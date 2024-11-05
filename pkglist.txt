@@ -252,6 +252,10 @@ tailscale
 texinfo
 texlab
 texlive-bin
+texlive-binextra
+texlive-latex
+texlive-latexextra
+texlive-plaingeneric
 timeshift
 tldr
 tmux
