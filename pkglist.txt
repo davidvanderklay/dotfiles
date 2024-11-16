@@ -31,6 +31,7 @@ cups
 deemix-gui-git
 device-mapper
 diffutils
+digilent.waveforms
 dmidecode
 dmraid
 dnsmasq
@@ -122,6 +123,7 @@ inetutils
 inxi
 iptables-nft
 iwd
+jdk8-openjdk
 jdtls
 jfsutils
 jq
@@ -144,6 +146,8 @@ lib32-nvidia-utils
 lib32-ocl-icd
 lib32-openal
 lib32-v4l-utils
+libastal-gjs-git
+libastal-meta
 libdvdcss
 libgsf
 libopenraw
@@ -214,6 +218,7 @@ plocate
 poppler-glib
 postgresql
 power-profiles-daemon
+prismlauncher
 pv
 python
 python-capng
