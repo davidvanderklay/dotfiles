@@ -5,6 +5,7 @@ alsa-plugins
 alsa-utils
 amd-ucode
 ani-cli
+anki
 arc-gtk-theme-eos
 aspell
 aylurs-gtk-shell
@@ -65,7 +66,6 @@ feishin-bin
 ffmpegthumbnailer
 file-roller
 firefox
-firewalld
 flatpak
 flatseal
 fwupd
@@ -146,8 +146,6 @@ lib32-nvidia-utils
 lib32-ocl-icd
 lib32-openal
 lib32-v4l-utils
-libastal-gjs-git
-libastal-meta
 libdvdcss
 libgsf
 libopenraw
@@ -273,6 +271,7 @@ ttf-liberation
 ttf-nerd-fonts-symbols
 ttf-opensans
 typescript-language-server
+ufw
 unrar
 unzip
 upower
@@ -285,7 +284,7 @@ vlc
 wallust
 waybar
 welcome
-wezterm-git
+wezterm
 wget
 which
 wine
@@ -312,5 +311,6 @@ xorg-xkill
 xorg-xrandr
 xterm
 yay
+yazi
 zoom
 zsh-theme-powerlevel10k-git
