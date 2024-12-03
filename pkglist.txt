@@ -6,6 +6,7 @@ alsa-utils
 amd-ucode
 ani-cli
 anki
+anydesk-bin
 arc-gtk-theme-eos
 aspell
 aylurs-gtk-shell
@@ -33,6 +34,7 @@ deemix-gui-git
 device-mapper
 diffutils
 digilent.waveforms
+discord-canary
 dmidecode
 dmraid
 dnsmasq
@@ -65,6 +67,7 @@ fastfetch
 feishin-bin
 ffmpegthumbnailer
 file-roller
+filelight
 firefox
 flatpak
 flatseal
@@ -73,6 +76,7 @@ gamemode
 gamescope
 gdb
 gdm
+geekbench
 ghc-libs
 ghcup-hs-bin
 git
@@ -124,6 +128,7 @@ inxi
 iptables-nft
 iwd
 jdk8-openjdk
+jdownloader2
 jdtls
 jfsutils
 jq
@@ -185,6 +190,7 @@ networkmanager
 networkmanager-openconnect
 networkmanager-openvpn
 nfs-utils
+nicotine+
 nilfs-utils
 noto-fonts
 noto-fonts-cjk
@@ -205,6 +211,7 @@ openssh
 osu-handler
 pacman-contrib
 pamixer
+parsec-bin
 pavucontrol
 pdfarranger
 perl
@@ -223,6 +230,7 @@ python-capng
 python-defusedxml
 python-packaging
 python-pyqt5
+qbittorrent
 qemu-full
 r2modman-appimage
 rebuild-detector
@@ -284,7 +292,7 @@ vlc
 wallust
 waybar
 welcome
-wezterm
+wezterm-git
 wget
 which
 wine
