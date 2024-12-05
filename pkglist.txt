@@ -112,6 +112,7 @@ gvfs-nfs
 gvfs-smb
 haveged
 hdparm
+heroic-games-launcher-bin
 htop
 hwdetect
 hwinfo
