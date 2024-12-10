@@ -25,7 +25,6 @@ brightnessctl
 btop
 btrfs-progs
 cantarell-fonts
-cava
 chromium
 cliphist
 cryptsetup
@@ -34,7 +33,6 @@ deemix-gui-git
 device-mapper
 diffutils
 digilent.waveforms
-discord-canary
 dmidecode
 dmraid
 dnsmasq
