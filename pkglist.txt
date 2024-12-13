@@ -208,6 +208,7 @@ obsidian
 onlyoffice-bin
 openssh
 osu-handler
+osu-lazer-bin
 pacman-contrib
 pamixer
 parsec-bin
