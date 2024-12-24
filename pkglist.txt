@@ -33,6 +33,7 @@ deemix-gui-git
 device-mapper
 diffutils
 digilent.waveforms
+discord
 dmidecode
 dmraid
 dnsmasq
@@ -45,9 +46,9 @@ duf
 e2fsprogs
 efibootmgr
 efitools
+endeavouros-branding
 endeavouros-keyring
 endeavouros-mirrorlist
-endeavouros-theming
 eos-apps-info
 eos-hooks
 eos-log-tool
@@ -117,6 +118,7 @@ hwinfo
 hyprcursor
 hypridle
 hyprland
+hyprland-qtutils
 hyprlock
 hyprpaper
 hyprpicker
@@ -232,6 +234,7 @@ python-packaging
 python-pyqt5
 qbittorrent
 qemu-full
+r
 r2modman-appimage
 rebuild-detector
 reflector
