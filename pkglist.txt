@@ -78,6 +78,7 @@ gdm
 geekbench
 ghc-libs
 ghcup-hs-bin
+ghostty
 git
 glances
 gnome-boxes
@@ -235,9 +236,6 @@ python-pyqt5
 qbittorrent
 qemu-full
 r
-r-lifecycle
-r-ps
-r-r6
 r2modman-appimage
 rebuild-detector
 reflector
