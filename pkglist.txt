@@ -129,6 +129,7 @@ inetutils
 inxi
 iptables-nft
 iwd
+jdk21-openjdk
 jdk8-openjdk
 jdownloader2
 jdtls
