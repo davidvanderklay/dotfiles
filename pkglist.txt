@@ -5,9 +5,9 @@ alsa-plugins
 alsa-utils
 amd-ucode
 ani-cli
-anki
 anydesk-bin
 arc-gtk-theme-eos
+asdf-vm
 aspell
 aylurs-gtk-shell
 b43-fwcutter
@@ -37,6 +37,7 @@ discord
 dmidecode
 dmraid
 dnsmasq
+docker
 dosbox
 dosfstools
 downgrade
@@ -81,6 +82,7 @@ ghcup-hs-bin
 ghostty
 git
 glances
+glm
 gnome-boxes
 gnome-calculator
 gnome-clocks
@@ -173,6 +175,7 @@ lvm2
 man-db
 man-pages
 mangohud
+mariadb
 mdadm
 meld
 mesa-utils
