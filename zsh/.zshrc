@@ -134,3 +134,4 @@ PATH="$PATH":"$HOME/.local/scripts/"
 bindkey -s ^f "tmux-sessionizer\n"
 
 export EDITOR=nvim
+. /opt/asdf-vm/asdf.sh

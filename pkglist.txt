@@ -64,6 +64,7 @@ exfatprogs
 extension-manager
 f2fs-tools
 fastfetch
+fcitx5
 feishin-bin
 ffmpegthumbnailer
 file-roller
@@ -127,6 +128,7 @@ hyprpaper
 hyprpicker
 hyprshade
 hyprshot
+ibus
 inetutils
 inxi
 iptables-nft
@@ -268,6 +270,7 @@ swww
 sysfsutils
 systemd-sysvcompat
 tailscale
+teams
 texinfo
 texlab
 texlive-bin
