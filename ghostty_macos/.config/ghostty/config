@@ -1,4 +1,4 @@
 font-family = JetBrainsMono Nerd Font
 theme = Kanagawa Dragon
 font-size = 15
-window-decoration = false
+# window-decoration = false
