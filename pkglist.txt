@@ -4,6 +4,7 @@ alsa-firmware
 alsa-plugins
 alsa-utils
 amd-ucode
+android-studio
 ani-cli
 anydesk-bin
 arc-gtk-theme-eos
@@ -64,7 +65,6 @@ exfatprogs
 extension-manager
 f2fs-tools
 fastfetch
-fcitx5
 feishin-bin
 ffmpegthumbnailer
 file-roller
@@ -75,6 +75,7 @@ flatseal
 fwupd
 gamemode
 gamescope
+gcc-fortran
 gdb
 gdm
 geekbench
@@ -116,6 +117,7 @@ gvfs-smb
 haveged
 hdparm
 heroic-games-launcher-bin
+heroku-cli-bin
 htop
 hwdetect
 hwinfo
@@ -128,7 +130,6 @@ hyprpaper
 hyprpicker
 hyprshade
 hyprshot
-ibus
 inetutils
 inxi
 iptables-nft
@@ -215,6 +216,7 @@ nwg-look
 obs-studio
 obsidian
 onlyoffice-bin
+openmpi
 openssh
 osu-handler
 osu-lazer-bin
@@ -262,6 +264,7 @@ spotify-adblock
 steam
 stow
 sudo
+suitesparse
 sushi
 swappy
 swaylock-effects-git

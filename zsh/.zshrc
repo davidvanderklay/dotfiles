@@ -131,7 +131,9 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # tmux sessionizer
 PATH="$PATH":"$HOME/.local/scripts/"
+PATH="$PATH":"$HOME/XyceInstall/Serial/bin/"
 bindkey -s ^f "tmux-sessionizer\n"
 
 export EDITOR=nvim
-. /opt/asdf-vm/asdf.sh
+# . /opt/asdf-vm/asdf.sh
+export ANDROID_HOME=/home/geolan/Android/Sdk/
