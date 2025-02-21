@@ -137,3 +137,6 @@ bindkey -s ^f "tmux-sessionizer\n"
 export EDITOR=nvim
 # . /opt/asdf-vm/asdf.sh
 export ANDROID_HOME=/home/geolan/Android/Sdk/
+export GLM_INCLUDE_DIR=/home/geolan/Projects/CSCE441/glm-1.0.1
+export GLFW_DIR=/home/geolan/Projects/CSCE441/glfw-3.4
+export GLEW_DIR=/home/geolan/Projects/CSCE441/glew-2.1.0

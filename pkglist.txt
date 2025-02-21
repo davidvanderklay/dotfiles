@@ -252,6 +252,7 @@ reiserfsprogs
 rofi-wayland
 rsync
 rtkit
+ruby-rbs
 s-nail
 samba
 sbctl
