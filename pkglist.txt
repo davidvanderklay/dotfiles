@@ -26,7 +26,6 @@ brightnessctl
 btop
 btrfs-progs
 cantarell-fonts
-chromium
 cliphist
 cryptsetup
 cups
@@ -34,11 +33,11 @@ deemix-gui-git
 device-mapper
 diffutils
 digilent.waveforms
-discord
 dmidecode
 dmraid
 dnsmasq
 docker
+docker-compose
 dosbox
 dosfstools
 downgrade
@@ -70,6 +69,7 @@ ffmpegthumbnailer
 file-roller
 filelight
 firefox
+firewalld
 flatpak
 flatseal
 fwupd
@@ -88,6 +88,7 @@ glm
 gnome-boxes
 gnome-calculator
 gnome-clocks
+gnome-console
 gnome-control-center
 gnome-disk-utility
 gnome-keyring
@@ -217,9 +218,9 @@ obs-studio
 obsidian
 onlyoffice-bin
 openmpi
+openscad
 openssh
 osu-handler
-osu-lazer-bin
 pacman-contrib
 pamixer
 parsec-bin
@@ -252,7 +253,6 @@ reiserfsprogs
 rofi-wayland
 rsync
 rtkit
-ruby-rbs
 s-nail
 samba
 sbctl
@@ -264,6 +264,7 @@ spotify
 spotify-adblock
 steam
 stow
+stress-ng
 sudo
 suitesparse
 sushi
@@ -285,7 +286,6 @@ texlive-plaingeneric
 timeshift
 tldr
 tmux
-tor-browser-bin
 totem
 ttf-bitstream-vera
 ttf-dejavu
