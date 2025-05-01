@@ -5,10 +5,7 @@ alsa-plugins
 alsa-utils
 amd-ucode
 android-studio
-ani-cli
-anydesk-bin
 arc-gtk-theme-eos
-asdf-vm
 aspell
 aylurs-gtk-shell
 b43-fwcutter
@@ -29,10 +26,8 @@ cantarell-fonts
 cliphist
 cryptsetup
 cups
-deemix-gui-git
 device-mapper
 diffutils
-digilent.waveforms
 dmidecode
 dmraid
 dnsmasq
@@ -68,7 +63,6 @@ feishin-bin
 ffmpegthumbnailer
 file-roller
 filelight
-firefox
 firewalld
 flatpak
 flatseal
@@ -78,7 +72,6 @@ gamescope
 gcc-fortran
 gdb
 gdm
-geekbench
 ghc-libs
 ghcup-hs-bin
 ghostty
@@ -169,7 +162,6 @@ linux-firmware
 linux-headers
 localsend-bin
 logrotate
-lollypop
 loupe
 lsb-release
 lsscsi
@@ -257,16 +249,11 @@ s-nail
 samba
 sbctl
 sg3_utils
-signal-desktop
 smartmontools
 sof-firmware
-spotify
-spotify-adblock
 steam
 stow
-stress-ng
 sudo
-suitesparse
 sushi
 swappy
 swaylock-effects-git
@@ -302,12 +289,11 @@ usb_modeswitch
 usbutils
 vesktop-bin
 vi
-visual-studio-code-bin
+vim
 vlc
 wallust
 waybar
 welcome
-wezterm-git
 wget
 which
 wine
@@ -332,8 +318,6 @@ xorg-xinit
 xorg-xinput
 xorg-xkill
 xorg-xrandr
-xterm
 yay
-yazi
 zoom
 zsh-theme-powerlevel10k-git
