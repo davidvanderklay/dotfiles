@@ -319,5 +319,6 @@ xorg-xinput
 xorg-xkill
 xorg-xrandr
 yay
+zig
 zoom
 zsh-theme-powerlevel10k-git
