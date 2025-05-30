@@ -23,6 +23,7 @@ brightnessctl
 btop
 btrfs-progs
 cantarell-fonts
+cisco-secure-client
 cliphist
 cryptsetup
 cups
