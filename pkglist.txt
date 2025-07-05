@@ -7,6 +7,8 @@ amd-ucode
 android-studio
 arc-gtk-theme-eos
 aspell
+aws-cli
+aws-session-manager-plugin
 aylurs-gtk-shell
 b43-fwcutter
 base
@@ -25,6 +27,7 @@ btrfs-progs
 cantarell-fonts
 cisco-secure-client
 cliphist
+copilot-cli-bin
 cryptsetup
 cups
 device-mapper
@@ -43,6 +46,7 @@ duf
 e2fsprogs
 efibootmgr
 efitools
+electron36
 endeavouros-branding
 endeavouros-keyring
 endeavouros-mirrorlist
@@ -126,6 +130,7 @@ hyprpicker
 hyprshade
 hyprshot
 inetutils
+inkscape
 inxi
 iptables-nft
 iwd
@@ -229,6 +234,7 @@ poppler-glib
 postgresql
 power-profiles-daemon
 prismlauncher
+protonplus
 pv
 python
 python-capng
@@ -288,6 +294,7 @@ unzip
 upower
 usb_modeswitch
 usbutils
+ventoy-bin
 vesktop-bin
 vi
 vim
