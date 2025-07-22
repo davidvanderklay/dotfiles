@@ -260,6 +260,7 @@ smartmontools
 sof-firmware
 steam
 stow
+stress-ng
 sudo
 sushi
 swappy
@@ -274,6 +275,8 @@ texinfo
 texlab
 texlive-bin
 texlive-binextra
+texlive-fontsextra
+texlive-formatsextra
 texlive-latex
 texlive-latexextra
 texlive-plaingeneric
@@ -330,3 +333,4 @@ yay
 zig
 zoom
 zsh-theme-powerlevel10k-git
+zsh-vi-mode
