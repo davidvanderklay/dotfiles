@@ -4,11 +4,9 @@ alsa-firmware
 alsa-plugins
 alsa-utils
 amd-ucode
-android-studio
 arc-gtk-theme-eos
 aspell
 aws-cli
-aws-session-manager-plugin
 aylurs-gtk-shell
 b43-fwcutter
 base
@@ -27,7 +25,6 @@ btrfs-progs
 cantarell-fonts
 cisco-secure-client
 cliphist
-copilot-cli-bin
 cryptsetup
 cups
 device-mapper
@@ -177,7 +174,6 @@ lvm2
 man-db
 man-pages
 mangohud
-mariadb
 mdadm
 meld
 mesa-utils
@@ -270,9 +266,9 @@ swww
 sysfsutils
 systemd-sysvcompat
 tailscale
-teams
 texinfo
 texlab
+texlive-bibtexextra
 texlive-bin
 texlive-binextra
 texlive-fontsextra
@@ -284,6 +280,7 @@ timeshift
 tldr
 tmux
 totem
+tree
 ttf-bitstream-vera
 ttf-dejavu
 ttf-iosevka-nerd
@@ -297,11 +294,9 @@ unzip
 upower
 usb_modeswitch
 usbutils
-ventoy-bin
 vesktop-bin
 vi
 vim
-vlc
 wallust
 waybar
 welcome
@@ -333,4 +328,3 @@ yay
 zig
 zoom
 zsh-theme-powerlevel10k-git
-zsh-vi-mode
