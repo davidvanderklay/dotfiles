@@ -99,6 +99,7 @@ gnome-tweaks
 gnome-usage
 gnome-weather
 go
+google-chrome
 grim
 gst-libav
 gst-plugin-pipewire
