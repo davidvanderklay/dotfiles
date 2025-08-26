@@ -55,6 +55,28 @@ return {
       time_format = "%H:%M",
     },
 
+    -- In your opts = { ... } table
+    attachments = {
+      img_folder = "assets/imgs",
+
+      img_text_func = function(path)
+        -- This approach is adapted directly from the plugin's documentation.
+
+        -- 1. Get just the filename (the "basename") from the full path object.
+        -- The `tostring(path)` gives the full absolute path, e.g., "/Users/.../image.png"
+        local name = vim.fs.basename(tostring(path))
+
+        -- 2. URL-encode the filename to handle spaces and special characters safely.
+        local encoded_name = require("obsidian.util").urlencode(name)
+
+        -- 3. Prepend your configured image folder to create the correct relative path.
+        local relative_path = "assets/imgs/" .. encoded_name
+
+        -- 4. Create the final standard Markdown link.
+        return string.format("![%s](%s)", name, relative_path)
+      end,
+    },
+
     -- This is the new, correct way to set up buffer-local keymaps.
     -- These mappings will only be active in your Obsidian notes.
     callbacks = {
