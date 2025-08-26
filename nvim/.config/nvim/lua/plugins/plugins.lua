@@ -1,5 +1,4 @@
 return {
-  { "ThePrimeagen/vim-be-good" },
   {
     "stevearc/oil.nvim",
     ---@module 'oil'
