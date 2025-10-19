@@ -114,7 +114,6 @@ gvfs-smb
 haveged
 hdparm
 heroic-games-launcher-bin
-heroku-cli-bin
 htop
 hwdetect
 hwinfo
@@ -246,7 +245,7 @@ rebuild-detector
 reflector
 reflector-simple
 reiserfsprogs
-rofi-wayland
+rofi
 rsync
 rtkit
 s-nail
@@ -326,6 +325,7 @@ xorg-xinput
 xorg-xkill
 xorg-xrandr
 yay
+zen-browser-bin
 zig
 zoom
 zsh-theme-powerlevel10k-git

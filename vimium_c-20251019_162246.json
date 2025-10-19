@@ -1,0 +1,30 @@
+{
+	"name": "Vimium C",
+	"@time": "10/19/2025, 4:22:46 PM",
+	"time": 1760908966193,
+	"environment": {
+		"extension": "2.12.3",
+		"platform": "linux",
+		"firefox": 143
+	},
+	"keyLayout": 2,
+	"keyMappings": [
+		"#!no-check",
+		"unmap J",
+		"unmap K",
+		"map J nextTab",
+		"map K previousTab",
+		""
+	],
+	"userDefinedCss": [
+		".LH {",
+		"    border: 0;",
+		"    background-image: none !important;",
+		"    background-color: #ffffff !important;",
+		"    border-radius: 2px;",
+		"    color: #000000;",
+		"}",
+		""
+	],
+	"vimSync": true
+}
