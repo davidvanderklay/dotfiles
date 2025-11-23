@@ -75,7 +75,6 @@ gcc-fortran
 gdb
 gdm
 ghc-libs
-ghcup-hs-bin
 ghostty
 git
 glances
@@ -260,6 +259,7 @@ sg3_utils
 sgdboop-bin
 smartmontools
 sof-firmware
+starship
 steam
 stow
 stress-ng
@@ -331,7 +331,9 @@ xorg-xinput
 xorg-xkill
 xorg-xrandr
 yay
+yazi
 zen-browser-bin
 zig
 zoom
+zoxide
 zsh-theme-powerlevel10k-git

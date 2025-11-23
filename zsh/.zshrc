@@ -1,118 +1,94 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# =============================================================================
+# 1. BASIC SETTINGS
+# =============================================================================
+
+# Enable colors
+autoload -U colors && colors
+
+# History settings (OMZ usually hides this)
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
+
+# Editor
+export EDITOR=nvim
+
+# =============================================================================
+# 2. AUTOCOMPLETION (The native way, no OMZ needed)
+# =============================================================================
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select              # Interactive selection menu
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive tab completion
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"   # Colorize completion
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+
+# Initialize completion system (caching for speed)
+zmodload zsh/complist
+_comp_options+=(globdots) # Include hidden files in completion
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# =============================================================================
+# 3. PLUGINS
+# =============================================================================
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Source local plugins if they exist
+if [ -f "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+if [ -f "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+# FZF Integration
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source <(fzf --zsh 2>/dev/null) # 2>/dev/null in case fzf isn't installed on a new system
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# =============================================================================
+# 4. PROMPT (Starship or Fallback)
+# =============================================================================
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# If starship is installed, use it. If not, use a simple fallback prompt.
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+else
+    # A simple, colorful prompt as a backup for systems without starship
+    PROMPT='%F{green}%n@%m%f %F{blue}%~%f $ '
+fi
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+# =============================================================================
+# 5. ALIASES & FUNCTIONS
+# =============================================================================
 
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
+# Common aliases
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias sudo="sudo " # Allows aliases to be sudo'ed
 
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
+# Git aliases (Replacing OMZ git plugin)
+alias g='git'
+alias ga='git add'
+alias gc='git commit -m'
+alias gs='git status'
+alias gp='git push'
+alias gl='git pull'
+alias gd='git diff'
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=( git sudo zsh-256color zsh-autosuggestions zsh-syntax-highlighting )
-# plugins+=(zsh-vi-mode)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-# alias dnf="dnf5"
-alias sudo="sudo "
-export PATH=/home/geolan/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin
-
-[ -f "/home/geolan/.ghcup/env" ] && . "/home/geolan/.ghcup/env" # ghcup-env
-
+# Yazi wrapper
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
@@ -122,22 +98,37 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-source <(fzf --zsh)
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# Double-tap ESC to toggle sudo (Replaces OMZ sudo plugin)
+sudo-command-line() {
+    [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+    if [[ $BUFFER == sudo\ * ]]; then
+        LBUFFER="${LBUFFER#sudo }"
+    else
+        LBUFFER="sudo $LBUFFER"
+    fi
+}
+zle -N sudo-command-line
+bindkey "\e\e" sudo-command-line
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+# =============================================================================
+# 6. USER CONFIG & EXPORTS
+# =============================================================================
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Path setup
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin"
+export PATH="$PATH:$HOME/.local/scripts/"
+export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
 
-# tmux sessionizer
-PATH="$PATH":"$HOME/.local/scripts/"
-PATH="$PATH":"$HOME/XyceInstall/Serial/bin/"
-bindkey -s ^f "tmux-sessionizer\n"
-
-export EDITOR=nvim
+# Language/SDK Exports
+[ -f "/home/geolan/.ghcup/env" ] && . "/home/geolan/.ghcup/env" # ghcup-env
 # . /opt/asdf-vm/asdf.sh
+
 export ANDROID_HOME=/home/geolan/Android/Sdk/
 export GLM_INCLUDE_DIR=/home/geolan/Projects/CSCE441/glm-1.0.1
 export GLFW_DIR=/home/geolan/Projects/CSCE441/glfw-3.4
 export GLEW_DIR=/home/geolan/Projects/CSCE441/glew-2.1.0
+
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# Keybindings
+bindkey -s ^f "tmux-sessionizer\n"
