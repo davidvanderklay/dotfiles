@@ -17,7 +17,6 @@ bitwarden
 blueman
 bluez
 bluez-utils
-bottles
 brightnessctl
 btop
 btrfs-progs
@@ -74,7 +73,6 @@ gamescope
 gcc-fortran
 gdb
 gdm
-ghc-libs
 ghostty
 git
 glances
@@ -127,7 +125,6 @@ hyprshade
 hyprshot
 immich-go
 inetutils
-inkscape
 inxi
 iptables-nft
 iwd
@@ -187,7 +184,6 @@ nano
 nano-syntax-highlighting
 nasm
 nautilus
-ncmpcpp
 neovim
 netctl
 network-manager-applet
@@ -213,13 +209,9 @@ nwg-look
 obs-studio
 obsidian
 onlyoffice-bin
-openmpi
-openscad
 openssh
-osu-handler
 pacman-contrib
 pamixer
-parsec-bin
 pavucontrol
 pdfarranger
 perl
@@ -336,4 +328,3 @@ zen-browser-bin
 zig
 zoom
 zoxide
-zsh-theme-powerlevel10k-git
