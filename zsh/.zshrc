@@ -132,3 +132,19 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # Keybindings
 bindkey -s ^f "tmux-sessionizer\n"
+
+# =============================================================================
+# HISTORY SEARCH (Type 'ssh' then press Up to see previous ssh commands)
+# =============================================================================
+
+# Load the terminfo module to access key codes properly
+zmodload zsh/terminfo
+
+# Bind Up/Down keys to history search
+# This checks for the specific characters typed so far
+bindkey "${terminfo[kcuu1]}" history-search-backward
+bindkey "${terminfo[kcud1]}" history-search-forward
+
+# Fallback for some terminals that don't use terminfo codes correctly
+bindkey "^[[A" history-search-backward
+bindkey "^[[B" history-search-forward

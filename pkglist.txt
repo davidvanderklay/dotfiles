@@ -328,3 +328,4 @@ zen-browser-bin
 zig
 zoom
 zoxide
+zsh
