@@ -3,6 +3,17 @@
 {
 	home.username = "geolan";
 	home.homeDirectory = "/home/geolan";
+  
+  home.packages = with pkgs; [
+    tmux
+    yazi
+    fzf
+  ];
+
+  home.file.".local/bin/tmux-sessionizer" = {
+      source = ./scripts/tmux-sessionizer;
+      executable = true;
+    };
 
 	xdg.configFile."nvim".source = ./nvim;
 
@@ -11,6 +22,77 @@
 		userName = "davidvanderklay";
 		userEmail = "davidvanderklay@gmail.com"	;
 	};
+
+ # 1. GHOSTTY CONFIGURATION
+  programs.ghostty = {
+    enable = true;
+    enableZshIntegration = true;
+    # We link your config file from the dotfiles directory
+    installBatSyntax = false; # Fixes a common conflict issue
+  };
+  
+  # Link the config file manually to ensure it uses your specific file
+  xdg.configFile."ghostty/config".source = ./ghostty/config;
+
+  # 2. STARSHIP CONFIGURATION
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+    # Link your custom toml if it exists, otherwise comment this line out
+    # settings = pkgs.lib.importTOML ./starship.toml;
+  };
+
+  # 3. ZSH CONFIGURATION
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    # Shell Aliases
+    shellAliases = {
+      ls = "ls --color=auto";
+      grep = "grep --color=auto";
+      g = "git";
+      ga = "git add";
+      gc = "git commit -m";
+      gs = "git status";
+      gp = "git push";
+      gl = "git pull";
+      gd = "git diff";
+    };
+
+
+    # InitExtra: This is where we put your custom functions and raw shell code
+    initExtra = ''
+      # --- Keybindings (History Search) ---
+      bindkey "^[[A" history-search-backward
+      bindkey "^[[B" history-search-forward
+
+      # --- TMUX & SUDO ---
+      # Ensure tmux-sessionizer is in your PATH or change this to full path
+      bindkey -s ^f "tmux-sessionizer\n"
+
+      sudo-command-line() {
+          [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+          if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
+      }
+      zle -N sudo-command-line
+      bindkey "\e\e" sudo-command-line
+      
+      # --- Custom Path Additions ---
+      export PATH="$PATH:$HOME/.local/scripts/"
+      export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
+    '';
+  };
+
+  # 4. FZF CONFIGURATION
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultCommand = "rg --files --hidden";
+    fileWidgetCommand = "rg --files --hidden";
+  };
 
   programs.lazygit = {
       enable = true;
