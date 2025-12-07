@@ -76,6 +76,40 @@
     #media-session.enable = true;
   };
 
+ # --- NIM OPTIMIZATION & GARBAGE COLLECTION ---
+  nix = {
+    settings = {
+      # 1. Deduplicate the Nix Store
+      # Hard-links identical files. Saves 25-35% disk space.
+      auto-optimise-store = true;
+    };
+
+    # 2. Automatic Garbage Collection
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      # Delete generations older than 7 days
+      # This ensures you always have a week's worth of rollbacks
+      # but cleans up the really old stuff.
+      options = "--delete-older-than 7d";
+    };
+  };
+
+  # 3. AUTO UPGRADES (The "Safe" Way)
+  # I recommend setting this to specific inputs or disabling it for Nvidia machines.
+  # If you REALLY want auto-updates, uncomment the block below.
+  system.autoUpgrade = {
+    enable = true;
+    flake = inputs.self.outPath;
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "-L" # print build logs
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
