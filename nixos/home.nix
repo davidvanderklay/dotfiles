@@ -9,6 +9,33 @@
 	home.homeDirectory = "/home/geolan";
   
   home.packages = with pkgs; [
+    awscli2
+    btop
+    unzip
+    unrar
+    distrobox
+    texlive.combined.scheme-full
+    texlab
+
+    # Gaming
+    lutris
+    heroic
+    r2modman
+    prismlauncher
+    protonplus
+    ludusavi
+
+    # Social
+    bitwarden
+    vesktop
+
+    # Wine stuff
+    wineWow64Packages.stable
+    winetricks
+
+    ungoogled-chromium
+
+
     tmux
     yazi
     fzf

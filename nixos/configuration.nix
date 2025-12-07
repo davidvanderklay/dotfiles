@@ -83,7 +83,7 @@
   users.users.geolan = {
     isNormalUser = true;
     description = "geolan";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
     #  thunderbird
@@ -96,6 +96,39 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+
+# 2. NVIDIA DRIVERS (Commented out as requested)
+  # To enable: uncomment these lines and run 'nixos-rebuild switch'
+  # services.xserver.videoDrivers = [ "nvidia" ];
+  # hardware.nvidia = {
+  #   modesetting.enable = true;
+  #   powerManagement.enable = false;
+  #   open = false; # Use proprietary drivers
+  #   nvidiaSettings = true;
+  #   package = config.boot.kernelPackages.nvidiaPackages.stable;
+  # };
+  # hardware.graphics.enable = true; # Required for drivers to work
+
+  # 3. STEAM & GAMEMODE
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; 
+    dedicatedServer.openFirewall = true;
+  };
+  programs.gamemode.enable = true; # Feral Gamemode
+
+  # 4. DOCKER
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    # Prune images weekly to save space
+    autoPrune.enable = true;
+  };
+
+  # 5. TAILSCALE
+  services.tailscale.enable = true;
+
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
