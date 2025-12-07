@@ -125,7 +125,7 @@
             repo = "tmux-kanagawa";
             rev = "master";
             # DELETE THIS LINE AND PASTE THE REAL HASH AFTER FIRST BUILD FAIL:
-            sha256 = pkgs.lib.fakeSha256; 
+            sha256 = "sha256-BcPErvbG7QwhxXgc3brSQKw3xd3jO5MHNxUj595L0uk=";
           };
         };
         extraConfig = ''
