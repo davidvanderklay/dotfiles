@@ -24,10 +24,15 @@
 		withNodeJs = true;
 		withPython3 = true;
 
+    plugins = with pkgs.vimPlugins; [
+      nvim-treesitter.withAllGrammars
+    ];
+
 		extraPackages = with pkgs; [
 			gcc
 			gnumake
 			unzip
+      tree-sitter
 			
 			# Search tools
 			ripgrep
