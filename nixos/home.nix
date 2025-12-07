@@ -12,6 +12,10 @@
 		userEmail = "davidvanderklay@gmail.com"	;
 	};
 
+  programs.lazygit = {
+      enable = true;
+    };
+
 	programs.neovim = {
 		enable = true;
 		defaultEditor = true;
