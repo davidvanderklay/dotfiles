@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./gnome.nix  # <--- Add this line near the top
+  ];
+
 	home.username = "geolan";
 	home.homeDirectory = "/home/geolan";
   
