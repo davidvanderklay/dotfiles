@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   # 1. PACKAGES & EXTENSIONS
@@ -7,26 +7,22 @@
     gnome-tweaks
     gnome-extension-manager 
     
-    # Icon Theme (Fixes generic blue icons)
-    papirus-icon-theme
-    
     # Ensure standard apps are here
     nautilus # File Manager
-    firefox  # Browser (change command below if using Chrome)
+    inputs.zen-browser.packages."${pkgs.system}".nixos
   ];
 
-  # 2. THEME CONFIGURATION
-  gtk = {
-    enable = true;
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+  xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+          "text/html" = "zen.desktop";
+          "x-scheme-handler/http" = "zen.desktop";
+          "x-scheme-handler/https" = "zen.desktop";
+          "x-scheme-handler/about" = "zen.desktop";
+          "x-scheme-handler/unknown" = "zen.desktop";
+        };
     };
-    # Optional: Fix for legacy apps
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-  };
+
 
   # 4. DCONF SETTINGS (The Heavy Lifting)
   dconf.settings = {
@@ -97,7 +93,7 @@
     # Meta + w -> Browser (Firefox)
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
       binding = "<Super>w";
-      command = "firefox"; # Change to google-chrome-stable if you use Chrome
+      command = "zen"; # Change to google-chrome-stable if you use Chrome
       name = "Browser";
     };
 
