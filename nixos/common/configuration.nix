@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./gnome.nix
+      # ./gnome.nix
     ];
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
