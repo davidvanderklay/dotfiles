@@ -7,14 +7,9 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ./gnome.nix
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -131,18 +126,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-
-# 2. NVIDIA DRIVERS (Commented out as requested)
-  # To enable: uncomment these lines and run 'nixos-rebuild switch'
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # hardware.nvidia = {
-  #   modesetting.enable = true;
-  #   powerManagement.enable = false;
-  #   open = false; # Use proprietary drivers
-  #   nvidiaSettings = true;
-  #   package = config.boot.kernelPackages.nvidiaPackages.stable;
-  # };
-  # hardware.graphics.enable = true; # Required for drivers to work
 
   # 3. STEAM & GAMEMODE
   programs.steam = {

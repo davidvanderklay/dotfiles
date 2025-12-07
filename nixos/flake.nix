@@ -15,24 +15,47 @@
 	};
 	outputs = { self, nixpkgs, home-manager, ...}@inputs:
 {
-	nixosConfigurations = {
-		nixos = nixpkgs.lib.nixosSystem {
-			system = "x86_64-linux";
+ nixosConfigurations = {
+    
+    # SYSTEM 1: Your Desktop
+    desktop = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
       specialArgs = { inherit inputs; };
-
-			modules = [
-				./configuration.nix
-				home-manager.nixosModules.home-manager
-				{
-					home-manager.useGlobalPkgs = true;
-					home-manager.useUserPackages = true;
+      modules = [
+        # 1. Machine Specifics
+        ./hosts/desktop/default.nix
+        # 2. Common Config
+        ./common/configuration.nix
+        # 3. Home Manager
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit inputs; };
-					home-manager.users.geolan = import ./home.nix;
-				}
+          home-manager.users.geolan = import ./common/home.nix;
+        }
+      ];
+    };
 
-			];
+    # SYSTEM 2: Your Laptop (The new machine)
+    laptop = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        # 1. Machine Specifics (Different hardware config!)
+        ./hosts/laptop/default.nix
+        # 2. Common Config (Reused!)
+        ./common/configuration.nix
+        # 3. Home Manager (Reused!)
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.users.geolan = import ./common/home.nix;
+        }
+      ];
+    };
 
-		};
-	};
-};
+  };
 }
