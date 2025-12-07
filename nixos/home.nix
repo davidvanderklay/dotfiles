@@ -8,12 +8,8 @@
     tmux
     yazi
     fzf
+    (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
   ];
-
-  home.file.".local/bin/tmux-sessionizer" = {
-      source = ./scripts/tmux-sessionizer;
-      executable = true;
-    };
 
 	xdg.configFile."nvim".source = ./nvim;
 
