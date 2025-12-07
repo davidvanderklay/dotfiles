@@ -25,6 +25,7 @@ cisco-secure-client
 cliphist
 cryptsetup
 cups
+cups-pdf
 device-mapper
 diffutils
 distrobox
@@ -42,6 +43,7 @@ duf
 e2fsprogs
 efibootmgr
 efitools
+electron
 electron36
 endeavouros-branding
 endeavouros-keyring
@@ -220,6 +222,7 @@ pipewire-jack
 pipewire-pulse
 pkgfile
 plocate
+pnpm
 podman
 poppler-glib
 postgresql
@@ -262,6 +265,7 @@ swaylock-effects-git
 swaync
 swww
 sysfsutils
+system-config-printer
 systemd-sysvcompat
 tailscale
 texinfo
