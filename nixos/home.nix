@@ -26,7 +26,7 @@
     ludusavi
 
     # Social
-    bitwarden
+    bitwarden-desktop
     vesktop
 
     # Wine stuff
