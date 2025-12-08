@@ -125,8 +125,8 @@
       -- 3. BLINK CMP SETUP
       -- ==========================================
       require('blink.cmp').setup({
-        keymap = { preset = 'default' },
-        ['<CR>'] = { 'accept', 'fallback' }, -- Accept with Enter
+        keymap = { preset = 'default' ,
+        ['<CR>'] = { 'accept', 'fallback' }, 
         },
         appearance = {
           use_nvim_cmp_as_default = true,
