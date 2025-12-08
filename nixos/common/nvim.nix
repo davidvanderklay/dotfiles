@@ -15,13 +15,16 @@
       # Search & Utils
       ripgrep fd curl git
 
+      rustc
+      cargo
+      nodejs_22
+
       # LSPs
       lua-language-server
       nil                     # Nix
       pyright                 # Python
       gopls                   # Go
       rust-analyzer           # Rust
-      clang             # C/C++
       clang-tools
       nodePackages.typescript-language-server # TS
 
@@ -278,14 +281,39 @@
       local lspconfig = require('lspconfig')
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
+      -- --- Clangd Specific Setup (The Fix for Nix) ---
+      -- We find where 'gcc' is in your path and tell clangd to ask it for headers.
+      local clangd_cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+      }
+
+      -- If we are on Nix/Linux, append --query-driver to find GCC headers
+      if vim.fn.executable("gcc") == 1 then
+        table.insert(clangd_cmd, "--query-driver=" .. vim.fn.exepath("gcc"))
+      end
+
       local servers = {
         lua_ls = { settings = { Lua = { diagnostics = { globals = {'vim'} } } } },
         nil_ls = {},
         pyright = {},
         gopls = {},
-        clangd = {},
+        
+        -- Rust: ensure you ran 'cargo init' in the folder
         rust_analyzer = {},
+        
+        -- TypeScript: ensure you ran 'npm install typescript' in the folder
         ts_ls = {},
+
+        -- C++: Use our custom command with header detection
+        clangd = {
+            cmd = clangd_cmd,
+        },
       }
 
       for server, config in pairs(servers) do
