@@ -10,6 +10,10 @@
     # Ensure standard apps are here
     nautilus # File Manager
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
+    # --- ADD THESE EXTENSIONS ---
+    gnomeExtensions.appindicator
+    gnomeExtensions.tiling-assistant
+    gnomeExtensions.hot-edge
   ];
 
   xdg.mimeApps = {
@@ -26,6 +30,14 @@
 
   # 4. DCONF SETTINGS (The Heavy Lifting)
   dconf.settings = {
+    "org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = [
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "tiling-assistant@leleat-on-github"
+        "hotedge@jonathan.jdoda.ca"
+      ];
+    };
     
     # --- MOUSE SETTINGS ---
     "org/gnome/desktop/peripherals/mouse" = {
