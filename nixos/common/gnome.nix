@@ -76,6 +76,8 @@
       
       # Close Window (Like a WM)
       close = ["<Super>q"];
+      # --- ADD THIS LINE ---
+      toggle-maximized = ["<Super>f"];
     };
 
     # --- CUSTOM KEYBINDINGS (Terminal, Browser, Files) ---
