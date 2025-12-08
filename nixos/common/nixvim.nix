@@ -223,12 +223,14 @@
           key = "<C-s>"; 
           action.__raw = ''
             function()
+              print("DEBUG: Ctrl+S pressed") -- Check :messages if you see this
               require("conform").format({ lsp_fallback = true }, function()
+                print("DEBUG: Formatting done, saving...") 
                 vim.cmd("w")
               end)
             end
           '';
-          options.desc = "Format and Save"; 
+          options.desc = "Format and Save (Debug)"; 
         }
 
         { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
