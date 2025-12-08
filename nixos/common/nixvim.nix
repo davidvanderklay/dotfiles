@@ -23,6 +23,14 @@
       timeoutlen = 300;
       termguicolors = true;
       smoothscroll = true;
+
+      # --- FIX: INDENTATION SETTINGS (LazyVim Style) ---
+      # This fixes the "huge gaps" by using 2 spaces instead of huge tabs
+      expandtab = true;     # Use spaces instead of tabs
+      shiftwidth = 2;       # Size of an indent
+      tabstop = 2;          # Number of spaces tabs count for
+      softtabstop = 2;
+      smartindent = true;   # Insert indents automatically
     };
 
     globals = {
@@ -119,7 +127,6 @@
       blink-cmp = {
         enable = true;
         settings = {
-          # Expand keymap into a block to handle the special "<CR>" key
           keymap = {
             preset = "default";
             "<CR>" = [ "accept" "fallback" ];
@@ -148,7 +155,6 @@
             installRustc = true;
           };
           
-          # C++ SETUP
           clangd = {
             enable = true;
             cmd = [
@@ -182,8 +188,8 @@
       conform-nvim = {
         enable = true;
         settings = {
+            # Note: We keep this, but the <C-s> keymap below now manually triggers it too
             format_on_save = {
-                # FIX 1: Increased timeout to 5 seconds.
                 timeout_ms = 5000;
                 lsp_fallback = true;
             };
@@ -207,10 +213,24 @@
         # General
         { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
         
-        # FIX 2: Changed to 'wqa' (Write, Quit All) to fix the 'No write since last change' error
         { mode = "n"; key = "<leader>qq"; action = "<cmd>wqa<cr>"; options.desc = "Save All & Quit"; }
         
-        { mode = ["n" "i" "x"]; key = "<C-s>"; action = "<cmd>w<cr><esc>"; options.desc = "Save File"; }
+        # --- FIX: Ctrl+S FORMATTING ---
+        # Instead of just saving (<cmd>w<cr>), we call conform to format, 
+        # and pass the save command as a callback.
+        { 
+          mode = ["n" "i" "x"]; 
+          key = "<C-s>"; 
+          action.__raw = ''
+            function()
+              require("conform").format({ lsp_fallback = true }, function()
+                vim.cmd("w")
+              end)
+            end
+          '';
+          options.desc = "Format and Save"; 
+        }
+
         { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
         { mode = "n"; key = "<leader>gg"; action.__raw = "function() require('snacks').lazygit() end"; options.desc = "Lazygit"; }
 
@@ -258,15 +278,11 @@
       shfmt
       black
       isort
-      # Added C/C++ Tools
       gcc
       clang
       clang-tools
     ];
 
-    # FIX 3: Environment Injection for C++ (The Correct Way)
-    # We set the environment variable inside Lua before plugins start.
-    # clangd inherits this environment.
     extraConfigLuaPre = ''
       vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
     '';
