@@ -10,6 +10,14 @@
 	home.homeDirectory = "/home/geolan";
   
   home.packages = with pkgs; [
+    # Programming tools
+    gcc           # C/C++ Compiler
+    gnumake       # Make
+    clang-tools   # Clangd, clang-format
+    rustc         # Rust Compiler
+    cargo         # Rust Package Manager
+    nodejs_22     # Node/NPM
+
     awscli2
     btop
     unzip

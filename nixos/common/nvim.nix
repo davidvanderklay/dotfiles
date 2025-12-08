@@ -10,14 +10,7 @@
     # --- 1. EXTERNAL TOOLS ---
     extraPackages = with pkgs; [
       # Build tools
-      gcc gnumake unzip
-
-      # Search & Utils
       ripgrep fd curl git
-
-      rustc
-      cargo
-      nodejs_22
 
       # LSPs
       lua-language-server
@@ -25,7 +18,6 @@
       pyright                 # Python
       gopls                   # Go
       rust-analyzer           # Rust
-      clang-tools
       nodePackages.typescript-language-server # TS
 
       # Formatters
@@ -294,7 +286,7 @@
         "--completion-style=detailed",
         "--function-arg-placeholders",
         "--fallback-style=llvm",
-        "--query-driver=/nix/store/**/*,/run/current-system/sw/bin/*"
+        "--query-driver=/run/current-system/sw/bin/gcc,/home/geolan/.nix-profile/bin/gcc"
       }
 
       local servers = {
