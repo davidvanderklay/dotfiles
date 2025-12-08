@@ -156,6 +156,9 @@
       -- ==========================================
       -- HARPOON CONFIG (LazyVim Style)
       -- ==========================================
+
+      local map = vim.keymap.set
+
       local harpoon = require("harpoon")
       harpoon:setup()
 
@@ -178,8 +181,6 @@
       
       -- Enable Telescope/Snacks integration (Optional but nice)
       -- map("n", "<leader>fh", function() toggle_telescope(harpoon:list()) end, { desc = "Open Harpoon Window" })
-
-      local map = vim.keymap.set
 
       -- General
       map("n", "<Esc>", "<cmd>nohlsearch<CR>")
