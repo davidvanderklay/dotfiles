@@ -293,10 +293,7 @@
         "--fallback-style=llvm",
       }
 
-      -- If we are on Nix/Linux, append --query-driver to find GCC headers
-      if vim.fn.executable("gcc") == 1 then
-        table.insert(clangd_cmd, "--query-driver=" .. vim.fn.exepath("gcc"))
-      end
+      table.insert(clangd_cmd, "--query-driver=/nix/store/**/*")
 
       local servers = {
         lua_ls = { settings = { Lua = { diagnostics = { globals = {'vim'} } } } },
