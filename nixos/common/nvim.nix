@@ -46,7 +46,7 @@
       # -- NAVIGATION --
       oil-nvim            # File explorer (Buffer based)
       flash-nvim          # Fast navigation
-      harpoon             # File marking
+      harpoon2             # File marking
       plenary-nvim        # Lua Utility lib
 
       # -- EDITING --
@@ -152,11 +152,44 @@
       -- ==========================================
       -- 5. KEYMAPS
       -- ==========================================
+
+      -- ==========================================
+      -- HARPOON CONFIG (LazyVim Style)
+      -- ==========================================
+      local harpoon = require("harpoon")
+      harpoon:setup()
+
+      -- Keymaps
+      -- <leader>H: Add current file to Harpoon
+      map("n", "<leader>H", function() harpoon:list():append() end, { desc = "Harpoon File (Add)" })
+      
+      -- <leader>h: Toggle the Harpoon quick menu
+      map("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon Quick Menu" })
+
+      -- Navigation 1-4
+      map("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "Harpoon to File 1" })
+      map("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "Harpoon to File 2" })
+      map("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Harpoon to File 3" })
+      map("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "Harpoon to File 4" })
+      map("n", "<leader>5", function() harpoon:list():select(4) end, { desc = "Harpoon to File 5" })
+      map("n", "<leader>6", function() harpoon:list():select(4) end, { desc = "Harpoon to File 6" })
+      map("n", "<leader>7", function() harpoon:list():select(4) end, { desc = "Harpoon to File 7" })
+      map("n", "<leader>8", function() harpoon:list():select(4) end, { desc = "Harpoon to File 8" })
+      
+      -- Enable Telescope/Snacks integration (Optional but nice)
+      -- map("n", "<leader>fh", function() toggle_telescope(harpoon:list()) end, { desc = "Open Harpoon Window" })
+
       local map = vim.keymap.set
 
       -- General
       map("n", "<Esc>", "<cmd>nohlsearch<CR>")
-      map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })
+      -- Quit All (<leader>qq)
+      map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
+
+      -- Save File (Ctrl+s)
+      -- This works in Normal (n), Insert (i), and Visual (x) modes.
+      -- NOTE: This triggers 'format_on_save' defined in your Conform setup automatically.
+      map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
       map("n", "<leader>bd", function() snacks.bufdelete() end, { desc = "Delete Buffer" })
       map("n", "<leader>gg", function() snacks.lazygit() end, { desc = "Lazygit" })
 
