@@ -32,6 +32,18 @@
       softtabstop = 2;
       smartindent = true;   # Insert indents automatically
     };
+    
+    extraConfigLua = ''
+    vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
+      require("conform").format({
+        lsp_fallback = true,
+        timeout_ms = 500,
+      }, function()
+        vim.cmd("write")
+        print("Formatted and Saved") -- Visual feedback
+      end)
+    end, { desc = "Format and Save" })
+  '';
 
     globals = {
       mapleader = " ";
@@ -218,20 +230,6 @@
         # --- FIX: Ctrl+S FORMATTING ---
         # Instead of just saving (<cmd>w<cr>), we call conform to format, 
         # and pass the save command as a callback.
-        { 
-          mode = ["n" "i" "x"]; 
-          key = "<C-s>"; 
-          action.__raw = ''
-            function()
-              print("DEBUG: Ctrl+S pressed") -- Check :messages if you see this
-              require("conform").format({ lsp_fallback = true }, function()
-                print("DEBUG: Formatting done, saving...") 
-                vim.cmd("w")
-              end)
-            end
-          '';
-          options.desc = "Format and Save (Debug)"; 
-        }
 
         { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
         { mode = "n"; key = "<leader>gg"; action.__raw = "function() require('snacks').lazygit() end"; options.desc = "Lazygit"; }
