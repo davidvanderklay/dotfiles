@@ -281,8 +281,24 @@
       local lspconfig = require('lspconfig')
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- --- Clangd Specific Setup (The Fix for Nix) ---
-      -- We find where 'gcc' is in your path and tell clangd to ask it for headers.
+      -- ==========================================
+      -- CLANGD SPECIFIC SETUP
+      -- ==========================================
+      -- 1. Find the path to g++ (C++) or gcc (C)
+      local cpp_driver = vim.fn.exepath("g++")
+      local c_driver = vim.fn.exepath("gcc")
+      
+      -- 2. Build the allow-list glob
+      -- We add the exact paths found, plus the generic Nix store pattern
+      local query_driver = "/nix/store/**/*"
+      if cpp_driver ~= "" then
+        query_driver = query_driver .. "," .. cpp_driver
+      end
+      if c_driver ~= "" then
+        query_driver = query_driver .. "," .. c_driver
+      end
+
+      -- 3. Define the command
       local clangd_cmd = {
         "clangd",
         "--background-index",
@@ -291,9 +307,8 @@
         "--completion-style=detailed",
         "--function-arg-placeholders",
         "--fallback-style=llvm",
+        "--query-driver=" .. query_driver 
       }
-
-      table.insert(clangd_cmd, "--query-driver=/nix/store/**/*")
 
       local servers = {
         lua_ls = { settings = { Lua = { diagnostics = { globals = {'vim'} } } } },
