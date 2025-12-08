@@ -119,7 +119,12 @@
       blink-cmp = {
         enable = true;
         settings = {
-          keymap.preset = "default";
+          # Expand keymap into a block to handle the special "<CR>" key
+          keymap = {
+            preset = "default";
+            "<CR>" = [ "accept" "fallback" ];
+          };
+          
           appearance = {
             use_nvim_cmp_as_default = true;
             nerd_font_variant = "mono";
