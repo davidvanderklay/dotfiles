@@ -72,7 +72,6 @@
 
       flash.enable = true;
       
-      # --- FIX: REMOVED KEYMAPS FROM HERE ---
       harpoon = {
         enable = true;
         enableTelescope = false;
@@ -143,14 +142,19 @@
             installCargo = true;
             installRustc = true;
           };
+          
+          # C++ SETUP
           clangd = {
             enable = true;
+            # We remove the hardcoded cmd to let nixvim handle the binary path, 
+            # but we pass args to help it find drivers.
             cmd = [
                 "clangd"
                 "--background-index"
                 "--clang-tidy"
                 "--header-insertion=iwyu"
                 "--completion-style=detailed"
+                "--query-driver=**" # Allow clangd to use any compiler it finds in PATH
             ];
           };
         };
@@ -176,7 +180,9 @@
         enable = true;
         settings = {
             format_on_save = {
-                timeout_ms = 500;
+                # FIX 1: Increased timeout to 5 seconds.
+                # 500ms is too fast for cold-starts on NixOS
+                timeout_ms = 5000;
                 lsp_fallback = true;
             };
             formatters_by_ft = {
@@ -194,11 +200,15 @@
       trouble.enable = true;
     };
 
-    # --- 4. KEYMAPS (Including Harpoon Fixes) ---
+    # --- 4. KEYMAPS ---
     keymaps = [
         # General
         { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
-        { mode = "n"; key = "<leader>qq"; action = "<cmd>qa<cr>"; options.desc = "Quit All"; }
+        
+        # FIX 2: Changed to 'wqa' (Write, Quit All). 
+        # This saves your changes automatically instead of erroring out.
+        { mode = "n"; key = "<leader>qq"; action = "<cmd>wqa<cr>"; options.desc = "Save All & Quit"; }
+        
         { mode = ["n" "i" "x"]; key = "<C-s>"; action = "<cmd>w<cr><esc>"; options.desc = "Save File"; }
         { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
         { mode = "n"; key = "<leader>gg"; action.__raw = "function() require('snacks').lazygit() end"; options.desc = "Lazygit"; }
@@ -229,46 +239,16 @@
         { mode = ["n" "x"]; key = "gp"; action = "<Plug>(YankyGPutAfter)"; }
         { mode = ["n" "x"]; key = "gP"; action = "<Plug>(YankyGPutBefore)"; }
 
-        # --- FIX: HARPOON KEYMAPS MOVED HERE ---
-        {
-          mode = "n";
-          key = "<leader>H";
-          # The __raw action injects raw Lua code
-          action.__raw = "function() require('harpoon'):list():add() end";
-          options.desc = "Harpoon File (Add)";
-        }
-        {
-          mode = "n";
-          key = "<leader>h";
-          action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end";
-          options.desc = "Harpoon Quick Menu";
-        }
-        {
-          mode = "n";
-          key = "<leader>1";
-          action.__raw = "function() require('harpoon'):list():select(1) end";
-          options.desc = "Harpoon File 1";
-        }
-        {
-          mode = "n";
-          key = "<leader>2";
-          action.__raw = "function() require('harpoon'):list():select(2) end";
-          options.desc = "Harpoon File 2";
-        }
-        {
-          mode = "n";
-          key = "<leader>3";
-          action.__raw = "function() require('harpoon'):list():select(3) end";
-          options.desc = "Harpoon File 3";
-        }
-        {
-          mode = "n";
-          key = "<leader>4";
-          action.__raw = "function() require('harpoon'):list():select(4) end";
-          options.desc = "Harpoon File 4";
-        }
+        # Harpoon
+        { mode = "n"; key = "<leader>H"; action.__raw = "function() require('harpoon'):list():add() end"; options.desc = "Harpoon File (Add)"; }
+        { mode = "n"; key = "<leader>h"; action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end"; options.desc = "Harpoon Quick Menu"; }
+        { mode = "n"; key = "<leader>1"; action.__raw = "function() require('harpoon'):list():select(1) end"; options.desc = "Harpoon File 1"; }
+        { mode = "n"; key = "<leader>2"; action.__raw = "function() require('harpoon'):list():select(2) end"; options.desc = "Harpoon File 2"; }
+        { mode = "n"; key = "<leader>3"; action.__raw = "function() require('harpoon'):list():select(3) end"; options.desc = "Harpoon File 3"; }
+        { mode = "n"; key = "<leader>4"; action.__raw = "function() require('harpoon'):list():select(4) end"; options.desc = "Harpoon File 4"; }
     ];
 
+    # --- 5. EXTRA PACKAGES & ENVIRONMENT ---
     extraPackages = with pkgs; [
       ripgrep
       fd
@@ -277,6 +257,16 @@
       shfmt
       black
       isort
+      # Added C/C++ Tools
+      gcc
+      clang
+      clang-tools
+    ];
+
+    # FIX 3: Environment Injection for C++
+    # This adds the C++ headers to the Neovim environment so clangd can find <iostream>
+    extraWrapperArgs = [
+      "--prefix" "CPLUS_INCLUDE_PATH" ":" "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
     ];
   };
 }
