@@ -22,6 +22,7 @@
       gopls                   # Go
       rust-analyzer           # Rust
       clang             # C/C++
+      clang-tools
       nodePackages.typescript-language-server # TS
 
       # Formatters
