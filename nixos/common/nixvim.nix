@@ -10,7 +10,6 @@
     viAlias = true;
     vimAlias = true;
     
-    # Equivalent to vim.opt
     opts = {
       number = true;
       relativenumber = true;
@@ -23,7 +22,6 @@
       updatetime = 250;
       timeoutlen = 300;
       termguicolors = true;
-      # Smooth scroll for neovim >= 0.10
       smoothscroll = true;
     };
 
@@ -46,12 +44,10 @@
       };
     };
 
-    # --- 3. CLIPBOARD & MOUSE ---
-    clipboard.providers.wl-copy.enable = true; # Assuming Wayland (Gnome), otherwise xclip
+    clipboard.providers.wl-copy.enable = true;
 
-    # --- 4. PLUGINS ---
+    # --- 3. PLUGINS ---
     plugins = {
-      # Core / UI
       web-devicons.enable = true;
       
       lualine = {
@@ -66,7 +62,6 @@
         settings.notify.enabled = true;
       };
 
-      # Navigation
       oil = {
         enable = true;
         settings = {
@@ -77,22 +72,14 @@
 
       flash.enable = true;
       
+      # --- FIX: REMOVED KEYMAPS FROM HERE ---
       harpoon = {
         enable = true;
-        enableTelescope = false; # Using Snacks picker instead if possible, or raw UI
-        keymaps = {
-            addFile = "<leader>H";
-            toggleQuickMenu = "<leader>h";
-            navFile = {
-                "1" = "<leader>1";
-                "2" = "<leader>2";
-                "3" = "<leader>3";
-                "4" = "<leader>4";
-            };
-        };
+        enableTelescope = false;
+        saveOnToggle = true;
+        saveOnChange = true;
       };
 
-      # Editing
       mini = {
         enable = true;
         modules = {
@@ -103,24 +90,22 @@
 
       yanky = {
         enable = true;
-        enableTelescope = false; # We use Snacks
+        enableTelescope = false;
       };
 
       todo-comments.enable = true;
 
-      # Treesitter
       treesitter = {
         enable = true;
         settings = {
             highlight.enable = true;
             indent.enable = true;
         };
-        nixvimInjections = true; # Better nix support
+        nixvimInjections = true;
       };
       
       ts-autotag.enable = true;
 
-      # --- SNACKS (Dashboard, Picker, Etc) ---
       snacks = {
         enable = true;
         settings = {
@@ -134,9 +119,6 @@
         };
       };
 
-      # --- LSP & COMPLETION ---
-      
-      # Blink CMP (Fast completion)
       blink-cmp = {
         enable = true;
         settings = {
@@ -150,28 +132,19 @@
         };
       };
 
-      # LSP Configurations
       lsp = {
         enable = true;
-        
-        # NixVim handles the PATHs for these automatically!
         servers = {
           lua_ls.enable = true;
-          nil_ls.enable = true; # Nix
-          pyright.enable = true; # Python
-          gopls.enable = true; # Go
-          
-          # TypeScript
+          nil_ls.enable = true;
+          pyright.enable = true;
+          gopls.enable = true;
           ts_ls.enable = true;
-
-          # Rust
           rust_analyzer = {
             enable = true;
             installCargo = true;
             installRustc = true;
           };
-
-          # C++
           clangd = {
             enable = true;
             cmd = [
@@ -183,16 +156,12 @@
             ];
           };
         };
-
         keymaps = {
-          # Diagnostic keymaps
           diagnostic = {
             "<leader>cd" = "open_float";
             "[d" = "goto_prev";
             "]d" = "goto_next";
           };
-          
-          # Buffer keymaps (only attach when LSP is active)
           lspBuf = {
             "gd" = "definition";
             "gr" = "references";
@@ -205,7 +174,6 @@
         };
       };
 
-      # Formatting
       conform-nvim = {
         enable = true;
         settings = {
@@ -224,17 +192,11 @@
         };
       };
       
-      # Linting
-      lint = {
-        enable = true;
-        # Linters are configured per filetype here
-      };
-
-      # Diagnostics View
+      lint.enable = true;
       trouble.enable = true;
     };
 
-    # --- 5. KEYMAPS ---
+    # --- 4. KEYMAPS (Including Harpoon Fixes) ---
     keymaps = [
         # General
         { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
@@ -249,7 +211,7 @@
         { mode = "n"; key = "<C-k>"; action = "<C-w>k"; }
         { mode = "n"; key = "<C-l>"; action = "<C-w>l"; }
 
-        # Snacks Picker (Replacing Telescope)
+        # Snacks Picker
         { mode = "n"; key = "<leader><space>"; action.__raw = "function() require('snacks').picker.smart() end"; options.desc = "Find Files (Smart)"; }
         { mode = "n"; key = "<leader>ff"; action.__raw = "function() require('snacks').picker.files() end"; options.desc = "Find Files"; }
         { mode = "n"; key = "<leader>fg"; action.__raw = "function() require('snacks').picker.git_files() end"; options.desc = "Git Files"; }
@@ -268,10 +230,47 @@
         { mode = ["n" "x"]; key = "P"; action = "<Plug>(YankyPutBefore)"; }
         { mode = ["n" "x"]; key = "gp"; action = "<Plug>(YankyGPutAfter)"; }
         { mode = ["n" "x"]; key = "gP"; action = "<Plug>(YankyGPutBefore)"; }
+
+        # --- FIX: HARPOON KEYMAPS MOVED HERE ---
+        {
+          mode = "n";
+          key = "<leader>H";
+          # The __raw action injects raw Lua code
+          action.__raw = "function() require('harpoon'):list():add() end";
+          options.desc = "Harpoon File (Add)";
+        }
+        {
+          mode = "n";
+          key = "<leader>h";
+          action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end";
+          options.desc = "Harpoon Quick Menu";
+        }
+        {
+          mode = "n";
+          key = "<leader>1";
+          action.__raw = "function() require('harpoon'):list():select(1) end";
+          options.desc = "Harpoon File 1";
+        }
+        {
+          mode = "n";
+          key = "<leader>2";
+          action.__raw = "function() require('harpoon'):list():select(2) end";
+          options.desc = "Harpoon File 2";
+        }
+        {
+          mode = "n";
+          key = "<leader>3";
+          action.__raw = "function() require('harpoon'):list():select(3) end";
+          options.desc = "Harpoon File 3";
+        }
+        {
+          mode = "n";
+          key = "<leader>4";
+          action.__raw = "function() require('harpoon'):list():select(4) end";
+          options.desc = "Harpoon File 4";
+        }
     ];
 
-    # --- 6. EXTRA PACKAGES ---
-    # Binaries that plugins might need but NixVim doesn't strictly wrap (formatters, etc)
     extraPackages = with pkgs; [
       ripgrep
       fd
@@ -280,7 +279,6 @@
       shfmt
       black
       isort
-      # gcc # GCC is usually handled by system, but can be added here if clangd needs headers
     ];
   };
 }
