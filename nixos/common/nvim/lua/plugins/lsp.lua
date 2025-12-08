@@ -3,45 +3,35 @@ return {
   { "mason-org/mason.nvim", enabled = false },
   { "mason-org/mason-lspconfig.nvim", enabled = false },
 
-  -- 2. Configure LSP to use your Nix-installed binaries
+  -- 2. Setup servers via lspconfig
   {
     "neovim/nvim-lspconfig",
     opts = {
-      -- Tell LazyVim these servers exist and should be setup
+      -- This ensures we don't accidentally rely on mason for any server
       servers = {
-        -- Lua
-        lua_ls = {},
+        -- LUA
+        lua_ls = { mason = false },
 
-        -- Nix (nil)
-        nil_ls = {},
+        -- NIX
+        nil_ls = { mason = false },
 
-        -- Python
-        pyright = {},
+        -- PYTHON
+        pyright = { mason = false },
 
-        -- Go
-        gopls = {},
+        -- GO
+        gopls = { mason = false },
 
-        -- Rust
-        rust_analyzer = {
-          -- lazyvim usually handles rust-analyzer setup automatically if the extra is enabled,
-          -- but declaring it here ensures it attaches if you aren't using the rust extra.
-          mason = false,
-        },
+        -- RUST
+        rust_analyzer = { mason = false },
 
         -- C/C++
-        clangd = {
-          mason = false,
-        },
+        clangd = { mason = false },
 
-        -- TypeScript
-        -- Note: If you use the LazyVim typescript extra, it might expect 'vtsls'.
-        -- Since you installed 'typescript-language-server', that corresponds to 'ts_ls' (formerly tsserver).
-        ts_ls = {},
+        -- TYPESCRIPT
+        -- Note: 'ts_ls' is the new name for 'tsserver' in standard lspconfig.
+        -- If you are on an older version, change this key to 'tsserver'.
+        ts_ls = { mason = false },
       },
-
-      -- 3. Ensure your formatters/linters (which are not LSPs) are handled
-      -- Since you disabled mason, automatic linter installation via mason-null-ls won't work.
-      -- Ensure you have 'conform.nvim' or 'none-ls' configured to pick up 'prettier' and 'nixpkgs-fmt' from your path.
     },
   },
 }
