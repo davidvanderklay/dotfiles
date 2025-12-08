@@ -146,15 +146,13 @@
           # C++ SETUP
           clangd = {
             enable = true;
-            # We remove the hardcoded cmd to let nixvim handle the binary path, 
-            # but we pass args to help it find drivers.
             cmd = [
                 "clangd"
                 "--background-index"
                 "--clang-tidy"
                 "--header-insertion=iwyu"
                 "--completion-style=detailed"
-                "--query-driver=**" # Allow clangd to use any compiler it finds in PATH
+                "--query-driver=**" 
             ];
           };
         };
@@ -181,7 +179,6 @@
         settings = {
             format_on_save = {
                 # FIX 1: Increased timeout to 5 seconds.
-                # 500ms is too fast for cold-starts on NixOS
                 timeout_ms = 5000;
                 lsp_fallback = true;
             };
@@ -205,8 +202,7 @@
         # General
         { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
         
-        # FIX 2: Changed to 'wqa' (Write, Quit All). 
-        # This saves your changes automatically instead of erroring out.
+        # FIX 2: Changed to 'wqa' (Write, Quit All) to fix the 'No write since last change' error
         { mode = "n"; key = "<leader>qq"; action = "<cmd>wqa<cr>"; options.desc = "Save All & Quit"; }
         
         { mode = ["n" "i" "x"]; key = "<C-s>"; action = "<cmd>w<cr><esc>"; options.desc = "Save File"; }
@@ -263,10 +259,11 @@
       clang-tools
     ];
 
-    # FIX 3: Environment Injection for C++
-    # This adds the C++ headers to the Neovim environment so clangd can find <iostream>
-    extraWrapperArgs = [
-      "--prefix" "CPLUS_INCLUDE_PATH" ":" "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
-    ];
+    # FIX 3: Environment Injection for C++ (The Correct Way)
+    # We set the environment variable inside Lua before plugins start.
+    # clangd inherits this environment.
+    extraConfigLuaPre = ''
+      vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
+    '';
   };
 }
