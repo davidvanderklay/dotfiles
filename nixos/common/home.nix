@@ -3,7 +3,7 @@
 {
   imports = [
     ./gnome.nix  # <--- Add this line near the top
-    ./nvim.nix
+    ./nixvim.nix
   ];
 
 	home.username = "geolan";
