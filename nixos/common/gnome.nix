@@ -55,6 +55,8 @@
       switch-to-application-4 = [];
       switch-to-application-5 = [];
       switch-to-application-6 = [];
+
+      show-screenshot-ui = ["<Super><Shift>s"];
     };
 
     "org/gnome/desktop/wm/keybindings" = {
@@ -80,12 +82,14 @@
       toggle-maximized = ["<Super>f"];
     };
 
+
     # --- CUSTOM KEYBINDINGS (Terminal, Browser, Files) ---
     "org/gnome/settings-daemon/plugins/media-keys" = {
       custom-keybindings = [
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/" 
       ];
     };
 
@@ -108,6 +112,12 @@
       binding = "<Super>r";
       command = "nautilus"; 
       name = "File Manager";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3" = {
+      binding = "<Control><Shift>Escape";
+      command = "gnome-system-monitor";
+      name = "System Monitor";
     };
   };
 }
