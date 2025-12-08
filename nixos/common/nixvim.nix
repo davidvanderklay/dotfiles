@@ -76,8 +76,6 @@
       harpoon = {
         enable = true;
         enableTelescope = false;
-        saveOnToggle = true;
-        saveOnChange = true;
       };
 
       mini = {
