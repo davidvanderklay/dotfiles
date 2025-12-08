@@ -284,19 +284,6 @@
       -- ==========================================
       -- CLANGD SPECIFIC SETUP
       -- ==========================================
-      -- 1. Find the path to g++ (C++) or gcc (C)
-      local cpp_driver = vim.fn.exepath("g++")
-      local c_driver = vim.fn.exepath("gcc")
-      
-      -- 2. Build the allow-list glob
-      -- We add the exact paths found, plus the generic Nix store pattern
-      local query_driver = "/nix/store/**/*"
-      if cpp_driver ~= "" then
-        query_driver = query_driver .. "," .. cpp_driver
-      end
-      if c_driver ~= "" then
-        query_driver = query_driver .. "," .. c_driver
-      end
 
       -- 3. Define the command
       local clangd_cmd = {
@@ -307,7 +294,7 @@
         "--completion-style=detailed",
         "--function-arg-placeholders",
         "--fallback-style=llvm",
-        "--query-driver=" .. query_driver 
+        "--query-driver=/nix/store/**/*,/run/current-system/sw/bin/*"
       }
 
       local servers = {
