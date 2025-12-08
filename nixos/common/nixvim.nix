@@ -178,7 +178,7 @@
           # If this errors, change it to `package = null;` and use `npm i -g @prisma/language-server`
           prismals = {
             enable = true;
-            package = pkgs.nodePackages."@prisma/language-server";
+            package = null;
           };
         };
       };
@@ -297,8 +297,6 @@
       yaml-language-server
       texliveSmall
       
-      # Prisma (Manual Addition for fallback)
-      nodePackages."@prisma/language-server"
     ];
 
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
