@@ -200,6 +200,7 @@
       conform-nvim = {
         enable = true;
         settings = {
+            log_level = "debug";
             # Note: We keep this, but the <C-s> keymap below now manually triggers it too
             format_on_save = {
                 timeout_ms = 5000;
