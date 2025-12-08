@@ -312,7 +312,6 @@
           async = false,
         }, function()
           vim.cmd("write")
-          print("Formatted & Saved")
         end)
       end, { desc = "Format and Save" })
     '';
