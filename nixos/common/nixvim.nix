@@ -24,32 +24,17 @@
       termguicolors = true;
       smoothscroll = true;
 
-      # --- FIX: INDENTATION SETTINGS (LazyVim Style) ---
-      # This fixes the "huge gaps" by using 2 spaces instead of huge tabs
-      expandtab = true;     # Use spaces instead of tabs
-      shiftwidth = 2;       # Size of an indent
-      tabstop = 2;          # Number of spaces tabs count for
+      # Indentation (LazyVim Style)
+      expandtab = true;
+      shiftwidth = 2;
+      tabstop = 2;
       softtabstop = 2;
-      smartindent = true;   # Insert indents automatically
+      smartindent = true;
     };
-    
-    extraConfigLua = ''
-    vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
-      require("conform").format({
-        lsp_fallback = true,
-        timeout_ms = 500,
-      }, function()
-        vim.cmd("write")
-        print("Formatted and Saved") -- Visual feedback
-      end)
-    end, { desc = "Format and Save" })
-  '';
 
     globals = {
       mapleader = " ";
       maplocalleader = "\\";
-      loaded_netrw = 1;
-      loaded_netrwPlugin = 1;
     };
 
     # --- 2. THEME ---
@@ -69,19 +54,10 @@
     # --- 3. PLUGINS ---
     plugins = {
       web-devicons.enable = true;
-      
-      lualine = {
-        enable = true;
-        settings.options.theme = "kanagawa";
-      };
-
+      lualine.enable = true;
       which-key.enable = true;
+      noice.enable = true;
       
-      noice = {
-        enable = true;
-        settings.notify.enabled = true;
-      };
-
       oil = {
         enable = true;
         settings = {
@@ -91,25 +67,9 @@
       };
 
       flash.enable = true;
-      
-      harpoon = {
-        enable = true;
-        enableTelescope = false;
-      };
-
-      mini = {
-        enable = true;
-        modules = {
-            ai = {};
-            pairs = {};
-        };
-      };
-
-      yanky = {
-        enable = true;
-        enableTelescope = false;
-      };
-
+      harpoon = { enable = true; enableTelescope = false; };
+      mini = { enable = true; modules = { ai = {}; pairs = {}; }; };
+      yanky = { enable = true; enableTelescope = false; };
       todo-comments.enable = true;
 
       treesitter = {
@@ -117,6 +77,11 @@
         settings = {
             highlight.enable = true;
             indent.enable = true;
+            ensure_installed = [
+              "c" "cpp" "rust" "zig" "lua" "vim" "nix" "python" "javascript" 
+              "typescript" "tsx" "json" "yaml" "toml" "html" "css" "prisma" 
+              "sql" "dockerfile" "markdown" "java" "go" "cmake" "bash"
+            ];
         };
         nixvimInjections = true;
       };
@@ -126,7 +91,7 @@
       snacks = {
         enable = true;
         settings = {
-          dashboard.enabled = true;
+          dashboard.enabled = false;
           picker.enabled = true;
           notifier.enabled = true;
           quickfile.enabled = true;
@@ -143,7 +108,6 @@
             preset = "default";
             "<CR>" = [ "accept" "fallback" ];
           };
-          
           appearance = {
             use_nvim_cmp_as_default = true;
             nerd_font_variant = "mono";
@@ -153,20 +117,20 @@
         };
       };
 
+      # --- LSP CONFIGURATION ---
       lsp = {
         enable = true;
         servers = {
+          # existing
           lua_ls.enable = true;
-          nil_ls.enable = true;
           pyright.enable = true;
           gopls.enable = true;
           ts_ls.enable = true;
-          rust_analyzer = {
-            enable = true;
-            installCargo = true;
-            installRustc = true;
-          };
           
+          # Nix
+          nil_ls.enable = true; 
+
+          # C/C++
           clangd = {
             enable = true;
             cmd = [
@@ -175,44 +139,80 @@
                 "--clang-tidy"
                 "--header-insertion=iwyu"
                 "--completion-style=detailed"
-                "--query-driver=**" 
             ];
           };
-        };
-        keymaps = {
-          diagnostic = {
-            "<leader>cd" = "open_float";
-            "[d" = "goto_prev";
-            "]d" = "goto_next";
+
+          # Rust
+          rust_analyzer = {
+            enable = true;
+            installCargo = true;
+            installRustc = true;
           };
-          lspBuf = {
-            "gd" = "definition";
-            "gr" = "references";
-            "gI" = "implementation";
-            "<leader>D" = "type_definition";
-            "<leader>rn" = "rename";
-            "<leader>ca" = "code_action";
-            "K" = "hover";
-          };
+
+          # NEW ADDITIONS
+          zls.enable = true;          # Zig
+          jsonls.enable = true;       # JSON
+          cmake.enable = true;        # CMake
+          dockerls.enable = true;     # Docker
+          jdtls.enable = true;        # Java
+          marksman.enable = true;     # Markdown
+          prismals.enable = true;     # Prisma
+          sqls.enable = true;         # SQL
+          tailwindcss.enable = true;  # Tailwind
+          texlab.enable = true;       # LaTeX
+          taplo.enable = true;        # TOML
+          yamlls.enable = true;       # YAML
+          html.enable = true;         # HTML
+          cssls.enable = true;        # CSS
         };
       };
 
+      # --- FORMATTING (CONFORM) ---
       conform-nvim = {
         enable = true;
         settings = {
-            log_level = "debug";
-            # Note: We keep this, but the <C-s> keymap below now manually triggers it too
-            format_on_save = {
-                timeout_ms = 5000;
-                lsp_fallback = true;
-            };
+            log_level = "warn";
+            
+            # This map tells conform which external tool to use.
+            # IMPORTANT: We removed the "*" wildcard to prevent it from blocking LSP fallbacks.
             formatters_by_ft = {
-                lua = [ "nixpkgs_fmt" ];
-                nix = [ "nixpkgs_fmt" ];
+                # Scripting / Config
+                lua = [ "stylua" ];
+                nix = [ "nixfmt" ]; # switched to nixfmt-rfc-style
+                json = [ "prettier" ];
+                yaml = [ "prettier" ];
+                toml = [ "taplo" ];
+                cmake = [ "cmake_format" ];
+                
+                # Web / JS
                 javascript = [ "prettier" ];
                 typescript = [ "prettier" ];
+                typescriptreact = [ "prettier" ]; # FIX for .tsx files
+                javascriptreact = [ "prettier" ];
+                html = [ "prettier" ];
+                css = [ "prettier" ];
+                markdown = [ "prettier" ];
+                graphql = [ "prettier" ];
+                
+                # Backend / Systems
                 python = [ "isort" "black" ];
-                "*" = [ "trim_whitespace" ];
+                go = [ "gofmt" ];
+                rust = [ "rustfmt" ];
+                zig = [ "zigfmt" ];
+                
+                # C++
+                # Explicitly use clang-format. This is more reliable than LSP fallback.
+                c = [ "clang-format" ];
+                cpp = [ "clang-format" ];
+                
+                # Data / Other
+                sql = [ "sql_formatter" ];
+                java = [ "google-java-format" ];
+                tex = [ "latexindent" ];
+                
+                # Fallback for shell scripts
+                sh = [ "shfmt" ];
+                bash = [ "shfmt" ];
             };
         };
       };
@@ -225,13 +225,7 @@
     keymaps = [
         # General
         { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
-        
         { mode = "n"; key = "<leader>qq"; action = "<cmd>wqa<cr>"; options.desc = "Save All & Quit"; }
-        
-        # --- FIX: Ctrl+S FORMATTING ---
-        # Instead of just saving (<cmd>w<cr>), we call conform to format, 
-        # and pass the save command as a callback.
-
         { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
         { mode = "n"; key = "<leader>gg"; action.__raw = "function() require('snacks').lazygit() end"; options.desc = "Lazygit"; }
 
@@ -246,46 +240,60 @@
         { mode = "n"; key = "<leader>ff"; action.__raw = "function() require('snacks').picker.files() end"; options.desc = "Find Files"; }
         { mode = "n"; key = "<leader>fg"; action.__raw = "function() require('snacks').picker.git_files() end"; options.desc = "Git Files"; }
         { mode = "n"; key = "<leader>/"; action.__raw = "function() require('snacks').picker.grep() end"; options.desc = "Grep"; }
-        { mode = "n"; key = "<leader>:"; action.__raw = "function() require('snacks').picker.command_history() end"; options.desc = "Command History"; }
-        { mode = "n"; key = "<leader>,"; action.__raw = "function() require('snacks').picker.buffers() end"; options.desc = "Buffers"; }
-
+        
         # Oil
         { mode = "n"; key = "-"; action = "<CMD>Oil<CR>"; options.desc = "Open Parent Directory"; }
 
         # Trouble
         { mode = "n"; key = "<leader>xx"; action = "<cmd>Trouble diagnostics toggle<cr>"; options.desc = "Diagnostics (Trouble)"; }
         
-        # Yanky
-        { mode = ["n" "x"]; key = "p"; action = "<Plug>(YankyPutAfter)"; }
-        { mode = ["n" "x"]; key = "P"; action = "<Plug>(YankyPutBefore)"; }
-        { mode = ["n" "x"]; key = "gp"; action = "<Plug>(YankyGPutAfter)"; }
-        { mode = ["n" "x"]; key = "gP"; action = "<Plug>(YankyGPutBefore)"; }
-
         # Harpoon
-        { mode = "n"; key = "<leader>H"; action.__raw = "function() require('harpoon'):list():add() end"; options.desc = "Harpoon File (Add)"; }
         { mode = "n"; key = "<leader>h"; action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end"; options.desc = "Harpoon Quick Menu"; }
-        { mode = "n"; key = "<leader>1"; action.__raw = "function() require('harpoon'):list():select(1) end"; options.desc = "Harpoon File 1"; }
-        { mode = "n"; key = "<leader>2"; action.__raw = "function() require('harpoon'):list():select(2) end"; options.desc = "Harpoon File 2"; }
-        { mode = "n"; key = "<leader>3"; action.__raw = "function() require('harpoon'):list():select(3) end"; options.desc = "Harpoon File 3"; }
-        { mode = "n"; key = "<leader>4"; action.__raw = "function() require('harpoon'):list():select(4) end"; options.desc = "Harpoon File 4"; }
+        { mode = "n"; key = "<leader>H"; action.__raw = "function() require('harpoon'):list():add() end"; options.desc = "Harpoon File (Add)"; }
     ];
 
-    # --- 5. EXTRA PACKAGES & ENVIRONMENT ---
+    # --- 5. EXTRA PACKAGES (Environment) ---
     extraPackages = with pkgs; [
-      ripgrep
-      fd
-      nixpkgs-fmt
+      # Base Tools
+      ripgrep fd gcc clang clang-tools
+      
+      # Formatters & Linters
+      nixfmt-rfc-style  # The new standard for Nix
+      stylua
       nodePackages.prettier
+      black isort
       shfmt
-      black
-      isort
-      gcc
-      clang
-      clang-tools
+      cmake-format
+      sql-formatter
+      google-java-format
+      
+      # Language Servers / Compilers (if not auto-installed by nixvim modules)
+      zig zls
+      jdt-language-server
+      gopls gotools
+      taplo
+      vscode-langservers-extracted # html, css, json, eslint
+      yaml-language-server
+      texliveSmall
     ];
 
-    extraConfigLuaPre = ''
+    # --- 6. CONFIG LUA (The Ctrl+S Fix) ---
+    # We load this last to ensure the Keymap takes precedence and formats correctly.
+    extraConfigLua = ''
+      -- C++ Include Path setup
       vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
+      
+      -- Manual Format & Save Keymap
+      vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
+        require("conform").format({
+          lsp_fallback = true,
+          timeout_ms = 3000, -- 3 seconds should be plenty
+          async = false,
+        }, function()
+          vim.cmd("write")
+          print("Formatted & Saved")
+        end)
+      end, { desc = "Format and Save" })
     '';
   };
 }
