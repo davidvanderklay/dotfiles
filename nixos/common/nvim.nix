@@ -21,7 +21,7 @@
       pyright                 # Python
       gopls                   # Go
       rust-analyzer           # Rust
-      clang-tools             # C/C++
+      clang             # C/C++
       nodePackages.typescript-language-server # TS
 
       # Formatters
@@ -126,6 +126,8 @@
       -- ==========================================
       require('blink.cmp').setup({
         keymap = { preset = 'default' },
+        ['<CR>'] = { 'accept', 'fallback' }, -- Accept with Enter
+        },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = 'mono',
