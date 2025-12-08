@@ -11,15 +11,14 @@
 		};
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    # --- ADD THIS ---
+# --- ADD THIS ---
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
 
 	};
-	outputs = { self, nixpkgs, home-manager, nixvim, ...}@inputs:
+	outputs = { self, nixpkgs, home-manager, ...}@inputs:
 {
  nixosConfigurations = {
     
