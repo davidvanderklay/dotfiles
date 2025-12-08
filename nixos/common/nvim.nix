@@ -8,12 +8,11 @@
     vimAlias = true;
 
     # --- 1. EXTERNAL TOOLS ---
-    # These are available in the system PATH for Neovim to use.
     extraPackages = with pkgs; [
-      # Build
+      # Build tools
       gcc gnumake unzip
 
-      # Search & Utils (Required for Snacks/Telescope/LSP)
+      # Search & Utils
       ripgrep fd curl git
 
       # LSPs
@@ -35,7 +34,7 @@
     plugins = with pkgs.vimPlugins; [
       # -- CORE & UI --
       lazydev-nvim        # Fixes Lua LS for Neovim config
-      snacks-nvim         # The new LazyVim standard (Picker, Dashboard, Utils)
+      snacks-nvim         # Dashboard, Picker, Utils (LazyVim core)
       noice-nvim          # Cmdline/Notification UI
       nui-nvim            # Dependency
       lualine-nvim        # Status line
@@ -72,21 +71,23 @@
       nvim-dap-python
 
       # -- COMPLETION (Blink) --
-      # Replaces nvim-cmp, cmp-*, and luasnip
       blink-cmp
-      friendly-snippets   # Snippets collection (Blink uses this)
-
+      friendly-snippets   # Snippets collection
+      
       # -- SPECIFIC TOOLS --
       vimtex
       render-markdown-nvim
-      obsidian-nvim
     ];
 
     # --- 3. LUA CONFIGURATION ---
     extraLuaConfig = ''
       -- ==========================================
-      -- 1. GLOBALS & OPTIONS
+      -- 1. PRE-PLUGIN SETUP (Important for Oil)
       -- ==========================================
+      -- Disable Netrw so Oil can take over directory editing
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
       vim.g.mapleader = " "
       vim.g.maplocalleader = "\\"
 
@@ -101,62 +102,55 @@
       vim.opt.signcolumn = "yes"
       vim.opt.updatetime = 250
       vim.opt.timeoutlen = 300
-      vim.opt.splitright = true
-      vim.opt.splitbelow = true
-      vim.opt.inccommand = "split"
-      vim.opt.cursorline = true
-      vim.opt.scrolloff = 10
-
-      -- Neovim 0.11+ / Native features
+      vim.opt.termguicolors = true
+      
+      -- Neovim 0.11+ Smooth Scroll
       if vim.fn.has("nvim-0.10") == 1 then
         vim.opt.smoothscroll = true
       end
 
       -- ==========================================
-      -- 2. BLINK CMP SETUP (Replaces nvim-cmp)
+      -- 2. THEME (Kanagawa Dragon)
       -- ==========================================
-      -- See: https://cmp.saghen.dev/configuration/
-      require('blink.cmp').setup({
-        -- Keymap preset 'default' uses:
-        -- <C-space> to open menu
-        -- <CR> to accept
-        -- <Tab> / <S-Tab> to select next/prev
-        keymap = { preset = 'default' },
+      require('kanagawa').setup({
+        theme = "dragon", -- Explicitly set dragon theme
+        background = {
+            dark = "dragon",
+            light = "lotus"
+        },
+      })
+      vim.cmd("colorscheme kanagawa-dragon")
 
+      -- ==========================================
+      -- 3. BLINK CMP SETUP
+      -- ==========================================
+      require('blink.cmp').setup({
+        keymap = { preset = 'default' },
         appearance = {
           use_nvim_cmp_as_default = true,
           nerd_font_variant = 'mono',
         },
-
-        -- Sources configuration
         sources = {
           default = { 'lsp', 'path', 'snippets', 'buffer' },
         },
-        
-        -- Signature help (built-in to blink)
         signature = { enabled = true },
       })
 
       -- ==========================================
-      -- 3. SNACKS.NVIM (LazyVim Core)
+      -- 4. SNACKS.NVIM (Dashboard & Picker)
       -- ==========================================
-      -- Provides: Dashboard, Picker (Telescope replacer), Notifications, etc.
       local snacks = require("snacks")
       snacks.setup({
-        bigfile = { enabled = true },
         dashboard = { enabled = true },
-        indent = { enabled = true },
-        input = { enabled = true },
+        picker = { enabled = true },
         notifier = { enabled = true },
         quickfile = { enabled = true },
-        scroll = { enabled = true },
         statuscolumn = { enabled = true },
         words = { enabled = true },
-        picker = { enabled = true }, -- The Telescope alternative
       })
 
       -- ==========================================
-      -- 4. KEYMAPS (LazyVim Style)
+      -- 5. KEYMAPS
       -- ==========================================
       local map = vim.keymap.set
 
@@ -164,7 +158,6 @@
       map("n", "<Esc>", "<cmd>nohlsearch<CR>")
       map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })
       map("n", "<leader>bd", function() snacks.bufdelete() end, { desc = "Delete Buffer" })
-      map("n", "<leader>bo", function() snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
       map("n", "<leader>gg", function() snacks.lazygit() end, { desc = "Lazygit" })
 
       -- Window Movement
@@ -173,7 +166,7 @@
       map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window" })
       map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window" })
 
-      -- File Navigation (Using Snacks Picker instead of Telescope)
+      -- Snacks Picker (Replaces Telescope)
       map("n", "<leader><space>", function() snacks.picker.smart() end, { desc = "Find Files (Root Dir)" })
       map("n", "<leader>ff", function() snacks.picker.files() end, { desc = "Find Files (Root Dir)" })
       map("n", "<leader>fg", function() snacks.picker.git_files() end, { desc = "Find Files (git-files)" })
@@ -183,18 +176,26 @@
       map("n", "<leader>,", function() snacks.picker.buffers() end, { desc = "Buffers" })
 
       -- Oil (File Explorer)
+      -- Note: "-" is the standard LazyVim key for 'go to parent dir'
       map("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" })
 
-      -- Diagnostics / Trouble
-      map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+      -- Trouble
+      -- Using Lua directly avoids "Not an editor command" errors
+      map("n", "<leader>xx", function() require("trouble").toggle("diagnostics") end, { desc = "Diagnostics (Trouble)" })
+      map("n", "<leader>xX", function() require("trouble").toggle("buffer") end, { desc = "Buffer Diagnostics (Trouble)" })
+      map("n", "<leader>cs", function() require("trouble").toggle("symbols") end, { desc = "Symbols (Trouble)" })
 
       -- ==========================================
-      -- 5. PLUGIN CONFIGS
+      -- 6. PLUGIN CONFIGS
       -- ==========================================
+      
+      -- Oil Setup
+      require("oil").setup({
+        default_file_explorer = true,
+      })
 
-      -- Theme
-      require('kanagawa').setup()
-      vim.cmd("colorscheme kanagawa")
+      -- Trouble Setup (Must call setup explicitly)
+      require("trouble").setup({})
 
       -- Treesitter
       require('nvim-treesitter.configs').setup({
@@ -203,21 +204,18 @@
         autotag = { enable = true },
       })
 
-      -- Mini
+      -- Mini & Yanky
       require('mini.ai').setup()
       require('mini.pairs').setup()
-
-      -- Yanky
       require("yanky").setup()
+      -- Yanky mappings
       map({"n","x"}, "p", "<Plug>(YankyPutAfter)")
       map({"n","x"}, "P", "<Plug>(YankyPutBefore)")
       map({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
       map({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
 
       -- WhichKey
-      require("which-key").setup({
-        preset = "helix",
-      })
+      require("which-key").setup({ preset = "helix" })
 
       -- Lualine
       require('lualine').setup({
@@ -233,26 +231,24 @@
           nix = { "nixpkgs_fmt" },
           javascript = { "prettier" },
           typescript = { "prettier" },
-          sh = { "shfmt" },
+          python = { "isort", "black" },
         },
       })
 
       -- ==========================================
-      -- 6. LSP SETUP (Native + Blink)
+      -- 7. LSP SETUP (Native + Blink)
       -- ==========================================
       local lspconfig = require('lspconfig')
-      
-      -- Get capabilities from Blink
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
         lua_ls = { settings = { Lua = { diagnostics = { globals = {'vim'} } } } },
-        nil_ls = {},     -- Nix
-        pyright = {},    -- Python
-        gopls = {},      -- Go
-        clangd = {},     -- C/C++
-        rust_analyzer = {}, -- Rust
-        ts_ls = {},      -- TypeScript
+        nil_ls = {},
+        pyright = {},
+        gopls = {},
+        clangd = {},
+        rust_analyzer = {},
+        ts_ls = {},
       }
 
       for server, config in pairs(servers) do
@@ -260,15 +256,13 @@
         lspconfig[server].setup(config)
       end
 
-      -- LSP Keymaps (Native 0.11 style + standard)
+      -- LSP Keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
           local function map_lsp(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
-
-          map_lsp('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition') -- Fallback to telescope/snacks picker if desired, or use vim.lsp.buf.definition
           map_lsp('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
           map_lsp('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
           map_lsp('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
@@ -278,62 +272,6 @@
           map_lsp('K', vim.lsp.buf.hover, 'Hover Documentation')
         end,
       })
-
-      -- ==========================================
-      -- 7. OBSIDIAN (Your Provided Config)
-      -- ==========================================
-      require("obsidian").setup({
-        workspaces = {
-          { name = "personal", path = vim.fn.expand("~/notes/personal") },
-          { name = "csce625", path = vim.fn.expand("~/notes/csce625") },
-          { name = "csce631", path = vim.fn.expand("~/notes/csce631") },
-          { name = "csce636", path = vim.fn.expand("~/notes/csce636") },
-          { name = "csce765", path = vim.fn.expand("~/notes/csce765") },
-        },
-        daily_notes = {
-          folder = "dailies",
-          date_format = "%Y-%m-%d",
-        },
-        -- Blink/CMP integration handled automatically by blink source 'buffer'/'path' usually,
-        -- but we leave this true as requested.
-        completion = {
-          nvim_cmp = true, 
-          min_chars = 2,
-        },
-        templates = {
-          folder = "templates",
-          date_format = "%Y-%m-%d",
-          time_format = "%H:%M",
-        },
-        attachments = {
-          img_folder = "assets/imgs",
-          img_text_func = function(path)
-            local name = vim.fs.basename(tostring(path))
-            local encoded_name = require("obsidian.util").urlencode(name)
-            local relative_path = "assets/imgs/" .. encoded_name
-            return string.format("![%s](%s)", name, relative_path)
-          end,
-        },
-        callbacks = {
-          enter_note = function(_, note)
-            vim.keymap.set("n", "<CR>", function() require("obsidian.api").smart_action() end, { buffer = note.bufnr, desc = "Smart action" })
-            vim.keymap.set("n", "<leader>ch", "<cmd>Obsidian toggle_checkbox<cr>", { buffer = note.bufnr, desc = "Toggle checkbox" })
-            vim.keymap.set("n", "]o", function() require("obsidian.api").nav_link("next") end, { buffer = note.bufnr, desc = "Next link" })
-            vim.keymap.set("n", "[o", function() require("obsidian.api").nav_link("prev") end, { buffer = note.bufnr, desc = "Prev link" })
-          end,
-        },
-      })
-
-      -- Obsidian Global Keymaps
-      local omap = function(mode, lhs, rhs, desc)
-         vim.keymap.set(mode, lhs, rhs, { desc = desc })
-      end
-      omap("n", "<leader>on", "<cmd>Obsidian new<cr>", "[O]bsidian [N]ew note")
-      omap("n", "<leader>os", "<cmd>Obsidian search<cr>", "[O]bsidian [S]earch")
-      omap("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", "[O]bsidian [F]ind file")
-      omap("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", "[O]bsidian [B]acklinks")
-      omap("n", "<leader>ot", "<cmd>Obsidian tags<cr>", "[O]bsidian [T]ags")
-      omap("n", "<leader>oy", "<cmd>Obsidian today<cr>", "[O]bsidian toda[y]")
     '';
   };
 }
