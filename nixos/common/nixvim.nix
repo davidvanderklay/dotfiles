@@ -5,7 +5,7 @@
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
-    
+
     # --- 1. GENERAL SETTINGS ---
     viAlias = true;
     vimAlias = true;
@@ -24,7 +24,7 @@
       termguicolors = true;
       smoothscroll = true;
 
-      # Indentation (LazyVim Style)
+      # Indentation Fix (LazyVim Style)
       expandtab = true;
       shiftwidth = 2;
       tabstop = 2;
@@ -56,6 +56,13 @@
       web-devicons.enable = true;
       lualine.enable = true;
       which-key.enable = true;
+      
+      # Git Integration
+      gitsigns = {
+        enable = true;
+        settings.current_line_blame = true;
+      };
+
       noice.enable = true;
       
       oil = {
@@ -72,6 +79,7 @@
       yanky = { enable = true; enableTelescope = false; };
       todo-comments.enable = true;
 
+      # --- TREESITTER (Syntax Highlighting) ---
       treesitter = {
         enable = true;
         settings = {
@@ -80,7 +88,8 @@
             ensure_installed = [
               "c" "cpp" "rust" "zig" "lua" "vim" "nix" "python" "javascript" 
               "typescript" "tsx" "json" "yaml" "toml" "html" "css" "prisma" 
-              "sql" "dockerfile" "markdown" "java" "go" "cmake" "bash"
+              "sql" "dockerfile" "markdown" "java" "go" "cmake" "bash" 
+              "git_config" "gitcommit" "gitignore" "diff"
             ];
         };
         nixvimInjections = true;
@@ -117,20 +126,32 @@
         };
       };
 
-      # --- LSP CONFIGURATION ---
+      # --- LSP CONFIGURATION (Language Support) ---
       lsp = {
         enable = true;
         servers = {
-          # existing
+          # -- 1. Core Languages --
           lua_ls.enable = true;
-          pyright.enable = true;
-          gopls.enable = true;
-          ts_ls.enable = true;
+          nil_ls.enable = true;    # Nix
+          pyright.enable = true;   # Python
+          gopls.enable = true;     # Go
           
-          # Nix
-          nil_ls.enable = true; 
-
-          # C/C++
+          # -- 2. Web Development --
+          ts_ls.enable = true;        # TypeScript / JS
+          html.enable = true;
+          cssls.enable = true;
+          tailwindcss.enable = true;
+          jsonls.enable = true;
+          
+          # -- 3. Systems --
+          rust_analyzer = {
+            enable = true;
+            installCargo = true;
+            installRustc = true;
+          };
+          zls.enable = true;       # Zig
+          
+          # C/C++ Setup
           clangd = {
             enable = true;
             cmd = [
@@ -142,28 +163,23 @@
             ];
           };
 
-          # Rust
-          rust_analyzer = {
+          # -- 4. Tools & Data --
+          cmake.enable = true;
+          dockerls.enable = true;
+          marksman.enable = true;  # Markdown
+          sqls.enable = true;      # SQL
+          taplo.enable = true;     # TOML
+          yamlls.enable = true;    # YAML
+          texlab.enable = true;    # LaTeX
+          jdtls.enable = true;     # Java
+          
+          # -- 5. Prisma Fix --
+          # We use the nodePackages version. 
+          # If this errors, change it to `package = null;` and use `npm i -g @prisma/language-server`
+          prismals = {
             enable = true;
-            installCargo = true;
-            installRustc = true;
+            package = pkgs.nodePackages."@prisma/language-server";
           };
-
-          # NEW ADDITIONS
-          zls.enable = true;          # Zig
-          jsonls.enable = true;       # JSON
-          cmake.enable = true;        # CMake
-          dockerls.enable = true;     # Docker
-          jdtls.enable = true;        # Java
-          marksman.enable = true;     # Markdown
-          prismals.enable = true;     # Prisma
-          sqls.enable = true;         # SQL
-          tailwindcss.enable = true;  # Tailwind
-          texlab.enable = true;       # LaTeX
-          taplo.enable = true;        # TOML
-          yamlls.enable = true;       # YAML
-          html.enable = true;         # HTML
-          cssls.enable = true;        # CSS
         };
       };
 
@@ -173,46 +189,51 @@
         settings = {
             log_level = "warn";
             
-            # This map tells conform which external tool to use.
-            # IMPORTANT: We removed the "*" wildcard to prevent it from blocking LSP fallbacks.
             formatters_by_ft = {
-                # Scripting / Config
+                # Scripting
                 lua = [ "stylua" ];
-                nix = [ "nixfmt" ]; # switched to nixfmt-rfc-style
-                json = [ "prettier" ];
-                yaml = [ "prettier" ];
-                toml = [ "taplo" ];
-                cmake = [ "cmake_format" ];
+                nix = [ "nixfmt" ]; # nixfmt-rfc-style
                 
                 # Web / JS
                 javascript = [ "prettier" ];
                 typescript = [ "prettier" ];
-                typescriptreact = [ "prettier" ]; # FIX for .tsx files
+                typescriptreact = [ "prettier" ];
                 javascriptreact = [ "prettier" ];
                 html = [ "prettier" ];
                 css = [ "prettier" ];
                 markdown = [ "prettier" ];
                 graphql = [ "prettier" ];
+                json = [ "prettier" ];
+                yaml = [ "prettier" ];
                 
-                # Backend / Systems
+                # Backend
                 python = [ "isort" "black" ];
                 go = [ "gofmt" ];
                 rust = [ "rustfmt" ];
                 zig = [ "zigfmt" ];
+                prisma = [ "prettier" ]; # Prettier handles prisma files standardly
                 
-                # C++
-                # Explicitly use clang-format. This is more reliable than LSP fallback.
+                # C/C++ (Explicitly use clang-format)
                 c = [ "clang-format" ];
                 cpp = [ "clang-format" ];
                 
-                # Data / Other
+                # Data / Config
+                toml = [ "taplo" ];
+                cmake = [ "cmake_format" ];
                 sql = [ "sql_formatter" ];
                 java = [ "google-java-format" ];
                 tex = [ "latexindent" ];
                 
-                # Fallback for shell scripts
+                # Shell
                 sh = [ "shfmt" ];
                 bash = [ "shfmt" ];
+            };
+            
+            # Formatter configurations
+            formatters = {
+              nixfmt = {
+                command = "nixfmt";
+              };
             };
         };
       };
@@ -267,7 +288,7 @@
       sql-formatter
       google-java-format
       
-      # Language Servers / Compilers (if not auto-installed by nixvim modules)
+      # Language Servers (installed manually if not by lsp module)
       zig zls
       jdt-language-server
       gopls gotools
@@ -275,19 +296,21 @@
       vscode-langservers-extracted # html, css, json, eslint
       yaml-language-server
       texliveSmall
+      
+      # Prisma (Manual Addition for fallback)
+      nodePackages."@prisma/language-server"
     ];
 
-    # --- 6. CONFIG LUA (The Ctrl+S Fix) ---
-    # We load this last to ensure the Keymap takes precedence and formats correctly.
+    # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
-      -- C++ Include Path setup
+      -- C++ Include Path
       vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
       
       -- Manual Format & Save Keymap
       vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
         require("conform").format({
           lsp_fallback = true,
-          timeout_ms = 3000, -- 3 seconds should be plenty
+          timeout_ms = 3000,
           async = false,
         }, function()
           vim.cmd("write")
