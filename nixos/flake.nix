@@ -19,9 +19,10 @@
     
     # SYSTEM 1: Your Desktop
     desktop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.hostPlatform = "x86_64-linux"; } 
+
         # 1. Machine Specifics
         ./hosts/desktop/default.nix
         # 2. Common Config
@@ -39,9 +40,9 @@
 
     # SYSTEM 2: Your Laptop (The new machine)
     laptop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.hostPlatform = "x86_64-linux"; } 
         # 1. Machine Specifics (Different hardware config!)
         ./hosts/laptop/default.nix
         # 2. Common Config (Reused!)

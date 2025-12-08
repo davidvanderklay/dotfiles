@@ -44,11 +44,19 @@
 
 	xdg.configFile."nvim".source = ./nvim;
 
-	programs.git = {
-		enable = true;
-		userName = "davidvanderklay";
-		userEmail = "davidvanderklay@gmail.com"	;
-	};
+  programs.git = {
+    enable = true;
+    # "settings" replaces userName, userEmail, and extraConfig
+    settings = {
+      user = {
+        name = "davidvanderklay";
+        email = "davidvanderklay@gmail.com";
+      };
+      # Any other config goes here, e.g.:
+      # init.defaultBranch = "main";
+      # core.editor = "nvim";
+    };
+  };
 
  # 1. GHOSTTY CONFIGURATION
   programs.ghostty = {
@@ -91,7 +99,7 @@
 
 
     # InitExtra: This is where we put your custom functions and raw shell code
-    initExtra = ''
+    initContent = ''
       # --- Keybindings (History Search) ---
       bindkey "^[[A" history-search-backward
       bindkey "^[[B" history-search-forward

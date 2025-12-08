@@ -9,7 +9,7 @@
     
     # Ensure standard apps are here
     nautilus # File Manager
-    inputs.zen-browser.packages."${pkgs.system}".default
+    inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
   ];
 
   xdg.mimeApps = {
