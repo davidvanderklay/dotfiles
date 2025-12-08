@@ -6,80 +6,75 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-    
-    # --- 1. EXTERNAL TOOLS (LSPs, Formatters, etc) ---
-    extraPackages = with pkgs; [
-      # Base Build Tools
-      gcc gnumake unzip
-      
-      # Search
-      ripgrep fd
 
-      # LSPs (Must match what you configure in Lua below)
+    # --- 1. EXTERNAL TOOLS ---
+    # These are available in the system PATH for Neovim to use.
+    extraPackages = with pkgs; [
+      # Build
+      gcc gnumake unzip
+
+      # Search & Utils (Required for Snacks/Telescope/LSP)
+      ripgrep fd curl git
+
+      # LSPs
       lua-language-server
-      nil                     # Nix LSP
-      pyright
-      gopls
-      rust-analyzer
-      clang-tools             # clangd
-      nodePackages.typescript-language-server
-      
+      nil                     # Nix
+      pyright                 # Python
+      gopls                   # Go
+      rust-analyzer           # Rust
+      clang-tools             # C/C++
+      nodePackages.typescript-language-server # TS
+
       # Formatters
       nixpkgs-fmt
       nodePackages.prettier
+      shfmt
     ];
 
-    # --- 2. PLUGINS (Installed via Nix) ---
+    # --- 2. PLUGINS ---
     plugins = with pkgs.vimPlugins; [
-      # -- UI & THEMES --
-      kanagawa-nvim
-      lualine-nvim
-      noice-nvim
-      nui-nvim
-      which-key-nvim
-      nvim-web-devicons
-      
+      # -- CORE & UI --
+      lazydev-nvim        # Fixes Lua LS for Neovim config
+      snacks-nvim         # The new LazyVim standard (Picker, Dashboard, Utils)
+      noice-nvim          # Cmdline/Notification UI
+      nui-nvim            # Dependency
+      lualine-nvim        # Status line
+      kanagawa-nvim       # Theme
+      which-key-nvim      # Keybind helper
+      nvim-web-devicons   # Icons
+      todo-comments-nvim  # Highlight TODOs
+
       # -- NAVIGATION --
-      oil-nvim
-      flash-nvim
-      harpoon
-      plenary-nvim
-      
+      oil-nvim            # File explorer (Buffer based)
+      flash-nvim          # Fast navigation
+      harpoon             # File marking
+      plenary-nvim        # Lua Utility lib
+
       # -- EDITING --
-      mini-ai
-      mini-pairs
-      yanky-nvim
-      todo-comments-nvim
-      # ts-comments.nvim # (Note: Might need to fetch from GitHub if not in your channel, skipping for stability)
-      
+      mini-ai             # Better text objects
+      mini-pairs          # Auto pairs
+      yanky-nvim          # Clipboard history
+
       # -- TREESITTER --
-      # Nix compiles these for us. No 'TSInstall' needed.
       nvim-treesitter.withAllGrammars
       nvim-treesitter-textobjects
       nvim-ts-autotag
-      
-      # -- LSP & CODING --
-      nvim-lspconfig
-      nvim-lint
-      conform-nvim       # Replacement for null-ls/mason-null-ls
-      lazydev-nvim       # For editing Neovim Lua config
-      trouble-nvim
-      
+
+      # -- LSP & LINTING --
+      nvim-lspconfig      # Native LSP Config
+      nvim-lint           # Linters
+      conform-nvim        # Formatters
+      trouble-nvim        # Diagnostics list
+
       # -- DEBUGGING --
       nvim-dap
       nvim-dap-go
       nvim-dap-python
 
-      # -- COMPLETION --
-      # We use nvim-cmp for stability on Nix. 
-      # (Blink is harder to get working on stable channels right now)
-      nvim-cmp
-      cmp-nvim-lsp
-      cmp-path
-      cmp-buffer
-      luasnip
-      cmp_luasnip
-      friendly-snippets
+      # -- COMPLETION (Blink) --
+      # Replaces nvim-cmp, cmp-*, and luasnip
+      blink-cmp
+      friendly-snippets   # Snippets collection (Blink uses this)
 
       # -- SPECIFIC TOOLS --
       vimtex
@@ -87,17 +82,17 @@
       obsidian-nvim
     ];
 
-    # --- 3. LUA CONFIGURATION (The "Kickstart" Glue) ---
+    # --- 3. LUA CONFIGURATION ---
     extraLuaConfig = ''
       -- ==========================================
-      -- 1. OPTIONS & GLOBALS
+      -- 1. GLOBALS & OPTIONS
       -- ==========================================
       vim.g.mapleader = " "
-      vim.g.maplocalleader = " "
-      
+      vim.g.maplocalleader = "\\"
+
+      -- UI Options
       vim.opt.number = true
       vim.opt.relativenumber = true
-      vim.opt.mouse = "a"
       vim.opt.clipboard = "unnamedplus"
       vim.opt.breakindent = true
       vim.opt.undofile = true
@@ -106,107 +101,186 @@
       vim.opt.signcolumn = "yes"
       vim.opt.updatetime = 250
       vim.opt.timeoutlen = 300
-      
-      -- ==========================================
-      -- 2. KEYMAPS (General)
-      -- ==========================================
-      -- Clear highlights on search when pressing <Esc> in normal mode
-      vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+      vim.opt.splitright = true
+      vim.opt.splitbelow = true
+      vim.opt.inccommand = "split"
+      vim.opt.cursorline = true
+      vim.opt.scrolloff = 10
 
-      -- Oil.nvim Keymap (As requested)
-      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Opens parent directory" })
+      -- Neovim 0.11+ / Native features
+      if vim.fn.has("nvim-0.10") == 1 then
+        vim.opt.smoothscroll = true
+      end
 
       -- ==========================================
-      -- 3. PLUGIN SETUP
+      -- 2. BLINK CMP SETUP (Replaces nvim-cmp)
+      -- ==========================================
+      -- See: https://cmp.saghen.dev/configuration/
+      require('blink.cmp').setup({
+        -- Keymap preset 'default' uses:
+        -- <C-space> to open menu
+        -- <CR> to accept
+        -- <Tab> / <S-Tab> to select next/prev
+        keymap = { preset = 'default' },
+
+        appearance = {
+          use_nvim_cmp_as_default = true,
+          nerd_font_variant = 'mono',
+        },
+
+        -- Sources configuration
+        sources = {
+          default = { 'lsp', 'path', 'snippets', 'buffer' },
+        },
+        
+        -- Signature help (built-in to blink)
+        signature = { enabled = true },
+      })
+
+      -- ==========================================
+      -- 3. SNACKS.NVIM (LazyVim Core)
+      -- ==========================================
+      -- Provides: Dashboard, Picker (Telescope replacer), Notifications, etc.
+      local snacks = require("snacks")
+      snacks.setup({
+        bigfile = { enabled = true },
+        dashboard = { enabled = true },
+        indent = { enabled = true },
+        input = { enabled = true },
+        notifier = { enabled = true },
+        quickfile = { enabled = true },
+        scroll = { enabled = true },
+        statuscolumn = { enabled = true },
+        words = { enabled = true },
+        picker = { enabled = true }, -- The Telescope alternative
+      })
+
+      -- ==========================================
+      -- 4. KEYMAPS (LazyVim Style)
+      -- ==========================================
+      local map = vim.keymap.set
+
+      -- General
+      map("n", "<Esc>", "<cmd>nohlsearch<CR>")
+      map("n", "<C-s>", "<cmd>w<CR>", { desc = "Save File" })
+      map("n", "<leader>bd", function() snacks.bufdelete() end, { desc = "Delete Buffer" })
+      map("n", "<leader>bo", function() snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
+      map("n", "<leader>gg", function() snacks.lazygit() end, { desc = "Lazygit" })
+
+      -- Window Movement
+      map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window" })
+      map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window" })
+      map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window" })
+      map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window" })
+
+      -- File Navigation (Using Snacks Picker instead of Telescope)
+      map("n", "<leader><space>", function() snacks.picker.smart() end, { desc = "Find Files (Root Dir)" })
+      map("n", "<leader>ff", function() snacks.picker.files() end, { desc = "Find Files (Root Dir)" })
+      map("n", "<leader>fg", function() snacks.picker.git_files() end, { desc = "Find Files (git-files)" })
+      map("n", "<leader>fr", function() snacks.picker.recent() end, { desc = "Recent" })
+      map("n", "<leader>/", function() snacks.picker.grep() end, { desc = "Grep (Root Dir)" })
+      map("n", "<leader>:", function() snacks.picker.command_history() end, { desc = "Command History" })
+      map("n", "<leader>,", function() snacks.picker.buffers() end, { desc = "Buffers" })
+
+      -- Oil (File Explorer)
+      map("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" })
+
+      -- Diagnostics / Trouble
+      map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+
+      -- ==========================================
+      -- 5. PLUGIN CONFIGS
       -- ==========================================
 
-      -- Treesitter (Config only, parsers are installed by Nix)
+      -- Theme
+      require('kanagawa').setup()
+      vim.cmd("colorscheme kanagawa")
+
+      -- Treesitter
       require('nvim-treesitter.configs').setup({
         highlight = { enable = true },
         indent = { enable = true },
-        auto_install = false, -- IMPORANT: Nix handles this
-        ensure_installed = {},
+        autotag = { enable = true },
       })
 
-      -- WhichKey
-      require("which-key").setup()
-
-      -- Mini Plugins
+      -- Mini
       require('mini.ai').setup()
       require('mini.pairs').setup()
 
-      -- Oil
-      require("oil").setup()
-
       -- Yanky
       require("yanky").setup()
+      map({"n","x"}, "p", "<Plug>(YankyPutAfter)")
+      map({"n","x"}, "P", "<Plug>(YankyPutBefore)")
+      map({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
+      map({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
+
+      -- WhichKey
+      require("which-key").setup({
+        preset = "helix",
+      })
+
+      -- Lualine
+      require('lualine').setup({
+        options = { theme = 'kanagawa' }
+      })
+
+      -- Conform (Formatting)
+      require("conform").setup({
+        notify_on_error = false,
+        format_on_save = { timeout_ms = 500, lsp_fallback = true },
+        formatters_by_ft = {
+          lua = { "nixpkgs_fmt" },
+          nix = { "nixpkgs_fmt" },
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          sh = { "shfmt" },
+        },
+      })
 
       -- ==========================================
-      -- 4. LSP SETUP (Connects to extraPackages)
+      -- 6. LSP SETUP (Native + Blink)
       -- ==========================================
       local lspconfig = require('lspconfig')
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      
+      -- Get capabilities from Blink
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Helper to setup servers
-      local function setup_server(server, config)
-        config = config or {}
+      local servers = {
+        lua_ls = { settings = { Lua = { diagnostics = { globals = {'vim'} } } } },
+        nil_ls = {},     -- Nix
+        pyright = {},    -- Python
+        gopls = {},      -- Go
+        clangd = {},     -- C/C++
+        rust_analyzer = {}, -- Rust
+        ts_ls = {},      -- TypeScript
+      }
+
+      for server, config in pairs(servers) do
         config.capabilities = capabilities
         lspconfig[server].setup(config)
       end
 
-      -- Lua
-      setup_server('lua_ls', {
-        settings = { Lua = { diagnostics = { globals = {'vim'} } } }
+      -- LSP Keymaps (Native 0.11 style + standard)
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        callback = function(event)
+          local function map_lsp(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
+
+          map_lsp('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition') -- Fallback to telescope/snacks picker if desired, or use vim.lsp.buf.definition
+          map_lsp('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+          map_lsp('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+          map_lsp('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+          map_lsp('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+          map_lsp('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map_lsp('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+          map_lsp('K', vim.lsp.buf.hover, 'Hover Documentation')
+        end,
       })
-      
-      -- Nix
-      setup_server('nil_ls')
-      
-      -- Python
-      setup_server('pyright')
-      
-      -- Go
-      setup_server('gopls')
-      
-      -- C/C++
-      setup_server('clangd')
-      
-      -- Rust
-      setup_server('rust_analyzer')
-      
-      -- TypeScript
-      -- (Note: 'ts_ls' is new name for 'tsserver')
-      setup_server('ts_ls')
 
       -- ==========================================
-      -- 5. COMPLETION (nvim-cmp)
-      -- ==========================================
-      local cmp = require 'cmp'
-      local luasnip = require 'luasnip'
-      require('luasnip.loaders.from_vscode').lazy_load()
-
-      cmp.setup {
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-          ['<C-Space>'] = cmp.mapping.complete {},
-        },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
-        },
-      }
-
-      -- ==========================================
-      -- 6. OBSIDIAN CONFIG (Ported from your request)
+      -- 7. OBSIDIAN (Your Provided Config)
       -- ==========================================
       require("obsidian").setup({
         workspaces = {
@@ -220,6 +294,8 @@
           folder = "dailies",
           date_format = "%Y-%m-%d",
         },
+        -- Blink/CMP integration handled automatically by blink source 'buffer'/'path' usually,
+        -- but we leave this true as requested.
         completion = {
           nvim_cmp = true, 
           min_chars = 2,
@@ -249,17 +325,15 @@
       })
 
       -- Obsidian Global Keymaps
-      local map = function(mode, lhs, rhs, desc)
+      local omap = function(mode, lhs, rhs, desc)
          vim.keymap.set(mode, lhs, rhs, { desc = desc })
       end
-      
-      map("n", "<leader>on", "<cmd>Obsidian new<cr>", "[O]bsidian [N]ew note")
-      map("n", "<leader>os", "<cmd>Obsidian search<cr>", "[O]bsidian [S]earch")
-      map("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", "[O]bsidian [F]ind file")
-      map("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", "[O]bsidian [B]acklinks")
-      map("n", "<leader>ot", "<cmd>Obsidian tags<cr>", "[O]bsidian [T]ags")
-      map("n", "<leader>oy", "<cmd>Obsidian today<cr>", "[O]bsidian toda[y]")
-      
+      omap("n", "<leader>on", "<cmd>Obsidian new<cr>", "[O]bsidian [N]ew note")
+      omap("n", "<leader>os", "<cmd>Obsidian search<cr>", "[O]bsidian [S]earch")
+      omap("n", "<leader>of", "<cmd>Obsidian quick_switch<cr>", "[O]bsidian [F]ind file")
+      omap("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", "[O]bsidian [B]acklinks")
+      omap("n", "<leader>ot", "<cmd>Obsidian tags<cr>", "[O]bsidian [T]ags")
+      omap("n", "<leader>oy", "<cmd>Obsidian today<cr>", "[O]bsidian toda[y]")
     '';
   };
 }
