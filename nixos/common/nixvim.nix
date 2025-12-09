@@ -400,7 +400,8 @@
       {
         mode = "n";
         key = "<leader><space>";
-        action.__raw = "function() require('snacks').picker.smart({ filter = { cwd = true } }) end";
+        # We explicitly configure the 'multi' sources to restrict 'recent' to the current directory
+        action.__raw = "function() require('snacks').picker.smart({ multi = { 'buffers', { source = 'recent', filter = { cwd = true } }, 'files' } }) end";
         options.desc = "Find Files (Smart)";
       }
       {
