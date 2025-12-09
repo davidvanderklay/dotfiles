@@ -1,9 +1,13 @@
 { inputs, pkgs, ... }:
 let
-    # Define the C++ path safely (Linux only)
-    cplusInclude = if pkgs.stdenv.isLinux 
-                   then "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
-                   else ""; 
+  # 1. ROBUST HEADER PATH CALCULATION
+  # We prefer 'gcc-unwrapped' or 'stdenv.cc.cc' to get the raw headers.
+  # We also grab glibc headers just in case.
+  cplusPath = if pkgs.stdenv.isLinux then 
+    pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ 
+      pkgs.gcc-unwrapped 
+    ]
+  else "";
 in
 {
 
@@ -532,7 +536,9 @@ in
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
       -- C++ Include Path
-      vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
+      ${if pkgs.stdenv.isLinux then ''
+        vim.env.CPLUS_INCLUDE_PATH = "${cplusPath}/" .. vim.fn.glob("${pkgs.gcc-unwrapped}/include/c++/*")
+      '' else ""}
 
       -- Manual Format & Save Keymap
       vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
