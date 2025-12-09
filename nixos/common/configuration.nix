@@ -2,13 +2,18 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      # ./gnome.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    # ./gnome.nix
+  ];
 
   # --- ADD THIS HERE ---
   # Applies to all hosts importing this file
@@ -26,7 +31,10 @@
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -75,7 +83,7 @@
     #media-session.enable = true;
   };
 
- # --- NIM OPTIMIZATION & GARBAGE COLLECTION ---
+  # --- NIM OPTIMIZATION & GARBAGE COLLECTION ---
   nix = {
     settings = {
       # 1. Deduplicate the Nix Store
@@ -116,10 +124,14 @@
   users.users.geolan = {
     isNormalUser = true;
     description = "geolan";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+    ];
     shell = pkgs.zsh;
     packages = with pkgs; [
-    #  thunderbird
+      #  thunderbird
     ];
   };
 
@@ -130,11 +142,10 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-
   # 3. STEAM & GAMEMODE
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; 
+    remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
   programs.gamemode.enable = true; # Feral Gamemode
@@ -150,11 +161,10 @@
   # 5. TAILSCALE
   services.tailscale.enable = true;
 
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim 
+    vim
     gnumake
     gcc
     wget

@@ -1,12 +1,18 @@
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   # 1. PACKAGES & EXTENSIONS
   home.packages = with pkgs; [
     # Tools to manage GNOME locally if needed
     gnome-tweaks
-    gnome-extension-manager 
-    
+    gnome-extension-manager
+
     # Ensure standard apps are here
     nautilus # File Manager
     inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
@@ -17,16 +23,15 @@
   ];
 
   xdg.mimeApps = {
-      enable = true;
-      defaultApplications = {
-          "text/html" = "zen-beta.desktop";
-          "x-scheme-handler/http" = "zen-beta.desktop";
-          "x-scheme-handler/https" = "zen-beta.desktop";
-          "x-scheme-handler/about" = "zen-beta.desktop";
-          "x-scheme-handler/unknown" = "zen-beta.desktop";
-        };
+    enable = true;
+    defaultApplications = {
+      "text/html" = "zen-beta.desktop";
+      "x-scheme-handler/http" = "zen-beta.desktop";
+      "x-scheme-handler/https" = "zen-beta.desktop";
+      "x-scheme-handler/about" = "zen-beta.desktop";
+      "x-scheme-handler/unknown" = "zen-beta.desktop";
     };
-
+  };
 
   # 4. DCONF SETTINGS (The Heavy Lifting)
   dconf.settings = {
@@ -38,7 +43,7 @@
         "hotedge@jonathan.jdoda.ca"
       ];
     };
-    
+
     # --- MOUSE SETTINGS ---
     "org/gnome/desktop/peripherals/mouse" = {
       accel-profile = "flat";
@@ -52,8 +57,6 @@
       experimental-features = [ "scale-monitor-framebuffer" ];
     };
 
-
-
     "org/gnome/desktop/wm/preferences" = {
       num-workspaces = 6;
     };
@@ -61,39 +64,38 @@
     # --- KEYBINDINGS: WORKSPACE SWITCHING (WM Style) ---
     # Unbind default shell shortcuts that conflict (like App switching)
     "org/gnome/shell/keybindings" = {
-      switch-to-application-1 = [];
-      switch-to-application-2 = [];
-      switch-to-application-3 = [];
-      switch-to-application-4 = [];
-      switch-to-application-5 = [];
-      switch-to-application-6 = [];
+      switch-to-application-1 = [ ];
+      switch-to-application-2 = [ ];
+      switch-to-application-3 = [ ];
+      switch-to-application-4 = [ ];
+      switch-to-application-5 = [ ];
+      switch-to-application-6 = [ ];
 
-      show-screenshot-ui = ["<Super><Shift>s"];
+      show-screenshot-ui = [ "<Super><Shift>s" ];
     };
 
     "org/gnome/desktop/wm/keybindings" = {
       # Switch to workspace
-      switch-to-workspace-1 = ["<Super>1"];
-      switch-to-workspace-2 = ["<Super>2"];
-      switch-to-workspace-3 = ["<Super>3"];
-      switch-to-workspace-4 = ["<Super>4"];
-      switch-to-workspace-5 = ["<Super>5"];
-      switch-to-workspace-6 = ["<Super>6"];
-      
-      # Move window to workspace
-      move-to-workspace-1 = ["<Super><Shift>1"];
-      move-to-workspace-2 = ["<Super><Shift>2"];
-      move-to-workspace-3 = ["<Super><Shift>3"];
-      move-to-workspace-4 = ["<Super><Shift>4"];
-      move-to-workspace-5 = ["<Super><Shift>5"];
-      move-to-workspace-6 = ["<Super><Shift>6"];
-      
-      # Close Window (Like a WM)
-      close = ["<Super>q"];
-      # --- ADD THIS LINE ---
-      toggle-maximized = ["<Super>f"];
-    };
+      switch-to-workspace-1 = [ "<Super>1" ];
+      switch-to-workspace-2 = [ "<Super>2" ];
+      switch-to-workspace-3 = [ "<Super>3" ];
+      switch-to-workspace-4 = [ "<Super>4" ];
+      switch-to-workspace-5 = [ "<Super>5" ];
+      switch-to-workspace-6 = [ "<Super>6" ];
 
+      # Move window to workspace
+      move-to-workspace-1 = [ "<Super><Shift>1" ];
+      move-to-workspace-2 = [ "<Super><Shift>2" ];
+      move-to-workspace-3 = [ "<Super><Shift>3" ];
+      move-to-workspace-4 = [ "<Super><Shift>4" ];
+      move-to-workspace-5 = [ "<Super><Shift>5" ];
+      move-to-workspace-6 = [ "<Super><Shift>6" ];
+
+      # Close Window (Like a WM)
+      close = [ "<Super>q" ];
+      # --- ADD THIS LINE ---
+      toggle-maximized = [ "<Super>f" ];
+    };
 
     # --- CUSTOM KEYBINDINGS (Terminal, Browser, Files) ---
     "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -101,7 +103,7 @@
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/" 
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
       ];
     };
 
@@ -122,7 +124,7 @@
     # Meta + r -> Files (Nautilus/Home)
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
       binding = "<Super>r";
-      command = "nautilus"; 
+      command = "nautilus";
       name = "File Manager";
     };
 
