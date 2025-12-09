@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+
 let
     # Define the C++ path safely
     cplusInclude = if pkgs.stdenv.isLinux 
@@ -13,12 +14,7 @@ in
       vim = {
         viAlias = true;
         vimAlias = true;
-        debugMode = {
-            enable = false;
-            level = 16;
-            logFile = "/tmp/nvim.log";
-        };
-
+        
         # 1. CORE SETTINGS
         options = {
           number = true;
@@ -34,22 +30,35 @@ in
           smoothscroll = true;
         };
 
-        # 2. LSP & FORMATTING
-        lsp = {
-            enable = true;
-            # --- FIX 2: Enable Format on Save ---
-            formatOnSave = true; 
-            lightbulb.enable = true; 
+        # 2. UI & INTERFACE (The "Cool Stuff")
+        ui = {
+            # "noice" is the plugin that makes the command line fancy and centered
+            noice.enable = true; 
+            
+            # Add borders to various windows
+            borders.enable = true; 
         };
 
-        # 3. LANGUAGES
+        # "which-key" is the popup that shows keybindings when you press space
+        binds.whichKey.enable = true; 
+
+        # 3. LSP & FORMATTING
+        lsp = {
+            enable = true;
+            formatOnSave = true; 
+            lightbulb.enable = true; 
+            
+            # FIX: This restores the standard LSP keybinds (gd, gr, K, etc.)
+            lspKeymaps = true; 
+        };
+
+        # 4. LANGUAGES
         languages = {
-          # enableLSP = true;
           enableFormat = true;
           enableTreesitter = true;
           enableExtraDiagnostics = true;
-
-          # Scripting / Config
+          
+          # Scripting
           nix.enable = true;
           lua.enable = true;
           python.enable = true;
@@ -74,7 +83,7 @@ in
           java.enable = true;
         };
 
-        # 4. AUTOCOMPLETE
+        # 5. AUTOCOMPLETE
         autocomplete = {
           blink-cmp = {
             enable = true;
@@ -93,7 +102,7 @@ in
           };
         };
         
-        # 5. UTILITY PLUGINS
+        # 6. UTILITY PLUGINS
         statusline.lualine.enable = true;
         telescope.enable = false;
         filetree.neo-tree.enable = false;
@@ -102,7 +111,7 @@ in
             gitsigns.enable = true;
         };
 
-        # 6. CUSTOM PLUGINS
+        # 7. CUSTOM PLUGINS
         extraPlugins = with pkgs.vimPlugins; {
 
           # Kanagawa Theme
@@ -130,7 +139,6 @@ in
             setup = "require('harpoon').setup {}";
           };
 
-          # --- FIX 1: Snacks Configuration ---
           snacks-nvim = {
             package = snacks-nvim;
             setup = ''
@@ -140,10 +148,20 @@ in
                 quickfile = { enabled = true },
                 statuscolumn = { enabled = true },
                 
-                -- LAZYGIT FIX: Disable automatic theme configuration
+                -- LAZYGIT INTEGRATION
+                -- configure = true usually fixes the theme, but can cause crashes if it can't write config.
+                -- We enable it here. If it crashes, set to false and configure theme in home-manager.
                 lazygit = { 
                     enabled = true,
-                    configure = false 
+                    configure = true, 
+                    config = {
+                        gui = {
+                            theme = {
+                                activeBorderColor = { fg = "Label", bold = true },
+                                selectedLineBgColor = { bg = "CursorLine" },
+                            }
+                        }
+                    }
                 },
                 
                 dashboard = { enabled = false }
@@ -157,23 +175,31 @@ in
           };
         };
 
-        # 7. KEYMAPS
+        # 8. KEYMAPS
         keymaps = [
-          # General
+          # --- General ---
           { key = "<Esc>"; mode = ["n"]; action = ":nohlsearch<CR>"; silent = true; }
           { key = "<leader>qq"; mode = ["n"]; action = ":wqa<CR>"; desc = "Save & Quit"; }
           { key = "<leader>bd"; mode = ["n"]; action = ":lua require('snacks').bufdelete()<CR>"; desc = "Delete Buffer"; }
           { key = "<leader>gg"; mode = ["n"]; action = ":lua require('snacks').lazygit()<CR>"; desc = "Lazygit"; }
 
-          # Snacks Picker
+          # --- LazyVim Move Lines (Alt-j / Alt-k) ---
+          { key = "<A-j>"; mode = ["n"]; action = ":m .+1<CR>=="; desc = "Move Down"; }
+          { key = "<A-k>"; mode = ["n"]; action = ":m .-2<CR>=="; desc = "Move Up"; }
+          { key = "<A-j>"; mode = ["i"]; action = "<Esc>:m .+1<CR>==gi"; desc = "Move Down"; }
+          { key = "<A-k>"; mode = ["i"]; action = "<Esc>:m .-2<CR>==gi"; desc = "Move Up"; }
+          { key = "<A-j>"; mode = ["v"]; action = ":m '>+1<CR>gv=gv"; desc = "Move Down"; }
+          { key = "<A-k>"; mode = ["v"]; action = ":m '<-2<CR>gv=gv"; desc = "Move Up"; }
+
+          # --- Snacks Picker ---
           { key = "<leader><space>"; mode = ["n"]; action = ":lua require('snacks').picker.smart({ multi = { 'buffers', { source = 'recent', filter = { cwd = true } }, 'files' } })<CR>"; desc = "Find Files (Smart)"; }
           { key = "<leader>ff"; mode = ["n"]; action = ":lua require('snacks').picker.files()<CR>"; desc = "Find Files"; }
           { key = "<leader>/"; mode = ["n"]; action = ":lua require('snacks').picker.grep()<CR>"; desc = "Grep"; }
 
-          # Oil
+          # --- Oil ---
           { key = "-"; mode = ["n"]; action = ":Oil<CR>"; desc = "Open Parent Directory"; }
 
-          # Harpoon
+          # --- Harpoon ---
           { key = "<leader>h"; mode = ["n"]; action = ":lua local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list())<CR>"; desc = "Harpoon Menu"; }
           { key = "<leader>H"; mode = ["n"]; action = ":lua require('harpoon'):list():add()<CR>"; desc = "Harpoon Add"; }
           { key = "<leader>1"; mode = ["n"]; action = ":lua require('harpoon'):list():select(1)<CR>"; }
@@ -181,17 +207,29 @@ in
           { key = "<leader>3"; mode = ["n"]; action = ":lua require('harpoon'):list():select(3)<CR>"; }
           { key = "<leader>4"; mode = ["n"]; action = ":lua require('harpoon'):list():select(4)<CR>"; }
 
-          # Manual Save (Format on Save will trigger automatically now)
+          # --- Manual Save ---
           { key = "<C-s>"; mode = ["n" "i" "x"]; action = ":w<CR>"; desc = "Save"; }
         ];
         
-        # 8. EXTRA LUA
+        # 9. EXTRA LUA (Fixes & Hacks)
         luaConfigRC.extra = ''
+           -- 1. C++ Include Fix (Linux only)
            if "${cplusInclude}" ~= "" then
              vim.env.CPLUS_INCLUDE_PATH = "${cplusInclude}"
            end
            
+           -- 2. Ctrl+S Save
            vim.keymap.set({ "n", "i", "x" }, "<C-s>", function() vim.cmd("write") end)
+
+           -- 3. SILENCE DEPRECATION WARNINGS
+           -- This filters out the annoying "lspconfig is deprecated" message
+           local notify = vim.notify
+           vim.notify = function(msg, ...)
+               if msg:match("require%('lspconfig'%) framework is deprecated") then
+                   return
+               end
+               notify(msg, ...)
+           end
         '';
       };
     };
