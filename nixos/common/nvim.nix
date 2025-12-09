@@ -48,8 +48,6 @@ in
             formatOnSave = true; 
             lightbulb.enable = true; 
             
-            # FIX: This restores the standard LSP keybinds (gd, gr, K, etc.)
-            lspKeymaps = true; 
         };
 
         # 4. LANGUAGES
@@ -182,6 +180,16 @@ in
           { key = "<leader>qq"; mode = ["n"]; action = ":wqa<CR>"; desc = "Save & Quit"; }
           { key = "<leader>bd"; mode = ["n"]; action = ":lua require('snacks').bufdelete()<CR>"; desc = "Delete Buffer"; }
           { key = "<leader>gg"; mode = ["n"]; action = ":lua require('snacks').lazygit()<CR>"; desc = "Lazygit"; }
+
+          # --- MANUAL LSP BINDINGS (Since the option was missing) ---
+          { key = "gd"; mode = ["n"]; action = ":lua vim.lsp.buf.definition()<CR>"; desc = "Goto Definition"; }
+          { key = "gr"; mode = ["n"]; action = ":lua vim.lsp.buf.references()<CR>"; desc = "Goto References"; }
+          { key = "gD"; mode = ["n"]; action = ":lua vim.lsp.buf.declaration()<CR>"; desc = "Goto Declaration"; }
+          { key = "gi"; mode = ["n"]; action = ":lua vim.lsp.buf.implementation()<CR>"; desc = "Goto Implementation"; }
+          { key = "K"; mode = ["n"]; action = ":lua vim.lsp.buf.hover()<CR>"; desc = "Hover"; }
+          { key = "<leader>cr"; mode = ["n"]; action = ":lua vim.lsp.buf.rename()<CR>"; desc = "Rename"; }
+          { key = "<leader>ca"; mode = ["n"]; action = ":lua vim.lsp.buf.code_action()<CR>"; desc = "Code Action"; }
+          { key = "<leader>cd"; mode = ["n"]; action = ":lua vim.diagnostic.open_float()<CR>"; desc = "Line Diagnostics"; }
 
           # --- LazyVim Move Lines (Alt-j / Alt-k) ---
           { key = "<A-j>"; mode = ["n"]; action = ":m .+1<CR>=="; desc = "Move Down"; }
