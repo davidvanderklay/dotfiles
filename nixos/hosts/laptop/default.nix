@@ -5,11 +5,12 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  networking.hostName = "nixos-laptop"; 
-  
+
+  networking.hostName = "nixos-laptop";
+
   # Specific drivers (like Nvidia) go here
   # services.xserver.videoDrivers = [ "nvidia" ];
-   # --- GRAPHICS & NVIDIA ---
+  # --- GRAPHICS & NVIDIA ---
   hardware.graphics.enable = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -31,9 +32,9 @@
     prime = {
       # 1. RUN: nix shell nixpkgs#pciutils -c lspci | grep VGA
       # 2. Convert output (e.g. 01:00.0) to decimal (PCI:1:0:0)
-      
+
       # Example IDs (YOU MUST CHANGE THESE TO MATCH YOUR LAPTOP):
-      amdgpuBusId = "PCI:7:0:0"; 
+      amdgpuBusId = "PCI:7:0:0";
       nvidiaBusId = "PCI:1:0:0";
 
       offload = {
