@@ -536,8 +536,17 @@ in
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
       -- C++ Include Path
-      ${if pkgs.stdenv.isLinux then ''
-        vim.env.CPLUS_INCLUDE_PATH = "${cplusPath}/" .. vim.fn.glob("${pkgs.gcc-unwrapped}/include/c++/*")
+        ${if pkgs.stdenv.isLinux then ''
+        -- Define C++ Paths explicitly using Nix
+        -- 1. Main headers (iostream, vector, etc.)
+        local cpp_base = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}"
+        
+        -- 2. Arch-specific headers (bits/c++config.h)
+        -- We look for the folder matching your system architecture
+        local cpp_arch = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}/${pkgs.stdenv.hostPlatform.config}"
+
+        -- Set the environment variable for Clangd
+        vim.env.CPLUS_INCLUDE_PATH = cpp_base .. ":" .. cpp_arch
       '' else ""}
 
       -- Manual Format & Save Keymap
