@@ -11,11 +11,12 @@
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
-    # NVF (The new Neovim wrapper)
-    nvf = {
-      url = "github:notashelf/nvf";
+    # SWAP BACK TO NIXVIM
+    nixvim = {
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+  };
   };
 
   outputs = { self, nixpkgs, home-manager, nvf, ... }@inputs: {
@@ -40,9 +41,9 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
-            
-            # Register NVF module so Home Manager can see it
-            home-manager.sharedModules = [ nvf.homeManagerModules.default ];
+
+            # Use NixVim Module
+            home-manager.sharedModules = [ nixvim.homeManagerModules.nixvim ];
             
             # Use the LINUX home config (Gnome + Gaming + Tools)
             home-manager.users.geolan = import ./common/home-linux.nix;
@@ -68,8 +69,8 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
             
-            # Register NVF module
-            home-manager.sharedModules = [ nvf.homeManagerModules.default ];
+            # Use NixVim Module
+            home-manager.sharedModules = [ nixvim.homeManagerModules.nixvim ];
             
             # Use the LINUX home config
             home-manager.users.geolan = import ./common/home-linux.nix;
@@ -87,7 +88,7 @@
         pkgs = nixpkgs.legacyPackages.aarch64-darwin; 
         extraSpecialArgs = { inherit inputs; };
         modules = [
-          nvf.homeManagerModules.default
+          nixvim.homeManagerModules.nixvim
           
           # Use the CORE home config (Safe for Mac)
           ./common/home-core.nix 
