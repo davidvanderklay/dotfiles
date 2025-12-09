@@ -34,12 +34,6 @@ in
           smoothscroll = true;
         };
 
-        # 2. THEME
-        theme = {
-          enable = true;
-          name = "kanagawa";
-          style = "dragon";
-        };
 
         # 3. LANGUAGES (LSP, Treesitter, Formatting handled automatically)
         languages = {
@@ -106,6 +100,21 @@ in
         # 6. CUSTOM PLUGINS (Snacks, Oil, Harpoon)
         # NVF allows raw lua config for plugins it doesn't have modules for yet
         extraPlugins = with pkgs.vimPlugins; {
+
+          # Kanagawa Theme (Manual Setup)
+          kanagawa = {
+            package = kanagawa-nvim;
+            setup = ''
+              require('kanagawa').setup({
+                theme = "dragon",
+                background = {
+                    dark = "dragon",
+                    light = "lotus"
+                }
+              })
+              vim.cmd("colorscheme kanagawa")
+            '';
+          };
           
           oil-nvim = {
             package = oil-nvim;
