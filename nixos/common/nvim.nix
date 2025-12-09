@@ -75,7 +75,23 @@ in
 
         # 4. AUTOCOMPLETE (Using Blink as requested)
         autocomplete = {
+          blink-cmp = {
             enable = true;
+            # We map your original config into 'setupOpts' 
+            # so it behaves exactly like your previous setup
+            setupOpts = {
+              keymap = {
+                preset = "default";
+                "<CR>" = [ "accept" "fallback" ];
+              };
+              appearance = {
+                use_nvim_cmp_as_default = true;
+                nerd_font_variant = "mono";
+              };
+              sources.default = [ "lsp" "path" "snippets" "buffer" ];
+              signature.enabled = true;
+            };
+          };
         };
         
         # 5. UTILITY PLUGINS
