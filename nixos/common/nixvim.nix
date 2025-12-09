@@ -9,7 +9,7 @@
     # --- 1. GENERAL SETTINGS ---
     viAlias = true;
     vimAlias = true;
-    
+
     opts = {
       number = true;
       relativenumber = true;
@@ -56,7 +56,7 @@
       web-devicons.enable = true;
       lualine.enable = true;
       which-key.enable = true;
-      
+
       # Git Integration
       gitsigns = {
         enable = true;
@@ -64,7 +64,7 @@
       };
 
       noice.enable = true;
-      
+
       oil = {
         enable = true;
         settings = {
@@ -74,27 +74,63 @@
       };
 
       flash.enable = true;
-      harpoon = { enable = true; enableTelescope = false; };
-      mini = { enable = true; modules = { ai = {}; pairs = {}; }; };
-      yanky = { enable = true; enableTelescope = false; };
+      harpoon = {
+        enable = true;
+        enableTelescope = false;
+      };
+      mini = {
+        enable = true;
+        modules = {
+          ai = { };
+          pairs = { };
+        };
+      };
+      yanky = {
+        enable = true;
+        enableTelescope = false;
+      };
       todo-comments.enable = true;
 
       # --- TREESITTER (Syntax Highlighting) ---
       treesitter = {
         enable = true;
         settings = {
-            highlight.enable = true;
-            indent.enable = true;
-            ensure_installed = [
-              "c" "cpp" "rust" "zig" "lua" "vim" "nix" "python" "javascript" 
-              "typescript" "tsx" "json" "yaml" "toml" "html" "css" "prisma" 
-              "sql" "dockerfile" "markdown" "java" "go" "cmake" "bash" 
-              "git_config" "gitcommit" "gitignore" "diff"
-            ];
+          highlight.enable = true;
+          indent.enable = true;
+          ensure_installed = [
+            "c"
+            "cpp"
+            "rust"
+            "zig"
+            "lua"
+            "vim"
+            "nix"
+            "python"
+            "javascript"
+            "typescript"
+            "tsx"
+            "json"
+            "yaml"
+            "toml"
+            "html"
+            "css"
+            "prisma"
+            "sql"
+            "dockerfile"
+            "markdown"
+            "java"
+            "go"
+            "cmake"
+            "bash"
+            "git_config"
+            "gitcommit"
+            "gitignore"
+            "diff"
+          ];
         };
         nixvimInjections = true;
       };
-      
+
       ts-autotag.enable = true;
 
       snacks = {
@@ -115,13 +151,21 @@
         settings = {
           keymap = {
             preset = "default";
-            "<CR>" = [ "accept" "fallback" ];
+            "<CR>" = [
+              "accept"
+              "fallback"
+            ];
           };
           appearance = {
             use_nvim_cmp_as_default = true;
             nerd_font_variant = "mono";
           };
-          sources.default = [ "lsp" "path" "snippets" "buffer" ];
+          sources.default = [
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+          ];
           signature.enabled = true;
         };
       };
@@ -129,53 +173,74 @@
       # --- LSP CONFIGURATION (Language Support) ---
       lsp = {
         enable = true;
+
+        # This is the missing part:
+        keymaps = {
+          silent = true;
+          diagnostic = {
+            # Navigate in diagnostics
+            "<leader>k" = "goto_prev";
+            "<leader>j" = "goto_next";
+          };
+
+          lspBuf = {
+            gd = "definition";
+            gD = "declaration";
+            gr = "references";
+            gI = "implementation";
+            gy = "type_definition";
+            K = "hover";
+            "<leader>cr" = "rename";
+            "<leader>ca" = "code_action";
+            "<leader>cf" = "format";
+          };
+        };
+
         servers = {
           # -- 1. Core Languages --
           lua_ls.enable = true;
-          nil_ls.enable = true;    # Nix
-          pyright.enable = true;   # Python
-          gopls.enable = true;     # Go
-          
+          nil_ls.enable = true; # Nix
+          pyright.enable = true; # Python
+          gopls.enable = true; # Go
+
           # -- 2. Web Development --
-          ts_ls.enable = true;        # TypeScript / JS
+          ts_ls.enable = true; # TypeScript / JS
           html.enable = true;
           cssls.enable = true;
           tailwindcss.enable = true;
           jsonls.enable = true;
-          
+
           # -- 3. Systems --
           rust_analyzer = {
             enable = true;
             installCargo = true;
             installRustc = true;
           };
-          zls.enable = true;       # Zig
-          
+          zls.enable = true; # Zig
+
           # C/C++ Setup
           clangd = {
             enable = true;
             cmd = [
-                "clangd"
-                "--background-index"
-                "--clang-tidy"
-                "--header-insertion=iwyu"
-                "--completion-style=detailed"
+              "clangd"
+              "--background-index"
+              "--clang-tidy"
+              "--header-insertion=iwyu"
+              "--completion-style=detailed"
             ];
           };
 
           # -- 4. Tools & Data --
           cmake.enable = true;
           dockerls.enable = true;
-          marksman.enable = true;  # Markdown
-          sqls.enable = true;      # SQL
-          taplo.enable = true;     # TOML
-          yamlls.enable = true;    # YAML
-          texlab.enable = true;    # LaTeX
-          jdtls.enable = true;     # Java
-          
+          marksman.enable = true; # Markdown
+          sqls.enable = true; # SQL
+          taplo.enable = true; # TOML
+          yamlls.enable = true; # YAML
+          texlab.enable = true; # LaTeX
+          jdtls.enable = true; # Java
+
           # -- 5. Prisma Fix --
-          # We use the nodePackages version. 
-          # If this errors, change it to `package = null;` and use `npm i -g @prisma/language-server`
           prismals = {
             enable = true;
             package = null;
@@ -187,123 +252,208 @@
       conform-nvim = {
         enable = true;
         settings = {
-            log_level = "warn";
-            
-            formatters_by_ft = {
-                # Scripting
-                lua = [ "stylua" ];
-                nix = [ "nixfmt" ]; # nixfmt-rfc-style
-                
-                # Web / JS
-                javascript = [ "prettier" ];
-                typescript = [ "prettier" ];
-                typescriptreact = [ "prettier" ];
-                javascriptreact = [ "prettier" ];
-                html = [ "prettier" ];
-                css = [ "prettier" ];
-                markdown = [ "prettier" ];
-                graphql = [ "prettier" ];
-                json = [ "prettier" ];
-                yaml = [ "prettier" ];
-                
-                # Backend
-                python = [ "isort" "black" ];
-                go = [ "gofmt" ];
-                rust = [ "rustfmt" ];
-                zig = [ "zigfmt" ];
-                prisma = [ "prettier" ]; # Prettier handles prisma files standardly
-                
-                # C/C++ (Explicitly use clang-format)
-                c = [ "clang-format" ];
-                cpp = [ "clang-format" ];
-                
-                # Data / Config
-                toml = [ "taplo" ];
-                cmake = [ "cmake_format" ];
-                sql = [ "sql_formatter" ];
-                java = [ "google-java-format" ];
-                tex = [ "latexindent" ];
-                
-                # Shell
-                sh = [ "shfmt" ];
-                bash = [ "shfmt" ];
+          log_level = "warn";
+
+          formatters_by_ft = {
+            # Scripting
+            lua = [ "stylua" ];
+            nix = [ "nixfmt" ]; # nixfmt-rfc-style
+
+            # Web / JS
+            javascript = [ "prettier" ];
+            typescript = [ "prettier" ];
+            typescriptreact = [ "prettier" ];
+            javascriptreact = [ "prettier" ];
+            html = [ "prettier" ];
+            css = [ "prettier" ];
+            markdown = [ "prettier" ];
+            graphql = [ "prettier" ];
+            json = [ "prettier" ];
+            yaml = [ "prettier" ];
+
+            # Backend
+            python = [
+              "isort"
+              "black"
+            ];
+            go = [ "gofmt" ];
+            rust = [ "rustfmt" ];
+            zig = [ "zigfmt" ];
+            prisma = [ "prettier" ]; # Prettier handles prisma files standardly
+
+            # C/C++ (Explicitly use clang-format)
+            c = [ "clang-format" ];
+            cpp = [ "clang-format" ];
+
+            # Data / Config
+            toml = [ "taplo" ];
+            cmake = [ "cmake_format" ];
+            sql = [ "sql_formatter" ];
+            java = [ "google-java-format" ];
+            tex = [ "latexindent" ];
+
+            # Shell
+            sh = [ "shfmt" ];
+            bash = [ "shfmt" ];
+          };
+
+          # Formatter configurations
+          formatters = {
+            nixfmt = {
+              command = "nixfmt";
             };
-            
-            # Formatter configurations
-            formatters = {
-              nixfmt = {
-                command = "nixfmt";
-              };
-            };
+          };
         };
       };
-      
+
       lint.enable = true;
       trouble.enable = true;
     };
 
     # --- 4. KEYMAPS ---
     keymaps = [
-        # General
-        { mode = "n"; key = "<Esc>"; action = "<cmd>nohlsearch<CR>"; }
-        { mode = "n"; key = "<leader>qq"; action = "<cmd>wqa<cr>"; options.desc = "Save All & Quit"; }
-        { mode = "n"; key = "<leader>bd"; action.__raw = "function() require('snacks').bufdelete() end"; options.desc = "Delete Buffer"; }
-        { mode = "n"; key = "<leader>gg"; action.__raw = "function() require('snacks').lazygit() end"; options.desc = "Lazygit"; }
+      # General
+      {
+        mode = "n";
+        key = "<Esc>";
+        action = "<cmd>nohlsearch<CR>";
+      }
+      {
+        mode = "n";
+        key = "<leader>qq";
+        action = "<cmd>wqa<cr>";
+        options.desc = "Save All & Quit";
+      }
+      {
+        mode = "n";
+        key = "<leader>bd";
+        action.__raw = "function() require('snacks').bufdelete() end";
+        options.desc = "Delete Buffer";
+      }
+      {
+        mode = "n";
+        key = "<leader>gg";
+        action.__raw = "function() require('snacks').lazygit() end";
+        options.desc = "Lazygit";
+      }
 
-        # Window Nav
-        { mode = "n"; key = "<C-h>"; action = "<C-w>h"; }
-        { mode = "n"; key = "<C-j>"; action = "<C-w>j"; }
-        { mode = "n"; key = "<C-k>"; action = "<C-w>k"; }
-        { mode = "n"; key = "<C-l>"; action = "<C-w>l"; }
+      # Window Nav
+      {
+        mode = "n";
+        key = "<C-h>";
+        action = "<C-w>h";
+      }
+      {
+        mode = "n";
+        key = "<C-j>";
+        action = "<C-w>j";
+      }
+      {
+        mode = "n";
+        key = "<C-k>";
+        action = "<C-w>k";
+      }
+      {
+        mode = "n";
+        key = "<C-l>";
+        action = "<C-w>l";
+      }
 
-        # Snacks Picker
-        { mode = "n"; key = "<leader><space>"; action.__raw = "function() require('snacks').picker.smart() end"; options.desc = "Find Files (Smart)"; }
-        { mode = "n"; key = "<leader>ff"; action.__raw = "function() require('snacks').picker.files() end"; options.desc = "Find Files"; }
-        { mode = "n"; key = "<leader>fg"; action.__raw = "function() require('snacks').picker.git_files() end"; options.desc = "Git Files"; }
-        { mode = "n"; key = "<leader>/"; action.__raw = "function() require('snacks').picker.grep() end"; options.desc = "Grep"; }
-        
-        # Oil
-        { mode = "n"; key = "-"; action = "<CMD>Oil<CR>"; options.desc = "Open Parent Directory"; }
+      # Snacks Picker
+      {
+        mode = "n";
+        key = "<leader><space>";
+        action.__raw = "function() require('snacks').picker.smart() end";
+        options.desc = "Find Files (Smart)";
+      }
+      {
+        mode = "n";
+        key = "<leader>ff";
+        action.__raw = "function() require('snacks').picker.files() end";
+        options.desc = "Find Files";
+      }
+      {
+        mode = "n";
+        key = "<leader>fg";
+        action.__raw = "function() require('snacks').picker.git_files() end";
+        options.desc = "Git Files";
+      }
+      {
+        mode = "n";
+        key = "<leader>/";
+        action.__raw = "function() require('snacks').picker.grep() end";
+        options.desc = "Grep";
+      }
 
-        # Trouble
-        { mode = "n"; key = "<leader>xx"; action = "<cmd>Trouble diagnostics toggle<cr>"; options.desc = "Diagnostics (Trouble)"; }
-        
-        # Harpoon
-        { mode = "n"; key = "<leader>h"; action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end"; options.desc = "Harpoon Quick Menu"; }
-        { mode = "n"; key = "<leader>H"; action.__raw = "function() require('harpoon'):list():add() end"; options.desc = "Harpoon File (Add)"; }
+      # Oil
+      {
+        mode = "n";
+        key = "-";
+        action = "<CMD>Oil<CR>";
+        options.desc = "Open Parent Directory";
+      }
+
+      # Trouble
+      {
+        mode = "n";
+        key = "<leader>xx";
+        action = "<cmd>Trouble diagnostics toggle<cr>";
+        options.desc = "Diagnostics (Trouble)";
+      }
+
+      # Harpoon
+      {
+        mode = "n";
+        key = "<leader>h";
+        action.__raw = "function() local harpoon = require('harpoon'); harpoon.ui:toggle_quick_menu(harpoon:list()) end";
+        options.desc = "Harpoon Quick Menu";
+      }
+      {
+        mode = "n";
+        key = "<leader>H";
+        action.__raw = "function() require('harpoon'):list():add() end";
+        options.desc = "Harpoon File (Add)";
+      }
     ];
 
     # --- 5. EXTRA PACKAGES (Environment) ---
     extraPackages = with pkgs; [
       # Base Tools
-      ripgrep fd gcc clang clang-tools
-      
+      ripgrep
+      fd
+      gcc
+      clang
+      clang-tools
+
       # Formatters & Linters
-      nixfmt-rfc-style  # The new standard for Nix
+      nixfmt-rfc-style # The new standard for Nix
       stylua
       nodePackages.prettier
-      black isort
+      black
+      isort
       shfmt
       cmake-format
       sql-formatter
       google-java-format
-      
+
       # Language Servers (installed manually if not by lsp module)
-      zig zls
+      zig
+      zls
       jdt-language-server
-      gopls gotools
+      gopls
+      gotools
       taplo
       vscode-langservers-extracted # html, css, json, eslint
       yaml-language-server
       texliveSmall
-      
+
     ];
 
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
       -- C++ Include Path
       vim.env.CPLUS_INCLUDE_PATH = "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
-      
+
       -- Manual Format & Save Keymap
       vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
         require("conform").format({
