@@ -1,9 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 let
     # Define the C++ path safely
     cplusInclude = if pkgs.stdenv.isLinux 
                    then "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
-                   else ""; # Mac usually finds headers automatically via standard clang
+                   else ""; 
 in
 {
   programs.nvf = {
@@ -34,8 +34,15 @@ in
           smoothscroll = true;
         };
 
+        # 2. LSP & FORMATTING
+        lsp = {
+            enable = true;
+            # --- FIX 2: Enable Format on Save ---
+            formatOnSave = true; 
+            lightbulb.enable = true; 
+        };
 
-        # 3. LANGUAGES (LSP, Treesitter, Formatting handled automatically)
+        # 3. LANGUAGES
         languages = {
           enableLSP = true;
           enableFormat = true;
@@ -50,7 +57,7 @@ in
           markdown.enable = true;
           
           # Web
-          ts.enable = true; # Typescript/Javascript
+          ts.enable = true;
           html.enable = true;
           css.enable = true;
           sql.enable = true;
@@ -61,18 +68,16 @@ in
             enable = true;
             crates.enable = true;
           };
-          clang.enable = true; # C/C++
+          clang.enable = true;
           zig.enable = true;
           go.enable = true;
           java.enable = true;
         };
 
-        # 4. AUTOCOMPLETE (Using Blink as requested)
+        # 4. AUTOCOMPLETE
         autocomplete = {
           blink-cmp = {
             enable = true;
-            # We map your original config into 'setupOpts' 
-            # so it behaves exactly like your previous setup
             setupOpts = {
               keymap = {
                 preset = "default";
@@ -90,18 +95,17 @@ in
         
         # 5. UTILITY PLUGINS
         statusline.lualine.enable = true;
-        telescope.enable = false; # Disabled because you use Snacks
-        filetree.neo-tree.enable = false; # You prefer Oil
+        telescope.enable = false;
+        filetree.neo-tree.enable = false;
         git = {
             enable = true;
             gitsigns.enable = true;
         };
 
-        # 6. CUSTOM PLUGINS (Snacks, Oil, Harpoon)
-        # NVF allows raw lua config for plugins it doesn't have modules for yet
+        # 6. CUSTOM PLUGINS
         extraPlugins = with pkgs.vimPlugins; {
 
-          # Kanagawa Theme (Manual Setup)
+          # Kanagawa Theme
           kanagawa = {
             package = kanagawa-nvim;
             setup = ''
@@ -126,6 +130,7 @@ in
             setup = "require('harpoon').setup {}";
           };
 
+          # --- FIX 1: Snacks Configuration ---
           snacks-nvim = {
             package = snacks-nvim;
             setup = ''
@@ -134,7 +139,13 @@ in
                 notifier = { enabled = true },
                 quickfile = { enabled = true },
                 statuscolumn = { enabled = true },
-                lazygit = { enabled = true },
+                
+                -- LAZYGIT FIX: Disable automatic theme configuration
+                lazygit = { 
+                    enabled = true,
+                    configure = false 
+                },
+                
                 dashboard = { enabled = false }
               })
             '';
@@ -170,17 +181,16 @@ in
           { key = "<leader>3"; mode = ["n"]; action = ":lua require('harpoon'):list():select(3)<CR>"; }
           { key = "<leader>4"; mode = ["n"]; action = ":lua require('harpoon'):list():select(4)<CR>"; }
 
-          # Format (Manual)
+          # Manual Save (Format on Save will trigger automatically now)
           { key = "<C-s>"; mode = ["n" "i" "x"]; action = ":w<CR>"; desc = "Save"; }
         ];
         
         # 8. EXTRA LUA
         luaConfigRC.extra = ''
-           -- Only set this on Linux
            if "${cplusInclude}" ~= "" then
              vim.env.CPLUS_INCLUDE_PATH = "${cplusInclude}"
            end
-
+           
            vim.keymap.set({ "n", "i", "x" }, "<C-s>", function() vim.cmd("write") end)
         '';
       };
