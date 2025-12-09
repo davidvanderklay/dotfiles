@@ -400,7 +400,7 @@
       {
         mode = "n";
         key = "<leader><space>";
-        action.__raw = "function() require('snacks').picker.smart() end";
+        action.__raw = "function() require('snacks').picker.smart({ filter = { cwd = true } }) end";
         options.desc = "Find Files (Smart)";
       }
       {
