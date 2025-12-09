@@ -2,21 +2,24 @@
 
 {
   imports = [
-    ./gnome.nix  # <--- Add this line near the top
+    ./gnome.nix # <--- Add this line near the top
     ./nixvim.nix
   ];
 
-	home.username = "geolan";
-	home.homeDirectory = "/home/geolan";
-  
+  home.username = "geolan";
+  home.homeDirectory = "/home/geolan";
+
   home.packages = with pkgs; [
     # Programming tools
-    gcc           # C/C++ Compiler
-    gnumake       # Make
-    clang-tools   # Clangd, clang-format
-    rustc         # Rust Compiler
-    cargo         # Rust Package Manager
-    nodejs_22     # Node/NPM
+    gcc # C/C++ Compiler
+    gnumake # Make
+    clang-tools # Clangd, clang-format
+    rustc # Rust Compiler
+    cargo # Rust Package Manager
+    nodejs_22 # Node/NPM
+
+    # Formatters
+    rustfmt
 
     awscli2
     btop
@@ -44,14 +47,13 @@
 
     ungoogled-chromium
 
-
     tmux
     yazi
     fzf
     (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
   ];
 
-	# xdg.configFile."nvim".source = ./nvim;
+  # xdg.configFile."nvim".source = ./nvim;
 
   programs.git = {
     enable = true;
@@ -67,14 +69,14 @@
     };
   };
 
- # 1. GHOSTTY CONFIGURATION
+  # 1. GHOSTTY CONFIGURATION
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
     # We link your config file from the dotfiles directory
     installBatSyntax = false; # Fixes a common conflict issue
   };
-  
+
   # Link the config file manually to ensure it uses your specific file
   xdg.configFile."ghostty/config".source = ./ghostty/config;
 
@@ -106,7 +108,6 @@
       gd = "git diff";
     };
 
-
     # InitExtra: This is where we put your custom functions and raw shell code
     initContent = ''
       # --- Keybindings (History Search) ---
@@ -123,7 +124,7 @@
       }
       zle -N sudo-command-line
       bindkey "\e\e" sudo-command-line
-      
+
       # --- Custom Path Additions ---
       export PATH="$PATH:$HOME/.local/scripts/"
       export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
@@ -139,30 +140,30 @@
   };
 
   programs.lazygit = {
-      enable = true;
+    enable = true;
   };
 
- programs.tmux = {
+  programs.tmux = {
     enable = true;
     shell = "${pkgs.zsh}/bin/zsh";
     terminal = "tmux-256color";
     historyLimit = 100000;
-    
+
     # Replaces: set -g prefix C-a / unbind C-b
-    shortcut = "a"; 
-    
+    shortcut = "a";
+
     # Replaces: set -g base-index 1
-    baseIndex = 1; 
-    
+    baseIndex = 1;
+
     # Replaces: set -sg escape-time 0
-    escapeTime = 0; 
-    
+    escapeTime = 0;
+
     # Replaces: set -g mouse on
     mouse = true;
 
     plugins = with pkgs; [
       tmuxPlugins.yank
-      
+
       # --- KANAGAWA THEME (Custom Build) ---
       {
         plugin = tmuxPlugins.mkTmuxPlugin {
@@ -199,6 +200,5 @@
     '';
   };
 
-
-	home.stateVersion = "25.11";
+  home.stateVersion = "25.11";
 }
