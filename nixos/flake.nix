@@ -1,5 +1,5 @@
 {
-  description = "My NixOS Flake Configuration";
+  description = "My NixOS and Portable Home Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -7,68 +7,98 @@
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-
     };
 
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    # --- ADD THIS ---
-    nixvim = {
-      url = "github:nix-community/nixvim";
+
+    # NVF (The new Neovim wrapper)
+    nvf = {
+      url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
-  outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }@inputs:
-    {
-      nixosConfigurations = {
 
-        # SYSTEM 1: Your Desktop
-        desktop = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
-          modules = [
-            { nixpkgs.hostPlatform = "x86_64-linux"; }
+  outputs = { self, nixpkgs, home-manager, nvf, ... }@inputs: {
+    
+    # --- 1. NIXOS SYSTEMS (Linux Desktop & Laptop) ---
+    nixosConfigurations = {
+      
+      # SYSTEM 1: Desktop
+      desktop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+          
+          # Machine Specifics
+          ./hosts/desktop/default.nix
+          # Common Config
+          ./common/configuration.nix
+          
+          # Home Manager
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            
+            # Register NVF module so Home Manager can see it
+            home-manager.sharedModules = [ nvf.homeManagerModules.default ];
+            
+            # Use the LINUX home config (Gnome + Gaming + Tools)
+            home-manager.users.geolan = import ./common/home-linux.nix;
+          }
+        ];
+      };
 
-            # 1. Machine Specifics
-            ./hosts/desktop/default.nix
-            # 2. Common Config
-            ./common/configuration.nix
-            # 3. Home Manager
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.geolan = import ./common/home.nix;
-            }
-          ];
-        };
-
-        # SYSTEM 2: Your Laptop (The new machine)
-        laptop = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
-          modules = [
-            { nixpkgs.hostPlatform = "x86_64-linux"; }
-            # 1. Machine Specifics (Different hardware config!)
-            ./hosts/laptop/default.nix
-            # 2. Common Config (Reused!)
-            ./common/configuration.nix
-            # 3. Home Manager (Reused!)
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.geolan = import ./common/home.nix;
-            }
-          ];
-        };
-
+      # SYSTEM 2: Laptop
+      laptop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+          
+          # Machine Specifics
+          ./hosts/laptop/default.nix
+          # Common Config
+          ./common/configuration.nix
+          
+          # Home Manager
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            
+            # Register NVF module
+            home-manager.sharedModules = [ nvf.homeManagerModules.default ];
+            
+            # Use the LINUX home config
+            home-manager.users.geolan = import ./common/home-linux.nix;
+          }
+        ];
       };
     };
+
+    # --- 2. STANDALONE HOME (MacOS / Generic Linux) ---
+    # Install with: nix run .#mac
+    homeConfigurations = {
+      
+      "mac" = home-manager.lib.homeManagerConfiguration {
+        # Select architecture: 'aarch64-darwin' (M1/M2/M3) or 'x86_64-darwin' (Intel)
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin; 
+        extraSpecialArgs = { inherit inputs; };
+        modules = [
+          nvf.homeManagerModules.default
+          
+          # Use the CORE home config (Safe for Mac)
+          ./common/home-core.nix 
+
+          {
+            home.username = "geolan";
+            home.homeDirectory = "/Users/geolan"; # macOS standard path
+            home.stateVersion = "25.11";
+          }
+        ];
+      };
+    };
+  };
 }

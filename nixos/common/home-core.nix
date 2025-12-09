@@ -2,12 +2,9 @@
 
 {
   imports = [
-    ./gnome.nix # <--- Add this line near the top
-    ./nixvim.nix
+    ./nvim.nix
   ];
 
-  home.username = "geolan";
-  home.homeDirectory = "/home/geolan";
 
   home.packages = with pkgs; [
     # Programming tools
@@ -18,39 +15,23 @@
     cargo # Rust Package Manager
     nodejs_22 # Node/NPM
 
-    # Formatters
-    rustfmt
 
     awscli2
     btop
     unzip
     unrar
-    distrobox
     texlive.combined.scheme-full
     texlab
 
-    # Gaming
-    lutris
-    heroic
-    r2modman
-    prismlauncher
-    protonplus
-    ludusavi
+    # Formatters
+    rustfmt
 
-    # Social
-    bitwarden-desktop
-    vesktop
-
-    # Wine stuff
-    wineWow64Packages.stable
-    winetricks
-
-    ungoogled-chromium
 
     tmux
     yazi
     fzf
     (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
+    pkgs.wl-clipboard
   ];
 
   # xdg.configFile."nvim".source = ./nvim;
@@ -68,17 +49,6 @@
       # core.editor = "nvim";
     };
   };
-
-  # 1. GHOSTTY CONFIGURATION
-  programs.ghostty = {
-    enable = true;
-    enableZshIntegration = true;
-    # We link your config file from the dotfiles directory
-    installBatSyntax = false; # Fixes a common conflict issue
-  };
-
-  # Link the config file manually to ensure it uses your specific file
-  xdg.configFile."ghostty/config".source = ./ghostty/config;
 
   # 2. STARSHIP CONFIGURATION
   programs.starship = {
