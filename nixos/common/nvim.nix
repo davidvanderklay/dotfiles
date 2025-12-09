@@ -76,7 +76,6 @@ in
         # 4. AUTOCOMPLETE (Using Blink as requested)
         autocomplete = {
             enable = true;
-            alwaysComplete = true;
         };
         
         # 5. UTILITY PLUGINS
