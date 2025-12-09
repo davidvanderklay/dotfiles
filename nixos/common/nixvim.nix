@@ -1,4 +1,10 @@
 { inputs, pkgs, ... }:
+let
+    # Define the C++ path safely (Linux only)
+    cplusInclude = if pkgs.stdenv.isLinux 
+                   then "${pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ pkgs.gcc ]}"
+                   else ""; 
+in
 {
 
   programs.nixvim = {
