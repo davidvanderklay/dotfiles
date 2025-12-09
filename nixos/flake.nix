@@ -18,7 +18,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, nvf, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nixvim, ... }@inputs: {
     
     # --- 1. NIXOS SYSTEMS (Linux Desktop & Laptop) ---
     nixosConfigurations = {
