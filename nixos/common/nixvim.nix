@@ -3,11 +3,13 @@ let
   # 1. ROBUST HEADER PATH CALCULATION
   # We prefer 'gcc-unwrapped' or 'stdenv.cc.cc' to get the raw headers.
   # We also grab glibc headers just in case.
-  cplusPath = if pkgs.stdenv.isLinux then 
-    pkgs.lib.makeSearchPathOutput "dev" "include/c++" [ 
-      pkgs.gcc-unwrapped 
-    ]
-  else "";
+  cplusPath =
+    if pkgs.stdenv.isLinux then
+      pkgs.lib.makeSearchPathOutput "dev" "include/c++" [
+        pkgs.gcc-unwrapped
+      ]
+    else
+      "";
 in
 {
 
@@ -536,18 +538,23 @@ in
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
       -- C++ Include Path
-        ${if pkgs.stdenv.isLinux then ''
-        -- Define C++ Paths explicitly using Nix
-        -- 1. Main headers (iostream, vector, etc.)
-        local cpp_base = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}"
-        
-        -- 2. Arch-specific headers (bits/c++config.h)
-        -- We look for the folder matching your system architecture
-        local cpp_arch = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}/${pkgs.stdenv.hostPlatform.config}"
+        ${
+          if pkgs.stdenv.isLinux then
+            ''
+              -- Define C++ Paths explicitly using Nix
+              -- 1. Main headers (iostream, vector, etc.)
+              local cpp_base = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}"
 
-        -- Set the environment variable for Clangd
-        vim.env.CPLUS_INCLUDE_PATH = cpp_base .. ":" .. cpp_arch
-      '' else ""}
+              -- 2. Arch-specific headers (bits/c++config.h)
+              -- We look for the folder matching your system architecture
+              local cpp_arch = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}/${pkgs.stdenv.hostPlatform.config}"
+
+              -- Set the environment variable for Clangd
+              vim.env.CPLUS_INCLUDE_PATH = cpp_base .. ":" .. cpp_arch
+            ''
+          else
+            ""
+        }
 
       -- Manual Format & Save Keymap
       vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()

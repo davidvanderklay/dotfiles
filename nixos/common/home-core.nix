@@ -5,7 +5,6 @@
     ./nixvim.nix
   ];
 
-
   home.packages = with pkgs; [
     # Programming tools
     gcc # C/C++ Compiler
@@ -14,7 +13,6 @@
     rustc # Rust Compiler
     cargo # Rust Package Manager
     nodejs_22 # Node/NPM
-
 
     awscli2
     btop
@@ -25,7 +23,6 @@
 
     # Formatters
     rustfmt
-
 
     tmux
     yazi

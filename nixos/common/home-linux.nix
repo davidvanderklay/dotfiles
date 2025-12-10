@@ -1,4 +1,3 @@
-
 { config, pkgs, ... }:
 
 {
@@ -34,7 +33,6 @@
 
   ];
 
-
   # 1. GHOSTTY CONFIGURATION
   programs.ghostty = {
     enable = true;
@@ -45,7 +43,6 @@
 
   # Link the config file manually to ensure it uses your specific file
   xdg.configFile."ghostty/config".source = ./ghostty/config;
-
 
   home.stateVersion = "25.11";
 }
