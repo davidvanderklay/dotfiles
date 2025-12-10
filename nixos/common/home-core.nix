@@ -48,6 +48,21 @@
     };
   };
 
+  programs.direnv = {
+    enable = true;
+
+    # "nix-direnv" is the special sauce that makes it fast and keeps
+    # your garbage collector from deleting your dev environments.
+    nix-direnv.enable = true;
+
+    # Optional: silence the "direnv: loading..." verbose messages
+    # config = {
+    #   global = {
+    #     warn_timeout = "0s";
+    #   };
+    # };
+  };
+
   # 2. STARSHIP CONFIGURATION
   programs.starship = {
     enable = true;
