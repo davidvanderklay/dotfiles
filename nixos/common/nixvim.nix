@@ -325,6 +325,17 @@ in
     keymaps = [
       # General
       {
+        mode = [
+          "n"
+          "v"
+        ];
+        key = "<Space>";
+        action = "<Nop>";
+        options = {
+          silent = true;
+        };
+      }
+      {
         mode = "n";
         key = "<Esc>";
         action = "<cmd>nohlsearch<CR>";
