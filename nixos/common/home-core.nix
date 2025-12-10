@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     # Programming tools
     gcc # C/C++ Compiler
+    python3
     gnumake # Make
     clang-tools # Clangd, clang-format
     rustc # Rust Compiler
