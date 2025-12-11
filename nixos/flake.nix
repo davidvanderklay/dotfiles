@@ -16,6 +16,12 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Add this input
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1"; # Check their GitHub for latest version
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -24,6 +30,7 @@
       nixpkgs,
       home-manager,
       nixvim,
+      lanzaboote,
       ...
     }@inputs:
     {
@@ -37,6 +44,7 @@
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
 
+            lanzaboote.nixosModules.lanzaboote
             # Machine Specifics
             ./hosts/desktop/default.nix
             # Common Config
