@@ -19,7 +19,7 @@
 
     # Add this input
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1"; # Check their GitHub for latest version
+      url = "github:nix-community/lanzaboote"; # Check their GitHub for latest version
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

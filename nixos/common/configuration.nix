@@ -142,13 +142,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # 3. STEAM & GAMEMODE
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
-  programs.gamemode.enable = true; # Feral Gamemode
 
   # 4. DOCKER
   virtualisation.docker = {
@@ -164,7 +157,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
+    pkgs.sbctl
     gnumake
     gcc
     wget

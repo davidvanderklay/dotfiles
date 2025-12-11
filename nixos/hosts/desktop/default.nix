@@ -13,7 +13,7 @@
 
   boot.lanzaboote = {
     enable = true;
-    pkiBundle = "/etc/secureboot";
+    pkiBundle = "/var/lib/sbctl";
   };
 
   # Specific drivers (like Nvidia) go here

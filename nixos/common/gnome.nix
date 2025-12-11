@@ -83,6 +83,15 @@
       switch-to-workspace-5 = [ "<Super>5" ];
       switch-to-workspace-6 = [ "<Super>6" ];
 
+      # --- DISABLE DEFAULT SWIPING ---
+      # This stops Ctrl+Alt+Left/Right from switching workspaces
+      switch-to-workspace-left = [ ];
+      switch-to-workspace-right = [ ];
+
+      # (Optional) This stops Shift+Ctrl+Alt+Left/Right from moving windows to other workspaces
+      move-to-workspace-left = [ ];
+      move-to-workspace-right = [ ];
+
       # Move window to workspace
       move-to-workspace-1 = [ "<Super><Shift>1" ];
       move-to-workspace-2 = [ "<Super><Shift>2" ];
