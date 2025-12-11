@@ -144,6 +144,10 @@ in
 
       ts-autotag.enable = true;
 
+      grug-far = {
+        enable = true;
+      };
+
       snacks = {
         enable = true;
         settings = {
@@ -509,6 +513,16 @@ in
         key = "<leader>6";
         action.__raw = "function() require('harpoon'):list():select(5) end";
         options.desc = "Harpoon File 6";
+      }
+      # ADD THIS: Search and Replace (Grug Far)
+      {
+        mode = [
+          "n"
+          "v"
+        ];
+        key = "<leader>sr";
+        action = "<cmd>GrugFar<CR>";
+        options.desc = "Search and Replace (GrugFar)";
       }
 
     ];
