@@ -20,6 +20,19 @@
     gnomeExtensions.appindicator
     gnomeExtensions.tiling-assistant
     gnomeExtensions.hot-edge
+
+    # Cool fonts I might need
+    # --- The "Must Haves" for Discord/Web ---
+    noto-fonts # The standard Google font family
+    noto-fonts-cjk-sans # Fixes ▯▯▯ squares for Asian characters
+    noto-fonts-color-emoji # Fixes broken/missing emojis 🦜
+    liberation_ttf # Free replacement for Times/Arial (Metric compatible)
+
+    # --- Microsoft Fonts (Optional but recommended) ---
+    # These are the actual Windows fonts (Arial, Comic Sans, Verdana).
+    # NOTE: You must allow 'unfree' packages in your flake for this to work.
+    corefonts
+    vista-fonts # Consolas, Calibri, etc.
   ];
 
   xdg.mimeApps = {
