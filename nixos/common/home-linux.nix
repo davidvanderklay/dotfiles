@@ -21,6 +21,7 @@
     prismlauncher
     protonplus
     ludusavi
+    sgdboop
 
     # Social
     bitwarden-desktop
