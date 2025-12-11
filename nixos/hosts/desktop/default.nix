@@ -34,7 +34,7 @@
     modesetting.enable = true;
 
     # Power management (fine-grained is usually for laptops, can leave false for desktop)
-    powerManagement.enable = false;
+    powerManagement.enable = true;
     powerManagement.finegrained = false;
 
     # USE THE OPEN KERNEL MODULES (GSP)
