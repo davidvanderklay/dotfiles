@@ -67,6 +67,10 @@
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
+
+    aws = {
+      disabled = true;
+    };
     # Link your custom toml if it exists, otherwise comment this line out
     # settings = pkgs.lib.importTOML ./starship.toml;
   };
