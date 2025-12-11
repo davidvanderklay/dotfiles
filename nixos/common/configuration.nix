@@ -142,6 +142,13 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # 3. STEAM & GAMEMODE
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+  programs.gamemode.enable = true; # Feral Gamemode
 
   # 4. DOCKER
   virtualisation.docker = {

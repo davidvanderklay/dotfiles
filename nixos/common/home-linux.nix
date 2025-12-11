@@ -33,14 +33,6 @@
 
   ];
 
-  # 3. STEAM & GAMEMODE
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
-
-  programs.gamemode.enable = true; # Feral Gamemode
   # 1. GHOSTTY CONFIGURATION
   programs.ghostty = {
     enable = true;
