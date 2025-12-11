@@ -98,20 +98,41 @@
       # Install with: nix run .#mac
       homeConfigurations = {
 
+        # TARGET 1: MacOS (Apple Silicon)
+        # Install with: nix run .#mac
         "mac" = home-manager.lib.homeManagerConfiguration {
-          # Select architecture: 'aarch64-darwin' (M1/M2/M3) or 'x86_64-darwin' (Intel)
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          pkgs = nixpkgs.legacyPackages.aarch64-darwin; # MacOS Arch
+          extraSpecialArgs = { inherit inputs; };
+          modules = [
+            nixvim.homeManagerModules.nixvim
+            ./common/home-core.nix # The "Safe" config without Linux-specific desktop stuff
+            {
+              home.username = "geolan";
+              home.homeDirectory = "/Users/geolan";
+              home.stateVersion = "25.11";
+            }
+          ];
+        };
+
+        # TARGET 2: Ubuntu / Generic Linux (Intel/AMD)
+        # Install with: nix run .#generic
+        "generic" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Standard Linux Arch
           extraSpecialArgs = { inherit inputs; };
           modules = [
             nixvim.homeManagerModules.nixvim
 
-            # Use the CORE home config (Safe for Mac)
+            # Use home-core.nix (CLI tools only)
+            # OR use home-linux.nix (Desktop apps) IF it doesn't contain NixOS-specific systemd/driver flags
             ./common/home-core.nix
 
             {
               home.username = "geolan";
-              home.homeDirectory = "/Users/geolan"; # macOS standard path
+              home.homeDirectory = "/home/geolan";
               home.stateVersion = "25.11";
+
+              # On Ubuntu, you usually need to force the targets to work alongside the native distro
+              targets.genericLinux.enable = true;
             }
           ];
         };
