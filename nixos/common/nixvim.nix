@@ -22,6 +22,7 @@ in
     vimAlias = true;
 
     opts = {
+      confirm = true; # This is the magic setting. It prompts to save before exiting.
       number = true;
       relativenumber = true;
       clipboard = "unnamedplus";
@@ -344,11 +345,14 @@ in
         key = "<Esc>";
         action = "<cmd>nohlsearch<CR>";
       }
+      # --- UPDATED QUIT KEYMAP ---
       {
         mode = "n";
         key = "<leader>qq";
-        action = "<cmd>wqa<cr>";
-        options.desc = "Save All & Quit";
+        # Changed from "wqa" to "qa".
+        # Combined with 'opts.confirm = true', this triggers the interactive prompt.
+        action = "<cmd>qa<cr>";
+        options.desc = "Quit All";
       }
       {
         mode = "n";
