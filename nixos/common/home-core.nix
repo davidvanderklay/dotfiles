@@ -25,6 +25,7 @@
     # Formatters
     rustfmt
 
+    fastfetch
     tmux
     yazi
     fzf
