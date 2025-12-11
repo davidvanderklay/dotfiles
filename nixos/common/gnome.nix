@@ -33,6 +33,16 @@
     };
   };
 
+  xdg.configFile."autostart/org.localsend.localsend_app.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=LocalSend
+    Exec=localsend --hidden
+    Icon=localsend
+    Comment=An open source cross-platform alternative to AirDrop
+    X-GNOME-Autostart-enabled=true
+  '';
+
   # 4. DCONF SETTINGS (The Heavy Lifting)
   dconf.settings = {
     "org/gnome/shell" = {

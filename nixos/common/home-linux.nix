@@ -12,6 +12,7 @@
   home.packages = with pkgs; [
 
     distrobox
+    pkgs.localsend
 
     # Gaming
     lutris
