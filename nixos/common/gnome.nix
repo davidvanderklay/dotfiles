@@ -67,6 +67,10 @@
       ];
     };
 
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+
     # --- MOUSE SETTINGS ---
     "org/gnome/desktop/peripherals/mouse" = {
       accel-profile = "flat";
