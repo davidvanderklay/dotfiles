@@ -127,6 +127,8 @@
       close = [ "<Super>q" ];
       # --- ADD THIS LINE ---
       toggle-maximized = [ "<Super>f" ];
+      # Fullscreen (hide title bar/top bar) - THIS IS THE NEW LINE
+      toggle-fullscreen = [ "<Super><Shift>f" ];
     };
 
     # --- CUSTOM KEYBINDINGS (Terminal, Browser, Files) ---
