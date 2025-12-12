@@ -56,6 +56,25 @@
     X-GNOME-Autostart-enabled=true
   '';
 
+  # --- ADD THIS BLOCK ---
+  # This generates ~/.config/gtk-3.0/settings.ini which Flutter apps read
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+  };
+  # ----------------------
   # 4. DCONF SETTINGS (The Heavy Lifting)
   dconf.settings = {
     "org/gnome/shell" = {
