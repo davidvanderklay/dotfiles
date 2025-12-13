@@ -185,8 +185,14 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 53317 ];
-  networking.firewall.allowedUDPPorts = [ 53317 ];
+  networking.firewall.allowedTCPPorts = [
+    53317
+    8081
+  ];
+  networking.firewall.allowedUDPPorts = [
+    53317
+    8081
+  ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
   environment.variables.EDITOR = "nvim";
