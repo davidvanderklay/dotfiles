@@ -58,7 +58,7 @@
               home-manager.extraSpecialArgs = { inherit inputs; };
 
               # Use NixVim Module
-              home-manager.sharedModules = [ nixvim.homeManagerModules.nixvim ];
+              home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
 
               # Use the LINUX home config (Gnome + Gaming + Tools)
               home-manager.users.geolan = import ./common/home-linux.nix;
@@ -85,7 +85,7 @@
               home-manager.extraSpecialArgs = { inherit inputs; };
 
               # Use NixVim Module
-              home-manager.sharedModules = [ nixvim.homeManagerModules.nixvim ];
+              home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
 
               # Use the LINUX home config
               home-manager.users.geolan = import ./common/home-linux.nix;
@@ -100,11 +100,11 @@
 
         # TARGET 1: MacOS (Apple Silicon)
         # Install with: nix run .#mac
-        "mac" = home-manager.lib.homeManagerConfiguration {
+        "mac" = home-manager.lib.homeModules {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin; # MacOS Arch
           extraSpecialArgs = { inherit inputs; };
           modules = [
-            nixvim.homeManagerModules.nixvim
+            nixvim.homeModules.nixvim
             ./common/home-core.nix # The "Safe" config without Linux-specific desktop stuff
             {
               home.username = "geolan";
@@ -120,7 +120,7 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Standard Linux Arch
           extraSpecialArgs = { inherit inputs; };
           modules = [
-            nixvim.homeManagerModules.nixvim
+            nixvim.homeModules.nixvim
 
             # Use home-core.nix (CLI tools only)
             # OR use home-linux.nix (Desktop apps) IF it doesn't contain NixOS-specific systemd/driver flags
