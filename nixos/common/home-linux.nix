@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -41,6 +46,31 @@
     enableZshIntegration = true;
     # We link your config file from the dotfiles directory
     installBatSyntax = false; # Fixes a common conflict issue
+  };
+
+  systemd.user.services.ghostty = {
+    Unit = {
+      Description = "Ghostty Terminal Server";
+      # Wait for the desktop to load before starting
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      # We explicitly use the nix package path so it never fails to find the binary
+      ExecStart = "${lib.getExe pkgs.ghostty} --initial-window=false";
+
+      # If it crashes, restart it automatically
+      Restart = "on-failure";
+
+      # "process" means: when we kill the window, don't kill the daemon
+      KillMode = "process";
+    };
+
+    Install = {
+      # This effectively "enables" it at login
+      WantedBy = [ "graphical-session.target" ];
+    };
   };
 
   # Link the config file manually to ensure it uses your specific file
