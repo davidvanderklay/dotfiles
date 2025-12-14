@@ -20,6 +20,7 @@
     gnomeExtensions.appindicator
     gnomeExtensions.tiling-assistant
     gnomeExtensions.hot-edge
+    gnomeExtensions.clipboard-indicator
 
     # Cool fonts I might need
     # --- The "Must Haves" for Discord/Web ---
@@ -83,11 +84,18 @@
         "appindicatorsupport@rgcjonas.gmail.com"
         "tiling-assistant@leleat-on-github"
         "hotedge@jonathan.jdoda.ca"
+        "clipboard-indicator@tudmotu.com"
       ];
     };
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
+    };
+
+    # --- CLIPBOARD INDICATOR SETTINGS (Optional tweaks) ---
+    "org/gnome/shell/extensions/clipboard-indicator" = {
+      move-item-first = true;
+      history-size = 50;
     };
 
     # --- MOUSE SETTINGS ---
