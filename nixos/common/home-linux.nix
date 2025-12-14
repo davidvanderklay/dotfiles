@@ -73,6 +73,21 @@
     };
   };
 
+  systemd.user.services.dbus-update-activation-environment = {
+    Unit = {
+      Description = "Update DBus activation environment";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # Link the config file manually to ensure it uses your specific file
   xdg.configFile."ghostty/config".source = ./ghostty/config;
 

@@ -94,4 +94,18 @@ in
       obs-vkcapture
     ];
   };
+
+  # --- FIX FOR SLOW APP STARTUP ---
+  xdg.portal = {
+    enable = true;
+
+    # Ensure the GNOME portal is installed and ready
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.xdg-desktop-portal-gtk
+    ];
+
+    # Force apps to use the GNOME portal
+    config.common.default = "gnome";
+  };
 }
