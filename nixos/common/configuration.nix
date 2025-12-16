@@ -68,9 +68,13 @@
   services.printing.enable = true;
   services.printing.drivers = [
     pkgs.brlaser
-    pkgs.brgenml1lpr
-    pkgs.brgenml1cupswrapper
   ];
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true; # Allows resolving .local addresses
+    openFirewall = true;
+  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
