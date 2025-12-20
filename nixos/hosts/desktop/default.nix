@@ -35,6 +35,11 @@ in
     enable = true;
     # IMPORTANT: Enable 32-bit support for Steam to work!
     enable32Bit = true;
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver # This is the "translator"
+      libva-vdpau-driver
+      libvdpau-va-gl
+    ];
   };
 
   environment.variables = {
@@ -70,12 +75,6 @@ in
     # 'stable' is usually best, but you can use 'beta' or 'production'
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
-
-  # Ensure these are in hardware.graphics
-  hardware.graphics.extraPackages = with pkgs; [
-    nvidia-vaapi-driver
-    libvdpau-va-gl
-  ];
 
   # Realtime audio priority
   security.rtkit.enable = true;
