@@ -37,6 +37,19 @@ in
     enable32Bit = true;
   };
 
+  environment.variables = {
+    # Forces the NVIDIA VA-API driver to use the direct backend (best for Wayland)
+    NVD_BACKEND = "direct";
+    LIBVA_DRIVER_NAME = "nvidia";
+
+    # CRITICAL: This allows the browser's video process to see the driver
+    MOZ_DISABLE_RDD_SANDBOX = "1";
+
+    # General Wayland fixes
+    NIXOS_OZONE_WL = "1";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
+
   # 3. Configure the Nvidia settings
   hardware.nvidia = {
     # Modesetting is required for most Wayland compositors (Hyprland, Gnome, etc.)
