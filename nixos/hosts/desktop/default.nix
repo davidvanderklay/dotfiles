@@ -58,6 +58,12 @@ in
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
+  # Ensure these are in hardware.graphics
+  hardware.graphics.extraPackages = with pkgs; [
+    nvidia-vaapi-driver
+    libvdpau-va-gl
+  ];
+
   # Realtime audio priority
   security.rtkit.enable = true;
   services.pipewire = {
