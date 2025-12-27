@@ -45,99 +45,16 @@
       darwinConfigurations."eth0" = nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs; };
         modules = [
+          ./hosts/macbook/default.nix # <--- YOUR NEW FILE
+
           home-manager.darwinModules.home-manager
           {
-            # 1. Basic System Config
-            nixpkgs.hostPlatform = "aarch64-darwin";
-
-            nixpkgs.config.allowUnfree = true;
-
-            # Add this line (mandatory for nix-darwin)
-            system.stateVersion = 6;
-
-            system.primaryUser = "geolan";
-            users.users.geolan.home = "/Users/geolan";
-
-            # 2. Home Manager Bridge
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "before-nix";
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
             home-manager.users.geolan = import ./common/home-core.nix;
-
-            # --- UPDATED NIX SETTINGS ---
-            nix = {
-              settings = {
-                experimental-features = "nix-command flakes";
-                trusted-users = [
-                  "root"
-                  "geolan"
-                ];
-              };
-              optimise.automatic = true;
-              gc = {
-                automatic = true;
-                interval = {
-                  Weekday = 0;
-                  Hour = 2;
-                  Minute = 0;
-                };
-                options = "--delete-older-than 30d";
-              };
-            };
-
-            # --- TOUCH ID FOR SUDO ---
-            security.pam.services.sudo_local.touchIdAuth = true;
-
-            # 3. Homebrew Integration
-            homebrew = {
-              enable = true;
-              onActivation.cleanup = "zap"; # Uninstalls anything not listed below
-              onActivation.autoUpdate = true;
-              onActivation.upgrade = true;
-
-              taps = [
-                "homebrew/services"
-                "nikitabobko/tap" # Required for Aerospace
-              ];
-
-              # CLI tools that are better via Homebrew on Mac (e.g. DBs)
-              brews = [
-                "imagemagick"
-                "postgresql@14"
-                "mariadb"
-              ];
-
-              # GUI Apps
-              casks = [
-                # System Utilities
-                "aerospace"
-                "alfred"
-                "maccy"
-                "rectangle"
-                "localsend"
-                "xquartz"
-
-                # Productivity & Dev
-                "zen"
-                "signal"
-                "zoom"
-                "helium-browser"
-
-                # Social & Medjja
-                "ghostty"
-                "iina"
-
-                # Fonts
-                "font-hack-nerd-font"
-              ];
-            };
-
-            # 3. Settings
-            # REMOVE: services.nix-daemon.enable = true; (Nix-darwin does this for you now)
-
-            programs.zsh.enable = true;
           }
         ];
       };
