@@ -5,33 +5,45 @@
     ./nixvim.nix
   ];
 
-  home.packages = with pkgs; [
-    # Programming tools
-    gcc # C/C++ Compiler
-    python3
-    gnumake # Make
-    clang-tools # Clangd, clang-format
-    rustc # Rust Compiler
-    cargo # Rust Package Manager
-    nodejs_22 # Node/NPM
+  home.packages =
+    with pkgs;
+    [
+      # Programming tools
+      gcc # C/C++ Compiler
+      python3
+      gnumake # Make
+      clang-tools # Clangd, clang-format
+      rustc # Rust Compiler
+      cargo # Rust Package Manager
+      nodejs_22 # Node/NPM
 
-    awscli2
-    btop
-    unzip
-    unrar
-    texlive.combined.scheme-full
-    texlab
+      awscli2
+      btop
+      unzip
+      unrar
+      texlive.combined.scheme-full
+      texlab
+      wget
+      croc
+      zstd
+      tailscale
+      syncthing
+      gnupg
+      jq
 
-    # Formatters
-    rustfmt
+      # Formatters
+      rustfmt
 
-    fastfetch
-    tmux
-    yazi
-    fzf
-    (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
-    # pkgs.wl-clipboard
-  ] ++ (lib.optionals stdenv.isLinux [ pkgs.wl-clipboard ]);
+      fastfetch
+      tmux
+      yazi
+      fzf
+      ripgrep
+      fd
+      (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
+      # pkgs.wl-clipboard
+    ]
+    ++ (lib.optionals stdenv.isLinux [ pkgs.wl-clipboard ]);
 
   # xdg.configFile."nvim".source = ./nvim;
 
@@ -165,7 +177,7 @@
             rev = "master";
             # DELETE THIS LINE AND PASTE THE REAL HASH AFTER FIRST BUILD FAIL:
             sha256 = "sha256-ldc++p2PcYdzoOLrd4PGSrueAGNWncdbc5k6wmFM9kQ=";
-  
+
           };
         };
         extraConfig = ''
