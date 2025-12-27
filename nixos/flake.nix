@@ -74,8 +74,8 @@
                   "root"
                   "geolan"
                 ];
-                optimise.automatic = true;
               };
+              optimise.automatic = true;
               gc = {
                 automatic = true;
                 interval = {
