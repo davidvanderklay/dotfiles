@@ -58,11 +58,6 @@
             system.primaryUser = "geolan";
             users.users.geolan.home = "/Users/geolan";
 
-            nix.settings.experimental-features = "nix-command flakes";
-            nix.settings.trusted-users = [
-              "root"
-              "geolan"
-            ];
             # 2. Home Manager Bridge
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -70,6 +65,30 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
             home-manager.users.geolan = import ./common/home-core.nix;
+
+            # --- UPDATED NIX SETTINGS ---
+            nix = {
+              settings = {
+                experimental-features = "nix-command flakes";
+                trusted-users = [
+                  "root"
+                  "geolan"
+                ];
+                auto-optimise-store = true;
+              };
+              gc = {
+                automatic = true;
+                interval = {
+                  Weekday = 0;
+                  Hour = 2;
+                  Minute = 0;
+                };
+                options = "--delete-older-than 30d";
+              };
+            };
+
+            # --- TOUCH ID FOR SUDO ---
+            security.pam.services.sudo_local.touchIdAuth = true;
 
             # 3. Homebrew Integration
             homebrew = {
