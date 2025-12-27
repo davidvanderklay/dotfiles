@@ -41,39 +41,87 @@
     }@inputs:
     {
 
-# --- MACOS CONFIGURATION ---
-    darwinConfigurations."eth0" = nix-darwin.lib.darwinSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        home-manager.darwinModules.home-manager
-        {
-          # 1. Basic System Config
-          nixpkgs.hostPlatform = "aarch64-darwin";
+      # --- MACOS CONFIGURATION ---
+      darwinConfigurations."eth0" = nix-darwin.lib.darwinSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          home-manager.darwinModules.home-manager
+          {
+            # 1. Basic System Config
+            nixpkgs.hostPlatform = "aarch64-darwin";
 
-          nixpkgs.config.allowUnfree = true; 
-          
-          # Add this line (mandatory for nix-darwin)
-          system.stateVersion = 6; 
+            nixpkgs.config.allowUnfree = true;
 
-          users.users.geolan.home = "/Users/geolan";
+            # Add this line (mandatory for nix-darwin)
+            system.stateVersion = 6;
 
-          nix.settings.experimental-features = "nix-command flakes";
-          nix.settings.trusted-users = [ "root" "geolan" ]; 
-          # 2. Home Manager Bridge
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "before-nix";
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
-          home-manager.users.geolan = import ./common/home-core.nix;
+            system.primaryUser = "geolan";
+            users.users.geolan.home = "/Users/geolan";
 
-          # 3. Settings
-          # REMOVE: services.nix-daemon.enable = true; (Nix-darwin does this for you now)
-          
-          programs.zsh.enable = true; 
-        }
-      ];
-    };
+            nix.settings.experimental-features = "nix-command flakes";
+            nix.settings.trusted-users = [
+              "root"
+              "geolan"
+            ];
+            # 2. Home Manager Bridge
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "before-nix";
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
+            home-manager.users.geolan = import ./common/home-core.nix;
+
+            # 3. Homebrew Integration
+            homebrew = {
+              enable = true;
+              onActivation.cleanup = "zap"; # Uninstalls anything not listed below
+              onActivation.autoUpdate = true;
+              onActivation.upgrade = true;
+
+              taps = [
+                "homebrew/services"
+                "nikitabobko/tap" # Required for Aerospace
+              ];
+
+              # CLI tools that are better via Homebrew on Mac (e.g. DBs)
+              brews = [
+                "imagemagick"
+                "postgresql@14"
+                "mariadb"
+              ];
+
+              # GUI Apps
+              casks = [
+                # System Utilities
+                "aerospace"
+                "alfred"
+                "maccy"
+                "rectangle"
+                "localsend"
+                "xquartz"
+
+                # Productivity & Dev
+                "zen"
+                "signal"
+                "zoom"
+                "helium-browser"
+
+                # Social & Medjja
+                "ghostty"
+                "iina"
+
+                # Fonts
+                "font-hack-nerd-font"
+              ];
+            };
+
+            # 3. Settings
+            # REMOVE: services.nix-daemon.enable = true; (Nix-darwin does this for you now)
+
+            programs.zsh.enable = true;
+          }
+        ];
+      };
 
       # --- 1. NIXOS SYSTEMS (Linux Desktop & Laptop) ---
       nixosConfigurations = {
