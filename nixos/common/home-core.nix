@@ -30,8 +30,8 @@
     yazi
     fzf
     (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
-    pkgs.wl-clipboard
-  ];
+    # pkgs.wl-clipboard
+  ] ++ (lib.optionals stdenv.isLinux [ pkgs.wl-clipboard ]);
 
   # xdg.configFile."nvim".source = ./nvim;
 
@@ -164,7 +164,8 @@
             repo = "tmux-kanagawa";
             rev = "master";
             # DELETE THIS LINE AND PASTE THE REAL HASH AFTER FIRST BUILD FAIL:
-            sha256 = "sha256-BcPErvbG7QwhxXgc3brSQKw3xd3jO5MHNxUj595L0uk=";
+            sha256 = "sha256-ldc++p2PcYdzoOLrd4PGSrueAGNWncdbc5k6wmFM9kQ=";
+  
           };
         };
         extraConfig = ''

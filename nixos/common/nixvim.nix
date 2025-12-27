@@ -61,7 +61,7 @@ in
       };
     };
 
-    clipboard.providers.wl-copy.enable = true;
+    clipboard.providers.wl-copy.enable = pkgs.stdenv.isLinux;
 
     # --- 3. PLUGINS ---
     plugins = {

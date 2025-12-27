@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,12 +33,47 @@
     {
       self,
       nixpkgs,
+      nix-darwin,
       home-manager,
       nixvim,
       lanzaboote,
       ...
     }@inputs:
     {
+
+# --- MACOS CONFIGURATION ---
+    darwinConfigurations."eth0" = nix-darwin.lib.darwinSystem {
+      specialArgs = { inherit inputs; };
+      modules = [
+        home-manager.darwinModules.home-manager
+        {
+          # 1. Basic System Config
+          nixpkgs.hostPlatform = "aarch64-darwin";
+
+          nixpkgs.config.allowUnfree = true; 
+          
+          # Add this line (mandatory for nix-darwin)
+          system.stateVersion = 6; 
+
+          users.users.geolan.home = "/Users/geolan";
+
+          nix.settings.experimental-features = "nix-command flakes";
+          nix.settings.trusted-users = [ "root" "geolan" ]; 
+          # 2. Home Manager Bridge
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "before-nix";
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
+          home-manager.users.geolan = import ./common/home-core.nix;
+
+          # 3. Settings
+          # REMOVE: services.nix-daemon.enable = true; (Nix-darwin does this for you now)
+          
+          programs.zsh.enable = true; 
+        }
+      ];
+    };
 
       # --- 1. NIXOS SYSTEMS (Linux Desktop & Laptop) ---
       nixosConfigurations = {
