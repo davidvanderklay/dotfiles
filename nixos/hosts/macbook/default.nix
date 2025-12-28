@@ -83,4 +83,6 @@
 
   # 4. Global Shell Config
   programs.zsh.enable = true;
+
+  services.tailscale.enable = true;
 }
