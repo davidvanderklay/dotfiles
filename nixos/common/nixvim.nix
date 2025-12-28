@@ -110,37 +110,39 @@ in
           auto_install = false;
           highlight.enable = true;
           indent.enable = true;
-          ensure_installed = [
-            "c"
-            "cpp"
-            "rust"
-            "zig"
-            "lua"
-            "vim"
-            "nix"
-            "python"
-            "javascript"
-            "typescript"
-            "tsx"
-            "json"
-            "yaml"
-            "toml"
-            "html"
-            "css"
-            "prisma"
-            "sql"
-            "dockerfile"
-            "markdown"
-            "java"
-            "go"
-            "cmake"
-            "bash"
-            "git_config"
-            "gitcommit"
-            "gitignore"
-            "diff"
-          ];
+          ensure_installed = [ ];
         };
+        grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+          bash
+          c
+          cmake
+          cpp
+          css
+          diff
+          dockerfile
+          git_config
+          gitcommit
+          gitignore
+          go
+          html
+          java
+          javascript
+          json
+          lua
+          markdown
+          nix
+          prisma
+          python
+          rust
+          sql
+          toml
+          tsx
+          typescript
+          vim
+          vimdoc # "vimdoc" is the new name for help syntax
+          yaml
+          zig
+        ];
         nixvimInjections = true;
       };
 
