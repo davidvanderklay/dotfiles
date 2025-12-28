@@ -112,37 +112,7 @@ in
           indent.enable = true;
           ensure_installed = [ ];
         };
-        grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
-          bash
-          c
-          cmake
-          cpp
-          css
-          diff
-          dockerfile
-          git_config
-          gitcommit
-          gitignore
-          go
-          html
-          java
-          javascript
-          json
-          lua
-          markdown
-          nix
-          prisma
-          python
-          rust
-          sql
-          toml
-          tsx
-          typescript
-          vim
-          vimdoc # "vimdoc" is the new name for help syntax
-          yaml
-          zig
-        ];
+        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
         nixvimInjections = true;
       };
 
