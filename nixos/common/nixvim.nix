@@ -107,6 +107,7 @@ in
       treesitter = {
         enable = true;
         settings = {
+          auto_install = false;
           highlight.enable = true;
           indent.enable = true;
           ensure_installed = [
