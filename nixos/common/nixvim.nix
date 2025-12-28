@@ -20,6 +20,46 @@ in
     # --- 1. GENERAL SETTINGS ---
     viAlias = true;
     vimAlias = true;
+    filetype = {
+      extension = {
+        # Data & Config
+        lock = "json"; # flake.lock, package-lock.json, etc.
+        conf = "conf";
+        env = "sh"; # Treat .env files as shell for syntax
+        "env.local" = "sh";
+        "env.example" = "sh";
+        tm = "toml"; # Some apps use .tm for toml
+        tf = "hcl"; # Terraform
+        tfvars = "hcl";
+
+        # Systems & Scripting
+        zsh = "zsh";
+        bash = "sh";
+      };
+
+      filename = {
+        # Web Dev & Tooling
+        ".prettierrc" = "json";
+        ".eslintrc" = "json";
+        ".babelrc" = "json";
+        ".stylelintrc" = "json";
+        "Brewfile" = "ruby";
+        "Jenkinsfile" = "groovy";
+        "Fastfile" = "ruby";
+
+        # Git
+        "ignore" = "gitignore";
+      };
+
+      pattern = {
+        # Catch any .env.xxxxx files (like .env.production)
+        "\\.env\\..*" = "sh";
+
+        # Ensure Docker Compose files are recognized correctly
+        "docker-compose.*\\.yml" = "yaml.docker-compose";
+        "docker-compose.*\\.yaml" = "yaml.docker-compose";
+      };
+    };
 
     opts = {
       confirm = true; # This is the magic setting. It prompts to save before exiting.
@@ -295,7 +335,16 @@ in
         };
       };
 
-      lint.enable = true;
+      lint = {
+        enable = true;
+        # We only define linters that actually exist.
+        # Since jsonls (LSP) handles JSON, we can leave this empty for JSON.
+        lintersByFt = {
+          # Example: python = [ "flake8" ];
+          # If you don't have a specific linter you want,
+          # leaving this empty is fine; LSP + Conform handles most things.
+        };
+      };
       trouble.enable = true;
     };
 
