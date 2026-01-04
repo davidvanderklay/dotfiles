@@ -151,8 +151,8 @@
             ./common/home-core.nix
 
             {
-              home.username = "geolan";
-              home.homeDirectory = "/home/geolan";
+              home.username = "van";
+              home.homeDirectory = "/home/van";
               home.stateVersion = "25.11";
 
               # On Ubuntu, you usually need to force the targets to work alongside the native distro
