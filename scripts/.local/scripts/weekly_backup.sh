@@ -16,6 +16,6 @@ echo "--- Backup started at $(date) ---" >>$LOGFILE
 
 # 3. Add --dry-run first to test safely!
 # REMOVE the "-n" once you are 100% sure the log looks correct.
-rsync -avz -n --delete $SOURCE $DEST >>$LOGFILE 2>&1
+rsync -avzH -n --delete $SOURCE $DEST >>$LOGFILE 2>&1
 
 echo "--- Backup finished at $(date) ---" >>$LOGFILE
