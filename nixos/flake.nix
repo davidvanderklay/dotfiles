@@ -141,7 +141,10 @@
         # TARGET 2: Ubuntu / Generic Linux (Intel/AMD)
         # Install with: nix run .#generic
         "generic" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Standard Linux Arch
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
           extraSpecialArgs = { inherit inputs; };
           modules = [
             nixvim.homeModules.nixvim
