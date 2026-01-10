@@ -88,6 +88,15 @@
     };
   };
 
+  systemd.user.services.ludusavi-backup = {
+    Unit.Description = "Ludusavi Auto Backup with Cloud Sync";
+    Service = {
+      # This backs up locally FIRST, then UPLOADS to the cloud
+      ExecStart = "${pkgs.ludusavi}/bin/ludusavi backup --force --cloud-sync";
+      Type = "oneshot";
+    };
+  };
+
   # Link the config file manually to ensure it uses your specific file
   xdg.configFile."ghostty/config".source = ./ghostty/config;
 
