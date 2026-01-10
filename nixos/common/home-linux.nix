@@ -97,6 +97,12 @@
     };
   };
 
+  systemd.user.timers.ludusavi-auto-backup = {
+    Timer.OnCalendar = "daily";
+    Timer.Persistent = true;
+    Install.WantedBy = [ "timers.target" ];
+  };
+
   # Link the config file manually to ensure it uses your specific file
   xdg.configFile."ghostty/config".source = ./ghostty/config;
 
