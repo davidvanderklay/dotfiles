@@ -26,7 +26,13 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    # This is the critical part to fix your error
+    plugins = with pkgs; [
+      networkmanager-openvpn
+    ];
+  };
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -183,6 +189,7 @@
     wget
     git
     ffmpeg
+    openvpn
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
