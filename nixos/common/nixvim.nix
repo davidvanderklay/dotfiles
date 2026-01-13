@@ -563,7 +563,7 @@ in
       clang-tools
 
       # Formatters & Linters
-      nixfmt-rfc-style # The new standard for Nix
+      pkgs.nixfmt
       stylua
       nodePackages.prettier
       black
