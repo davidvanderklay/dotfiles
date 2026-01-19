@@ -143,16 +143,11 @@ in
       };
       todo-comments.enable = true;
 
-      # --- TREESITTER (Syntax Highlighting) ---
       treesitter = {
         enable = true;
-        settings = {
-          auto_install = false;
-          highlight.enable = true;
-          indent.enable = true;
-          ensure_installed = [ ];
-        };
-        grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
+        highlight.enable = true;
+        indent.enable = true;
+        nixGrammars = true;
         nixvimInjections = true;
       };
 
