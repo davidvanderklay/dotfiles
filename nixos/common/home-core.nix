@@ -113,8 +113,14 @@
     # InitExtra: This is where we put your custom functions and raw shell code
     initContent = ''
       # --- Keybindings (History Search) ---
-      bindkey "^[[A" history-search-backward
-      bindkey "^[[B" history-search-forward
+      autoload -U history-search-end
+
+      bindkey "^[[A" history-beginning-search-backward
+      bindkey "^[[B" history-beginning-search-forward
+
+      # Some terminals (like tmux) send these codes instead
+      bindkey "^[OA" history-beginning-search-backward
+      bindkey "^[OB" history-beginning-search-forward
 
       # --- TMUX & SUDO ---
       # Ensure tmux-sessionizer is in your PATH or change this to full path
