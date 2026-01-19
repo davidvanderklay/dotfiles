@@ -113,14 +113,15 @@
     # InitExtra: This is where we put your custom functions and raw shell code
     initContent = ''
       # --- Keybindings (History Search) ---
-      autoload -U history-search-end
+      source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-      bindkey "^[[A" history-beginning-search-backward
-      bindkey "^[[B" history-beginning-search-forward
+      # Bind the Up/Down arrow keys to the substring search
+      bindkey '^[[A' history-substring-search-up
+      bindkey '^[[B' history-substring-search-down
 
-      # Some terminals (like tmux) send these codes instead
-      bindkey "^[OA" history-beginning-search-backward
-      bindkey "^[OB" history-beginning-search-forward
+      # Bindings for Tmux or other terminal modes that send different codes
+      bindkey '^[OA' history-substring-search-up
+      bindkey '^[OB' history-substring-search-down
 
       # --- TMUX & SUDO ---
       # Ensure tmux-sessionizer is in your PATH or change this to full path
