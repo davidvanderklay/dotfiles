@@ -30,6 +30,7 @@
       syncthing
       gnupg
       jq
+      qrencode
 
       # Formatters
       rustfmt
