@@ -166,6 +166,7 @@
     dedicatedServer.openFirewall = true;
   };
   programs.gamemode.enable = true; # Feral Gamemode
+  programs.gamescope.enable = true;
 
   # 4. DOCKER
   virtualisation.docker = {
