@@ -18,6 +18,7 @@
 
     distrobox
     pkgs.localsend
+    gamescope
 
     # Gaming
     lutris
