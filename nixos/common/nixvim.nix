@@ -103,8 +103,56 @@ in
 
     clipboard.providers.wl-copy.enable = pkgs.stdenv.isLinux;
 
+    # 1. Add required Python packages for Molten
+    extraPython3Packages =
+      ps: with ps; [
+        pynvim
+        jupyter-client
+        ipykernel
+        nbformat
+      ];
     # --- 3. PLUGINS ---
     plugins = {
+      # --- QUARTO & MOLTEN ---
+      quarto = {
+        enable = true;
+        settings = {
+          lspFeatures = {
+            enabled = true;
+            languages = [
+              "python"
+              "bash"
+              "lua"
+            ];
+            chunks = "all";
+          };
+          codeRunner = {
+            enabled = true;
+            default_method = "molten"; # Tell Quarto to use Molten
+          };
+        };
+      };
+
+      molten = {
+        enable = true;
+        settings = {
+          auto_open_output = false;
+          image_provider = "image.nvim"; # Use image.nvim for plots
+          wrap_output = true;
+          virt_text_output = true;
+          virt_lines_off_by_1 = true;
+        };
+      };
+
+      # Required for LSP features inside Quarto/Markdown code chunks
+      otter.enable = true;
+
+      # For rendering images (plots) inside Neovim
+      image = {
+        enable = true;
+        backend = "ueberzug"; # or "kitty" if you use kitty terminal
+        maxHeightWindowPercentage = 50;
+      };
       web-devicons.enable = true;
       lualine.enable = true;
       which-key.enable = true;
@@ -545,6 +593,51 @@ in
         action = "<cmd>GrugFar<CR>";
         options.desc = "Search and Replace (GrugFar)";
       }
+      # Molten Keymaps
+      {
+        mode = "n";
+        key = "<leader>mi";
+        action = "<cmd>MoltenInit<cr>";
+        options.desc = "Initialize Molten";
+      }
+      {
+        mode = "n";
+        key = "<leader>re";
+        action = "<cmd>MoltenEvaluateOperator<cr>";
+        options.desc = "Run Operator";
+      }
+      {
+        mode = "n";
+        key = "<leader>rl";
+        action = "<cmd>MoltenEvaluateLine<cr>";
+        options.desc = "Run Line";
+      }
+      {
+        mode = "v";
+        key = "<leader>rv";
+        action = ":<C-u>MoltenEvaluateVisual<cr>gv";
+        options.desc = "Run Visual Selection";
+      }
+      {
+        mode = "n";
+        key = "<leader>rh";
+        action = "<cmd>MoltenHideOutput<cr>";
+        options.desc = "Hide Output";
+      }
+      {
+        mode = "n";
+        key = "<leader>ro";
+        action = "<cmd>MoltenShowOutput<cr>";
+        options.desc = "Show Output";
+      }
+
+      # Quarto Keymaps
+      {
+        mode = "n";
+        key = "<leader>qp";
+        action = "<cmd>QuartoPreview<cr>";
+        options.desc = "Quarto Preview";
+      }
 
     ];
 
@@ -578,6 +671,11 @@ in
       vscode-langservers-extracted # html, css, json, eslint
       yaml-language-server
       texliveSmall
+
+      quarto
+      python311Packages.ipykernel # For the python kernel
+      # If using image.nvim, you usually need:
+      imagemagick
 
     ];
 

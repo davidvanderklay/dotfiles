@@ -52,6 +52,7 @@
       "imagemagick"
       "postgresql@14"
       "mariadb"
+      "jupytext"
     ];
 
     casks = [

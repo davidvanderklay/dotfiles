@@ -41,6 +41,7 @@
       fzf
       ripgrep
       fd
+      quarto
       (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile ./scripts/tmux-sessionizer))
       # pkgs.wl-clipboard
     ]
@@ -196,6 +197,7 @@
     ];
 
     extraConfig = ''
+      set -g allow-passthrough on # ADD THIS LINE
       set -g status-position top
       setw -g pane-base-index 1
 
