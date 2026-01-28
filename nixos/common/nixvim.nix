@@ -137,6 +137,9 @@ in
         enable = true;
         settings = {
           auto_open_output = false;
+          # ADD THESE:
+          save_last_position = true;
+          auto_export_output = true; # Molten will try to export on save
           image_provider = "image.nvim"; # Use image.nvim for plots
           wrap_output = true;
           virt_text_output = true;
