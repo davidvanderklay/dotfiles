@@ -4,15 +4,6 @@
   lib,
   ...
 }:
-let
-  # 1. Define the custom wrapper script right here
-  # This creates a command called 'osu' that automatically applies low latency and gamemode
-  osu-optimized = pkgs.writeShellScriptBin "osu" ''
-    export PIPEWIRE_LATENCY="64/48000" 
-    # Use gamemoderun to launch the official binary
-    exec ${pkgs.gamemode}/bin/gamemoderun ${pkgs.osu-lazer-bin}/bin/osu! "$@"
-  '';
-in
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -85,13 +76,6 @@ in
     pulse.enable = true;
     # jack.enable = true; # Optional
   };
-
-  # 3. Install the specific package + the wrapper
-  environment.systemPackages = with pkgs; [
-    osu-optimized # This installs our custom script above
-    osu-lazer-bin # This installs the actual game assets
-    pavucontrol # Audio control
-  ];
 
   programs.obs-studio = {
     enable = true;
