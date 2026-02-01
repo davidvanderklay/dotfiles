@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 {
@@ -76,6 +77,14 @@
     pulse.enable = true;
     # jack.enable = true; # Optional
   };
+
+  environment.systemPackages = with pkgs; [
+    # This installs the specifically patched osu! stable version
+    inputs.nix-gaming.packages.${pkgs.system}.osu-stable
+
+    # Optional: If you want the native Lazer version as well
+    # osu-lazer-bin
+  ];
 
   programs.obs-studio = {
     enable = true;

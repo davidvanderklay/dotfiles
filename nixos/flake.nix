@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +35,7 @@
     {
       self,
       nixpkgs,
+      nix-gaming,
       nix-darwin,
       home-manager,
       nixvim,
