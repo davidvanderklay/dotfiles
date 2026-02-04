@@ -61,7 +61,7 @@
     }
 
     layout {
-      gaps 12
+      gaps 0
       border {
         width 2
         active-color "#d1d1d1"    // Pure White
