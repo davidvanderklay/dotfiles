@@ -19,6 +19,34 @@
     };
   };
 
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        # This avoids starting multiple instances
+        lock_cmd = "niri msg action power-off-monitors";
+        unlock_cmd = "niri msg action power-on-monitors";
+        # This ensures the screen turns off before the computer suspends
+        before_sleep_cmd = "niri msg action power-off-monitors";
+      };
+
+      listener = [
+        {
+          timeout = 60; # 5 minutes (300 seconds)
+          # What to do when the timeout is reached
+          on-timeout = "niri msg action power-off-monitors";
+          # What to do when you move the mouse/type again
+          on-resume = "niri msg action power-on-monitors";
+        }
+        {
+          timeout = 600; # 10 minutes
+          # Optional: Actually suspend the PC after 10 mins of inactivity
+          # on-timeout = "systemctl suspend";
+        }
+      ];
+    };
+  };
+
   xdg.configFile."niri/config.kdl".text = ''
     input {
       keyboard {
@@ -101,6 +129,7 @@
   };
 
   home.packages = with pkgs; [
+    hypridle
     xwayland-satellite # Allows Steam/X11 games to run on Niri
     swaybg # Wallpaper support
     grim # Screenshot tool
