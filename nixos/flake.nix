@@ -14,6 +14,13 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # --- ADD THESE ---
+    niri.url = "github:YaLTeR/niri";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-gaming.url = "github:fufexan/nix-gaming";
 
     nix-darwin = {
@@ -45,6 +52,8 @@
     {
       self,
       nixpkgs,
+      niri,
+      noctalia,
       nix-gaming,
       nix-darwin,
       home-manager,
