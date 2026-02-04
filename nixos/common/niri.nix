@@ -88,7 +88,6 @@
             accel-profile "flat"
           }
           focus-follows-mouse
-          warp-mouse-to-focus
         }
 
         layout {
