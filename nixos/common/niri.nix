@@ -28,14 +28,16 @@
       mouse {
         accel-profile "flat"
       }
+      focus-follows-mouse
+      warp-mouse-to-focus
     }
 
     layout {
       gaps 12
       border {
         width 2
-        active-color "#7aa2f7"
-        inactive-color "#414868"
+        active-color "#d1d1d1"    // Pure White
+        inactive-color "#333333"  // Dark Grey
       }
       focus-ring {
         off
