@@ -85,8 +85,6 @@
       
       Mod+H { focus-column-left; }
       Mod+L { focus-column-right; }
-      Mod+K { focus-window-up; }
-      Mod+J { focus-window-down; }
 
       // CHANGE THESE: This allows J and K to move between workspaces too
       Mod+K { focus-window-or-workspace-up; }
@@ -98,8 +96,6 @@
       
       Mod+Shift+H { move-column-left; }
       Mod+Shift+L { move-column-right; }
-      Mod+Shift+K { move-window-up; }
-      Mod+Shift+J { move-window-down; }
       
       Mod+1 { focus-workspace 1; }
       Mod+2 { focus-workspace 2; }
