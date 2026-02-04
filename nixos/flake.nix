@@ -15,7 +15,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # --- ADD THESE ---
-    niri.url = "github:YaLTeR/niri";
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,7 +51,6 @@
     {
       self,
       nixpkgs,
-      niri,
       noctalia,
       nix-gaming,
       nix-darwin,

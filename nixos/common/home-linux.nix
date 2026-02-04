@@ -9,6 +9,7 @@
   imports = [
     ./home-core.nix
     ./niri.nix # <--- Add this line near the top
+    ./gnome.nix
   ];
 
   home.username = "geolan";

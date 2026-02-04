@@ -8,100 +8,83 @@
 
 {
   imports = [
-    inputs.niri.homeModules.niri
     inputs.noctalia.homeModules.default
   ];
 
-  # Noctalia Shell Configuration
-  programs.noctalia = {
+  # To this:
+  programs.noctalia-shell = {
     enable = true;
     settings = {
-      # Noctalia is designed to be minimal.
-      # It handles the bar and the launcher automatically.
+      # your config here
     };
   };
 
-  # Niri Compositor Configuration
-  programs.niri.settings = {
-    # --- NVIDIA & INPUT ---
-    input = {
-      mouse.accel-profile = "flat";
-      keyboard.repeat-delay = 250;
-      keyboard.repeat-rate = 40;
-    };
-
-    # --- COSMETICS ---
-    layout = {
-      gaps = 12;
-      border = {
-        enable = true;
-        width = 2;
-        active-color = "#7aa2f7"; # You can change these to match your theme
-        inactive-color = "#414868";
-      };
-      focus-ring.enable = false; # We use borders instead
-    };
-
-    # --- VIM BINDINGS & YOUR GNOME BINDS ---
-    binds = with config.lib.niri.actions; {
-      # Basic WM Ops
-      "Super+Q".action = close-window;
-      "Super+F".action = maximize-column;
-      "Super+Shift+F".action = fullscreen-window;
-      "Super+Space".action = spawn "noctalia-launcher";
-
-      # Your GNOME App Binds
-      "Super+U".action = spawn "ghostty";
-      "Super+W".action = spawn "zen";
-      "Super+R".action = spawn "nautilus";
-      "Control+Shift+Escape".action = spawn "gnome-system-monitor";
-
-      # --- VIM MOVEMENT (HJKL) ---
-      # Focus windows/columns
-      "Super+H".action = focus-column-left;
-      "Super+L".action = focus-column-right;
-      "Super+K".action = focus-window-or-workspace-up;
-      "Super+J".action = focus-window-or-workspace-down;
-
-      # Move windows/columns
-      "Super+Shift+H".action = move-column-left;
-      "Super+Shift+L".action = move-column-right;
-      "Super+Shift+K".action = move-window-up;
-      "Super+Shift+J".action = move-window-down;
-
-      # --- WORKSPACES (1-6) ---
-      "Super+1".action = focus-workspace 1;
-      "Super+2".action = focus-workspace 2;
-      "Super+3".action = focus-workspace 3;
-      "Super+4".action = focus-workspace 4;
-      "Super+5".action = focus-workspace 5;
-      "Super+6".action = focus-workspace 6;
-
-      "Super+Shift+1".action = move-window-to-workspace 1;
-      "Super+Shift+2".action = move-window-to-workspace 2;
-      "Super+Shift+3".action = move-window-to-workspace 3;
-      "Super+Shift+4".action = move-window-to-workspace 4;
-      "Super+Shift+5".action = move-window-to-workspace 5;
-      "Super+Shift+6".action = move-window-to-workspace 6;
-
-      # Screenshot (Matching your GNOME bind)
-      "Super+Shift+S".action = screenshot;
-    };
-
-    # --- STARTUP ---
-    spawn-at-startup = [
-      { command = [ "xwayland-satellite" ]; } # ESSENTIAL FOR NVIDIA GAMING
-      {
-        command = [
-          "swaybg"
-          "-m"
-          "fill"
-          "-i"
-          "${../wallpapers/your_wallpaper.png}"
-        ];
+  xdg.configFile."niri/config.kdl".text = ''
+    input {
+      keyboard {
+        repeat-delay 250
+        repeat-rate 40
       }
-    ];
-  };
+      mouse {
+        accel-profile "flat"
+      }
+    }
+
+    layout {
+      gaps 12
+      border {
+        width 2
+        active-color "#7aa2f7"
+        inactive-color "#414868"
+      }
+      focus-ring {
+        off
+      }
+    }
+
+    binds {
+      Mod+Q { close-window; }
+      Mod+F { maximize-column; }
+      Mod+Shift+F { fullscreen-window; }
+      
+      Mod+U { spawn "ghostty"; }
+      Mod+W { spawn "zen"; }
+      Mod+R { spawn "nautilus"; }
+      Mod+Space { spawn "noctalia-launcher"; }
+      
+      Mod+H { focus-column-left; }
+      Mod+L { focus-column-right; }
+      Mod+K { focus-window-up; }
+      Mod+J { focus-window-down; }
+      
+      Mod+Shift+H { move-column-left; }
+      Mod+Shift+L { move-column-right; }
+      Mod+Shift+K { move-window-up; }
+      Mod+Shift+J { move-window-down; }
+      
+      Mod+1 { focus-workspace 1; }
+      Mod+2 { focus-workspace 2; }
+      Mod+3 { focus-workspace 3; }
+      Mod+4 { focus-workspace 4; }
+      Mod+5 { focus-workspace 5; }
+      Mod+6 { focus-workspace 6; }
+      
+      Mod+Shift+1 { move-column-to-workspace 1; }
+      Mod+Shift+2 { move-column-to-workspace 2; }
+      Mod+Shift+3 { move-column-to-workspace 3; }
+      Mod+Shift+4 { move-column-to-workspace 4; }
+      Mod+Shift+5 { move-column-to-workspace 5; }
+      Mod+Shift+6 { move-column-to-workspace 6; }
+      
+      Mod+Shift+S { screenshot; }
+    }
+
+    spawn-at-startup "xwayland-satellite"
+
+    output "*" {
+      background-color "#000000"
+    }
+  '';
 
   # Environment variables to force Wayland on Nvidia
   home.sessionVariables = {
@@ -114,6 +97,7 @@
   home.packages = with pkgs; [
     xwayland-satellite # Allows Steam/X11 games to run on Niri
     swaybg # Wallpaper support
+    grim # Screenshot tool
     wl-clipboard # Wayland clipboard
   ];
 }
