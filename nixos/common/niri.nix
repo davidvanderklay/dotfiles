@@ -76,6 +76,7 @@
       Mod+Q { close-window; }
       Mod+F { maximize-column; }
       Mod+Shift+F { fullscreen-window; }
+      Mod+Tab { toggle-overview; }
       
       Mod+U { spawn "ghostty"; }
       Mod+W { spawn "zen"; }
