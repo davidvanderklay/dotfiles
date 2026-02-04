@@ -114,21 +114,22 @@
     };
   };
 
-  # Update Hypridle to use hyprctl
   services.hypridle = {
     enable = true;
     settings = {
       general = {
-        lock_cmd = "pidof hyprlock || hyprlock";
-        before_sleep_cmd = "loginctl lock-session";
+        # Optional: Lock the screen before the display turns off
+        # lock_cmd = "pidof hyprlock || hyprlock";
+
+        # Ensure screen turns on if you press a key
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
       listener = [
         {
-          timeout = 300;
-          on-timeout = "hyprctl dispatch dpms off";
-          on-resume = "hyprctl dispatch dpms on";
+          timeout = 60; # 1 minute
+          on-timeout = "hyprctl dispatch dpms off"; # Turn screen OFF
+          on-resume = "hyprctl dispatch dpms on"; # Turn screen ON
         }
       ];
     };
