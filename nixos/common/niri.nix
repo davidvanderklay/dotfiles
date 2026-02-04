@@ -50,7 +50,7 @@
       Mod+U { spawn "ghostty"; }
       Mod+W { spawn "zen"; }
       Mod+R { spawn "nautilus"; }
-      Mod+Space { spawn "noctalia-launcher"; }
+      Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
       
       Mod+H { focus-column-left; }
       Mod+L { focus-column-right; }
@@ -77,11 +77,15 @@
       Mod+Shift+6 { move-column-to-workspace 6; }
       
       Mod+Shift+S { screenshot; }
+
+      Mod+Shift+Slash { show-hotkey-overlay; }
     }
 
+    spawn-at-startup "noctalia-shell"
     spawn-at-startup "xwayland-satellite"
 
-    output "*" {
+    output "DP-3" {
+      mode "2560x1440@239.999"  // Must match EXACTLY from niri msg outputs
       background-color "#000000"
     }
   '';
