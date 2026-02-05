@@ -156,6 +156,7 @@
       Mod+Shift+S { screenshot; }
 
       Mod+Shift+Slash { show-hotkey-overlay; }
+      Mod+Shift+E { quit; }
     }
 
     spawn-at-startup "noctalia-shell"
