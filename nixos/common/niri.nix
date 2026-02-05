@@ -109,8 +109,13 @@
       }
     }
 
+    hotkey-overlay {
+        skip-at-startup
+    }
+
     binds {
       Mod+Q { close-window; }
+      Mod+Shift+Q { spawn "sh" "-c" "niri msg --json focused-window | jq .pid | xargs kill -9"; }
       Mod+F { maximize-column; }
       Mod+Shift+F { fullscreen-window; }
       Mod+Tab { toggle-overview; }
