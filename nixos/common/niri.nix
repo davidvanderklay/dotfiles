@@ -79,6 +79,7 @@
   };
 
   xdg.configFile."niri/config.kdl".text = ''
+    prefer-no-csd
     input {
       keyboard {
         repeat-delay 250
