@@ -19,51 +19,6 @@
     };
   };
 
-  # 2. GTK Theming (Top level)
-  gtk = {
-    enable = true;
-    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
-    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
-  };
-
-  # 3. Qt Theming (Top level)
-  qt = {
-    enable = true;
-    platformTheme.name = "gtk";
-    style.name = "adwaita-dark";
-  };
-
-  # 4. Dconf / Dark Mode Preference (Top level)
-  dconf.settings = {
-    "org/freedesktop/appearance" = {
-      color-scheme = 1; # 1 = Prefer Dark
-    };
-  };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gnome
-      pkgs.xdg-desktop-portal-gtk
-    ];
-    config = {
-      niri = {
-        default = [
-          "gnome"
-          "gtk"
-        ];
-        "org.freedesktop.impl.portal.Screencast" = [ "gnome" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-      };
-      common = {
-        default = [
-          "gnome"
-          "gtk"
-        ];
-      };
-    };
-  };
-
   services.hypridle = {
     enable = true;
     settings = {
@@ -191,8 +146,6 @@
     WLR_NO_HARDWARE_CURSORS = "1"; # Stops the cursor from being invisible
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
-    # Theme Variables
-    GTK_THEME = "Adwaita:dark";
   };
 
   home.packages = with pkgs; [
@@ -200,7 +153,5 @@
     xwayland-satellite # Allows Steam/X11 games to run on Niri
     swaybg # Wallpaper support
     wl-clipboard # Wayland clipboard
-    adwaita-icon-theme
-    gnome-themes-extra
   ];
 }
