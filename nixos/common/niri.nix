@@ -79,94 +79,80 @@
   };
 
   xdg.configFile."niri/config.kdl".text = ''
-        input {
-          keyboard {
-            repeat-delay 250
-            repeat-rate 40
-          }
-          mouse {
-            accel-profile "flat"
-          }
-          focus-follows-mouse
-        }
-
-        layout {
-          gaps 0
-          border {
-            width 2
-            active-color "#d1d1d1"    // Pure White
-            inactive-color "#333333"  // Dark Grey
-          }
-          focus-ring {
-            off
-          }
-        }
-
-        binds {
-          Mod+Q { close-window; }
-          Mod+F { maximize-column; }
-          Mod+Shift+F { fullscreen-window; }
-          Mod+Tab { toggle-overview; }
-          
-          Mod+U { spawn "ghostty"; }
-          Mod+W { spawn "zen"; }
-          Mod+R { spawn "nautilus"; }
-          Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-          
-          Mod+H { focus-column-left; }
-          Mod+L { focus-column-right; }
-
-          // CHANGE THESE: This allows J and K to move between workspaces too
-          Mod+K { focus-window-or-workspace-up; }
-          Mod+J { focus-window-or-workspace-down; }
-
-          // Do the same for moving windows/columns
-          Mod+Shift+K { move-window-up-or-to-workspace-up; }
-          Mod+Shift+J { move-window-down-or-to-workspace-down; }
-          
-          Mod+Shift+H { move-column-left; }
-          Mod+Shift+L { move-column-right; }
-          
-          Mod+1 { focus-workspace 1; }
-          Mod+2 { focus-workspace 2; }
-          Mod+3 { focus-workspace 3; }
-          Mod+4 { focus-workspace 4; }
-          Mod+5 { focus-workspace 5; }
-          Mod+6 { focus-workspace 6; }
-          
-          Mod+Shift+1 { move-column-to-workspace 1; }
-          Mod+Shift+2 { move-column-to-workspace 2; }
-          Mod+Shift+3 { move-column-to-workspace 3; }
-          Mod+Shift+4 { move-column-to-workspace 4; }
-          Mod+Shift+5 { move-column-to-workspace 5; }
-          Mod+Shift+6 { move-column-to-workspace 6; }
-          
-          Mod+Shift+S { screenshot; }
-
-          Mod+Shift+Slash { show-hotkey-overlay; }
-        }
-    window-rule {
-        // Match the Minecraft window specifically
-        match app-id="org.prismlauncher.PrismLauncher"
-        match title="Minecraft" // Or whatever the title bar usually says
-
-        // Force it to hide the bar and title
-        open-fullscreen true
-        
-        // This stops the "window name" (CSD) from showing up
-        draw-border-with-background false
-        
-        // Optional: Help with mouse focus in games
-        variable-refresh-rate true
+    input {
+      keyboard {
+        repeat-delay 250
+        repeat-rate 40
+      }
+      mouse {
+        accel-profile "flat"
+      }
+      focus-follows-mouse
     }
 
-        spawn-at-startup "noctalia-shell"
-        spawn-at-startup "xwayland-satellite"
+    layout {
+      gaps 0
+      border {
+        width 2
+        active-color "#d1d1d1"    // Pure White
+        inactive-color "#333333"  // Dark Grey
+      }
+      focus-ring {
+        off
+      }
+    }
 
-        output "DP-3" {
-          mode "2560x1440@239.999"  // Must match EXACTLY from niri msg outputs
-          background-color "#000000"
-        }
+    binds {
+      Mod+Q { close-window; }
+      Mod+F { maximize-column; }
+      Mod+Shift+F { fullscreen-window; }
+      Mod+Tab { toggle-overview; }
+      
+      Mod+U { spawn "ghostty"; }
+      Mod+W { spawn "zen"; }
+      Mod+R { spawn "nautilus"; }
+      Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+      
+      Mod+H { focus-column-left; }
+      Mod+L { focus-column-right; }
+
+      // CHANGE THESE: This allows J and K to move between workspaces too
+      Mod+K { focus-window-or-workspace-up; }
+      Mod+J { focus-window-or-workspace-down; }
+
+      // Do the same for moving windows/columns
+      Mod+Shift+K { move-window-up-or-to-workspace-up; }
+      Mod+Shift+J { move-window-down-or-to-workspace-down; }
+      
+      Mod+Shift+H { move-column-left; }
+      Mod+Shift+L { move-column-right; }
+      
+      Mod+1 { focus-workspace 1; }
+      Mod+2 { focus-workspace 2; }
+      Mod+3 { focus-workspace 3; }
+      Mod+4 { focus-workspace 4; }
+      Mod+5 { focus-workspace 5; }
+      Mod+6 { focus-workspace 6; }
+      
+      Mod+Shift+1 { move-column-to-workspace 1; }
+      Mod+Shift+2 { move-column-to-workspace 2; }
+      Mod+Shift+3 { move-column-to-workspace 3; }
+      Mod+Shift+4 { move-column-to-workspace 4; }
+      Mod+Shift+5 { move-column-to-workspace 5; }
+      Mod+Shift+6 { move-column-to-workspace 6; }
+      
+      Mod+Shift+S { screenshot; }
+
+      Mod+Shift+Slash { show-hotkey-overlay; }
+    }
+
+    spawn-at-startup "noctalia-shell"
+    spawn-at-startup "xwayland-satellite"
+
+    output "DP-3" {
+      mode "2560x1440@239.999"  // Must match EXACTLY from niri msg outputs
+      background-color "#000000"
+    }
   '';
 
   # Environment variables to force Wayland on Nvidia
