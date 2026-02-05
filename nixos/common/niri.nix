@@ -40,14 +40,28 @@
     };
   };
 
-  # 5. XDG Portals (Crucial for dark mode to "broadcast" to apps)
   xdg.portal = {
     enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gnome
       pkgs.xdg-desktop-portal-gtk
     ];
-    config.common.default = "*";
+    config = {
+      niri = {
+        default = [
+          "gnome"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Screencast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
+      };
+      common = {
+        default = [
+          "gnome"
+          "gtk"
+        ];
+      };
+    };
   };
 
   services.hypridle = {
@@ -168,6 +182,7 @@
       mode "2560x1440@239.999"  // Must match EXACTLY from niri msg outputs
       background-color "#000000"
     }
+    screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
   '';
 
   # Environment variables to force Wayland on Nvidia
