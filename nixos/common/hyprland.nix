@@ -25,6 +25,11 @@
 
     settings = {
       "$mainMod" = "SUPER";
+      # --- ADD THIS SECTION ---
+      misc = {
+        # This tells Hyprland to focus the window when it requests activation
+        focus_on_activate = true;
+      };
 
       monitor = [
         "DP-3, 2560x1440@239.99, 0x0, 1"
