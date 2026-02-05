@@ -115,7 +115,7 @@
 
     binds {
       Mod+Q { close-window; }
-      Mod+Shift+Q { spawn "sh" "-c" "niri msg --json focused-window | jq .pid | xargs kill -9"; }
+      Mod+Shift+Q { spawn "niri-force-kill"; }
       Mod+F { maximize-column; }
       Mod+Shift+F { fullscreen-window; }
       Mod+Tab { toggle-overview; }
@@ -181,7 +181,20 @@
     hypridle
     xwayland-satellite # Allows Steam/X11 games to run on Niri
     swaybg # Wallpaper support
-    grim # Screenshot tool
+    (writeShellScriptBin "niri-force-kill" ''
+      # Get focused window data
+      WINDOW_DATA=$(niri msg --json focused-window)
+      PID=$(echo "$WINDOW_DATA" | jq -r '.pid')
+      APP_ID=$(echo "$WINDOW_DATA" | jq -r '.app_id // empty')
+
+      # If the process is the X11 bridge, kill Java/Minecraft specifically
+      if ps -p "$PID" -o comm= | grep -q "xwayland-satellite"; then
+          pkill -9 -f "minecraft" || pkill -9 "java"
+      else
+          # Otherwise kill the native Wayland PID
+          kill -9 "$PID"
+      fi
+    '')
     wl-clipboard # Wayland clipboard
     adwaita-icon-theme
     gnome-themes-extra
