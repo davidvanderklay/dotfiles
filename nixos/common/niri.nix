@@ -80,6 +80,12 @@
 
   xdg.configFile."niri/config.kdl".text = ''
     prefer-no-csd
+    workspace "1"
+    workspace "2"
+    workspace "3"
+    workspace "4"
+    workspace "5"
+    workspace "6"
     input {
       keyboard {
         repeat-delay 250
@@ -128,19 +134,19 @@
       Mod+Shift+H { move-column-left; }
       Mod+Shift+L { move-column-right; }
       
-      Mod+1 { focus-workspace 1; }
-      Mod+2 { focus-workspace 2; }
-      Mod+3 { focus-workspace 3; }
-      Mod+4 { focus-workspace 4; }
-      Mod+5 { focus-workspace 5; }
-      Mod+6 { focus-workspace 6; }
-      
-      Mod+Shift+1 { move-column-to-workspace 1; }
-      Mod+Shift+2 { move-column-to-workspace 2; }
-      Mod+Shift+3 { move-column-to-workspace 3; }
-      Mod+Shift+4 { move-column-to-workspace 4; }
-      Mod+Shift+5 { move-column-to-workspace 5; }
-      Mod+Shift+6 { move-column-to-workspace 6; }
+      Mod+1 { focus-workspace "1"; }
+      Mod+2 { focus-workspace "2"; }
+      Mod+3 { focus-workspace "3"; }
+      Mod+4 { focus-workspace "4"; }
+      Mod+5 { focus-workspace "5"; }
+      Mod+6 { focus-workspace "6"; }
+
+      Mod+Shift+1 { move-column-to-workspace "1"; }
+      Mod+Shift+2 { move-column-to-workspace "2"; }
+      Mod+Shift+3 { move-column-to-workspace "3"; }
+      Mod+Shift+4 { move-column-to-workspace "4"; }
+      Mod+Shift+5 { move-column-to-workspace "5"; }
+      Mod+Shift+6 { move-column-to-workspace "6"; }
       
       Mod+Shift+S { screenshot; }
 
