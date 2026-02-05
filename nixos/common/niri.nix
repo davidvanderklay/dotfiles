@@ -156,7 +156,9 @@
 
       Mod+Shift+Slash { show-hotkey-overlay; }
       Mod+V { toggle-window-floating; }
+      Mod+Shift+P { power-off-monitors; }
       Mod+Shift+E { quit; }
+      Ctrl+Alt+Delete { quit; }
     }
 
     spawn-at-startup "noctalia-shell"
