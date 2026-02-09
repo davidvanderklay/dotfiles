@@ -5,14 +5,21 @@
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
+      "https://ezkea.cachix.org" # Add this
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI=" # Add this
     ];
   };
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Add this here
+    aagl = {
+      url = "github:ezKEa/aagl-gtk-on-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # --- ADD THESE ---
     noctalia = {
@@ -89,6 +96,7 @@
             { nixpkgs.hostPlatform = "x86_64-linux"; }
 
             lanzaboote.nixosModules.lanzaboote
+            inputs.aagl.nixosModules.default # <--- ADD THIS LINE
             # Machine Specifics
             ./hosts/desktop/default.nix
             # Common Config

@@ -86,6 +86,9 @@
     # osu-lazer-bin
   ];
 
+  nix.settings = inputs.aagl.nixConfig;
+  programs.honkers-railway-launcher.enable = true;
+
   programs.obs-studio = {
     enable = true;
 
