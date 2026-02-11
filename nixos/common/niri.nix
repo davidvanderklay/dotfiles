@@ -122,6 +122,9 @@
       Mod+Shift+6 { move-column-to-workspace "6"; }
       
       Mod+Shift+S { screenshot; }
+      Mod+Shift+G { 
+        spawn "sh" "-c" "niri msg outputs | grep -A 10 'DP-3' | grep -q 'enabled' && niri msg output DP-3 vrr off || niri msg output DP-3 vrr on"
+      }
 
       Mod+Shift+Slash { show-hotkey-overlay; }
       Mod+V { toggle-window-floating; }
