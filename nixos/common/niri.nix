@@ -146,7 +146,7 @@
   # Environment variables to force Wayland on Nvidia
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    WLR_NO_HARDWARE_CURSORS = "1"; # Stops the cursor from being invisible
+    # WLR_NO_HARDWARE_CURSORS = "1"; # Stops the cursor from being invisible
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
   };
