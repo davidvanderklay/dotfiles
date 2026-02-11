@@ -44,6 +44,16 @@
       "x-scheme-handler/https" = "zen-beta.desktop";
       "x-scheme-handler/about" = "zen-beta.desktop";
       "x-scheme-handler/unknown" = "zen-beta.desktop";
+
+      # PDF Viewer (GNOME Evince)
+      "application/pdf" = "org.gnome.Papers.desktop";
+
+      # Image Viewer (GNOME Loupe)
+      "image/png" = "org.gnome.Loupe.desktop";
+      "image/jpeg" = "org.gnome.Loupe.desktop";
+      "image/gif" = "org.gnome.Loupe.desktop";
+      "image/webp" = "org.gnome.Loupe.desktop";
+      "image/svg+xml" = "org.gnome.Loupe.desktop";
     };
   };
 

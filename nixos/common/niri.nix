@@ -149,6 +149,8 @@
     # WLR_NO_HARDWARE_CURSORS = "1"; # Stops the cursor from being invisible
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
   };
 
   home.packages = with pkgs; [
@@ -157,5 +159,15 @@
     swaybg # Wallpaper support
     wl-clipboard # Wayland clipboard
     libnotify # <--- Add this
+    bibata-cursors
   ];
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24; # Standard size. Increase to 32 if 24 is too small.
+  };
+
 }
