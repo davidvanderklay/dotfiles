@@ -123,7 +123,7 @@
       
       Mod+Shift+S { screenshot; }
       Mod+Shift+G { 
-        spawn "sh" "-c" "niri msg outputs | grep -A 10 'DP-3' | grep -q 'enabled' && niri msg output DP-3 vrr off || niri msg output DP-3 vrr on"
+        spawn "sh" "-c" "if niri msg outputs | grep -A 3 '(DP-3)' | grep 'Variable refresh rate' | grep -q 'enabled'; then niri msg output DP-3 vrr off && notify-send -t 1000 -u low 'VRR' 'OFF (Desktop Mode)'; else niri msg output DP-3 vrr on && notify-send -t 1000 -u low 'VRR' 'ON (Gaming Mode)'; fi"
       }
 
       Mod+Shift+Slash { show-hotkey-overlay; }
@@ -156,5 +156,6 @@
     xwayland-satellite # Allows Steam/X11 games to run on Niri
     swaybg # Wallpaper support
     wl-clipboard # Wayland clipboard
+    libnotify # <--- Add this
   ];
 }
