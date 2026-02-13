@@ -80,7 +80,7 @@
 
   environment.systemPackages = with pkgs; [
     # This installs the specifically patched osu! stable version
-    inputs.nix-gaming.packages.${pkgs.system}.osu-stable
+    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
 
     # Optional: If you want the native Lazer version as well
     # osu-lazer-bin

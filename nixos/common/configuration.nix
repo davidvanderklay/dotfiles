@@ -61,7 +61,7 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  # programs.niri.enable = true;
+  programs.niri.enable = true;
   # programs.hyprland = {
   #   enable = true;
   #   xwayland.enable = true;
