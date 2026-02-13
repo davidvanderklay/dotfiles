@@ -291,7 +291,7 @@ in
             installCargo = true;
             installRustc = true;
           };
-          zls.enable = true; # Zig
+          # zls.enable = true; # Zig
 
           # C/C++ Setup
           clangd = {
@@ -701,7 +701,7 @@ in
 
       # Language Servers (installed manually if not by lsp module)
       zig
-      zls
+      # zls
       jdt-language-server
       gopls
       gotools

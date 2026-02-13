@@ -29,6 +29,7 @@
       misc = {
         # This tells Hyprland to focus the window when it requests activation
         focus_on_activate = true;
+        key_press_enables_dpms = true;
       };
 
       monitor = [
@@ -46,7 +47,10 @@
         follow_mouse = 1;
         repeat_delay = 250;
         repeat_rate = 40;
+        # --- DISABLE MOUSE ACCELERATION ---
         accel_profile = "flat";
+        force_no_accel = true;
+        sensitivity = 0; # Set to 0 for raw input (flat profile handles the rest)
         touchpad.natural_scroll = false;
       };
 
@@ -75,8 +79,11 @@
       bind = [
         "$mainMod, Q, killactive,"
         "$mainMod SHIFT, Q, exec, hyprctl dispatch forcekillactive"
-        "$mainMod, F, togglefloating,"
-        "$mainMod, Shift+F, fullscreen, 0"
+
+        # --- MODIFIED KEYBINDS ---
+        " , F11, fullscreen, 0" # F11 for Fullscreen
+        "$mainMod SHIFT, F, togglefloating," # Shift + Win + F for Floating
+        "$mainMod, F, fullscreen, 1" # Keep Win + F for "Maximize" (Internal fullscreen)
 
         # Apps
         "$mainMod, U, exec, ghostty"
@@ -115,8 +122,23 @@
         # Screenshot
         "$mainMod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
       ];
+      # --- CURSOR CONFIG FOR HYPRLAND ---
+      # Ensure Hyprland knows about the cursor theme
+      env = [
+        "XCURSOR_SIZE,24"
+        "HYPRCURSOR_SIZE,24"
+      ];
 
     };
+  };
+
+  # --- POINTER CURSOR (FROM YOUR NIRI CONFIG) ---
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24;
   };
 
   services.hypridle = {
@@ -166,7 +188,7 @@
 
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    WLR_NO_HARDWARE_CURSORS = "1";
+    # WLR_NO_HARDWARE_CURSORS = "1";
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
     SDL_VIDEODRIVER = "wayland";
@@ -182,5 +204,6 @@
     adwaita-icon-theme
     gnome-themes-extra
     xwayland-satellite
+    bibata-cursors
   ];
 }
