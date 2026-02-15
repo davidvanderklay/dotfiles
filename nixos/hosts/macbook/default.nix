@@ -53,6 +53,7 @@
       "postgresql@14"
       "mariadb"
       "jupytext"
+      "ghostscript"
     ];
 
     casks = [
