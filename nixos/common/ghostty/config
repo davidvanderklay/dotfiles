@@ -3,3 +3,5 @@ theme = Kanagawa Dragon
 font-size = 13
 quit-after-last-window-closed = false
 gtk-single-instance = true
+clipboard-read = allow
+clipboard-write = allow
