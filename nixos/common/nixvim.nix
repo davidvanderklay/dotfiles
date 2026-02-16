@@ -101,7 +101,7 @@ in
       };
     };
 
-    clipboard.providers.wl-copy.enable = pkgs.stdenv.isLinux;
+    # clipboard.providers.wl-copy.enable = pkgs.stdenv.isLinux;
 
     # 1. Add required Python packages for Molten
     extraPython3Packages =
@@ -720,6 +720,20 @@ in
     # --- 6. CONFIG LUA (Ctrl+S Fix) ---
     extraConfigLua = ''
       -- C++ Include Path
+        if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
+            vim.g.clipboard = {
+              name = 'OSC 52',
+              copy = {
+                ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+                ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+              },
+              paste = {
+                ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+                ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+              },
+            }
+          end
+
         ${
           if pkgs.stdenv.isLinux then
             ''

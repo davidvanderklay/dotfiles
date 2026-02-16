@@ -198,6 +198,7 @@
 
     extraConfig = ''
       set -g allow-passthrough on # ADD THIS LINE
+      set -s set-clipboard on     # ADD THIS LINE
       set -g status-position top
       setw -g pane-base-index 1
 
