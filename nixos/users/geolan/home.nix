@@ -8,15 +8,15 @@
   imports = [
     ../../modules/home/shell
     ../../modules/home/editors/nixvim.nix
-    ../../modules/home/desktop/ghostty.nix
-    ../../modules/home/gaming.nix
-    ../../modules/home/desktop/gnome.nix
+    # ../../modules/home/desktop/ghostty.nix
+    # ../../modules/home/gaming.nix
+    # ../../modules/home/desktop/gnome.nix
   ];
 
   # NOW YOU JUST TOGGLE THINGS ON OR OFF
-  myHome.gaming.enable = pkgs.stdenv.isLinux; # Enable gaming only on Linux
-  myHome.desktop.ghostty.enable = true;
-  myHome.desktop.gnome.enable = true;
+  # myHome.gaming.enable = pkgs.stdenv.isLinux; # Enable gaming only on Linux
+  # myHome.desktop.ghostty.enable = true;
+  # myHome.desktop.gnome.enable = true;
   myHome.editors.nixvim.enable = true;
   myHome.shell.enable = true;
 
