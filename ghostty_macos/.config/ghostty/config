@@ -2,3 +2,5 @@ font-family = JetBrainsMono Nerd Font
 theme = Kanagawa Dragon
 font-size = 15
 # window-decoration = false
+clipboard-read = allow
+clipboard-write = allow
