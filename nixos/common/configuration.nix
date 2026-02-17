@@ -31,6 +31,7 @@
     # This is the critical part to fix your error
     plugins = with pkgs; [
       networkmanager-openvpn
+      networkmanager-openconnect # THIS IS THE IMPORTANT PART
     ];
   };
 
@@ -196,6 +197,8 @@
     git
     ffmpeg
     openvpn
+    networkmanager-openconnect
+    openconnect
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
