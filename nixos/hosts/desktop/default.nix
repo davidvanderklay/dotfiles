@@ -6,88 +6,35 @@
   ...
 }:
 {
-  imports = [ ./hardware-configuration.nix ];
-
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-  boot.loader.efi.canTouchEfiVariables = true;
-  networking.hostName = "nixos-desktop";
-
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
-
-  # Specific drivers (like Nvidia) go here
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # 1. Load the Nvidia drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-
-  # 2. Enable OpenGL (renamed to hardware.graphics in recent unstable)
-  hardware.graphics = {
-    enable = true;
-    # IMPORTANT: Enable 32-bit support for Steam to work!
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver # This is the "translator"
-      libva-vdpau-driver
-      libvdpau-va-gl
-    ];
-  };
-
-  environment.variables = {
-    # Forces the NVIDIA VA-API driver to use the direct backend (best for Wayland)
-    NVD_BACKEND = "direct";
-    LIBVA_DRIVER_NAME = "nvidia";
-
-    # CRITICAL: This allows the browser's video process to see the driver
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-
-    # General Wayland fixes
-    NIXOS_OZONE_WL = "1";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
-
-  # 3. Configure the Nvidia settings
-  hardware.nvidia = {
-    # Modesetting is required for most Wayland compositors (Hyprland, Gnome, etc.)
-    modesetting.enable = true;
-
-    # Power management (fine-grained is usually for laptops, can leave false for desktop)
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
-
-    # USE THE OPEN KERNEL MODULES (GSP)
-    # Supported on your RTX 3060 Ti.
-    open = true;
-
-    # Enable the Nvidia settings menu (accessible via 'nvidia-settings')
-    nvidiaSettings = true;
-
-    # Select the driver version
-    # 'stable' is usually best, but you can use 'beta' or 'production'
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
-  };
-
-  # Realtime audio priority
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # jack.enable = true; # Optional
-  };
-
-  environment.systemPackages = with pkgs; [
-    # This installs the specifically patched osu! stable version
-    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
-
-    # Optional: If you want the native Lazer version as well
-    # osu-lazer-bin
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/nixos/core/default.nix # Locales, GC, Nix settings
+    ../../modules/nixos/core/boot.nix # Lanzaboote logic
+    ../../modules/nixos/hardware/nvidia.nix # Nvidia drivers & env vars
+    ../../modules/nixos/services/audio.nix # Pipewire/Pipewire-32bit
+    ../../modules/nixos/services/docker.nix # Docker + User Groups
+    ../../modules/nixos/services/localsend.nix # LocalSend + Firewall
+    ../../modules/nixos/desktop/gnome.nix # GDM + GNOME Service
+    ../../modules/nixos/gaming/default.nix # Steam/Infrastructure
+    ../../modules/nixos/gaming/aagl.nix # Anime Game Launcher
+    ../../modules/nixos/gaming/osu.nix # Osu!
   ];
 
-  nix.settings = inputs.aagl.nixConfig;
-  programs.honkers-railway-launcher.enable = true;
+  # Boot & Hardware
+  mySystem.boot.secureboot.enable = true;
+  mySystem.hardware.nvidia.enable = true;
+
+  # Desktop Environment
+  mySystem.desktop.gnome.enable = true;
+
+  # Services
+  mySystem.services.docker.enable = true;
+  mySystem.services.localsend.enable = true;
+
+  # Gaming
+  mySystem.gaming.platform.enable = true; # Steam/Gamemode
+  mySystem.gaming.aagl.enable = true; # Honkai Star Rail
+  mySystem.gaming.osu.enable = true; # Osu!
 
   programs.obs-studio = {
     enable = true;
