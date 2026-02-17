@@ -9,6 +9,7 @@
 {
   # 1. PACKAGES & EXTENSIONS
   home.packages = with pkgs; [
+    bibata-cursors
     # Tools to manage GNOME locally if needed
     gnome-tweaks
     gnome-extension-manager
@@ -35,6 +36,14 @@
     corefonts
     vista-fonts # Consolas, Calibri, etc.
   ];
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24;
+  };
 
   xdg.mimeApps = {
     enable = true;
@@ -100,6 +109,8 @@
 
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
+      cursor-theme = "Bibata-Modern-Ice";
+      cursor-size = 24;
     };
 
     # --- CLIPBOARD INDICATOR SETTINGS (Optional tweaks) ---
