@@ -677,6 +677,80 @@ in
         options.desc = "Treesitter Search";
       }
 
+      # Quick Diagnostic Navigation
+      {
+        mode = "n";
+        key = "[d";
+        action = "vim.diagnostic.goto_prev";
+        options.desc = "Prev Diagnostic";
+      }
+      {
+        mode = "n";
+        key = "]d";
+        action = "vim.diagnostic.goto_next";
+        options.desc = "Next Diagnostic";
+      }
+      {
+        mode = "n";
+        key = "<leader>cd";
+        action = "vim.diagnostic.open_float";
+        options.desc = "Line Diagnostics";
+      }
+
+      # Gitsigns
+      {
+        mode = "n";
+        key = "]h";
+        action = "<cmd>Gitsigns next_hunk<cr>";
+        options.desc = "Next Hunk";
+      }
+      {
+        mode = "n";
+        key = "[h";
+        action = "<cmd>Gitsigns prev_hunk<cr>";
+        options.desc = "Prev Hunk";
+      }
+      {
+        mode = "n";
+        key = "<leader>ghp";
+        action = "<cmd>Gitsigns preview_hunk<cr>";
+        options.desc = "Preview Hunk";
+      }
+
+      # Snacks Picker Enhancements
+      {
+        mode = "n";
+        key = "<leader>sq";
+        action.__raw = "function() require('snacks').picker.resume() end";
+        options.desc = "Resume Last Search";
+      }
+      {
+        mode = "n";
+        key = "<leader>sw";
+        action.__raw = "function() require('snacks').picker.grep_word() end";
+        options.desc = "Search Word Under Cursor";
+      }
+      {
+        mode = "n";
+        key = "<leader>ss";
+        action.__raw = "function() require('snacks').picker.lsp_symbols() end";
+        options.desc = "LSP Symbols";
+      }
+
+      # Yanky History (Cycle through your last few yanks)
+      {
+        mode = "n";
+        key = "[p";
+        action = "<Plug>(YankyCycleForward)";
+        options.desc = "Cycle Yank Forward";
+      }
+      {
+        mode = "n";
+        key = "]p";
+        action = "<Plug>(YankyCycleBackward)";
+        options.desc = "Cycle Yank Backward";
+      }
+
     ];
 
     # --- 5. EXTRA PACKAGES (Environment) ---
