@@ -98,6 +98,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    historySubstringSearch.enable = true; # Native support!
 
     # Shell Aliases
     shellAliases = {
@@ -114,8 +115,6 @@
 
     # InitExtra: This is where we put your custom functions and raw shell code
     initContent = ''
-      # --- Keybindings (History Search) ---
-      source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
       # Bind the Up/Down arrow keys to the substring search
       bindkey '^[[A' history-substring-search-up
