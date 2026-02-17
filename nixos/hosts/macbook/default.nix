@@ -54,6 +54,7 @@
       "mariadb"
       "jupytext"
       "ghostscript"
+      "opencode"
     ];
 
     casks = [
