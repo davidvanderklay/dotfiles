@@ -48,6 +48,8 @@
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    opencode.url = "github:anomalyco/opencode";
   };
 
   outputs =
@@ -61,6 +63,7 @@
       nixvim,
       lanzaboote,
       aagl,
+      opencode,
       ...
     }@inputs:
     {
