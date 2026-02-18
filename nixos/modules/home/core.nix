@@ -7,7 +7,7 @@
 
 let
   cfg = config.mymod.home.core;
-  configsPath = ../../../configs;
+  configsPath = ../../configs;
 in
 {
   options.mymod.home.core = {

@@ -7,7 +7,7 @@
 
 let
   cfg = config.mymod.home.ghostty;
-  configsPath = ../../../configs;
+  configsPath = ../../configs;
 in
 {
   options.mymod.home.ghostty = {

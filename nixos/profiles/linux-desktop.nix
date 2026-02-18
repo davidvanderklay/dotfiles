@@ -7,7 +7,7 @@
 }:
 
 {
-  imports = [ ../../modules/home ];
+  imports = [ ../modules/home ];
 
   mymod.home = {
     core.enable = true;
