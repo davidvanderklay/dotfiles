@@ -1,125 +1,37 @@
+{ config, lib, pkgs, inputs, ... }:
+
 {
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}:
-{
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ 
+    ./hardware-configuration.nix 
+    ../../modules/nixos
+  ];
+
+  mymod = {
+    core = {
+      enable = true;
+      hostName = "nixos-desktop";
+    };
+    
+    desktop.enable = true;
+    gaming.enable = true;
+    docker.enable = true;
+    
+    nvidia.enable = true;
+    
+    services = {
+      enable = true;
+      obs = true;
+      obsCuda = true;
+    };
+  };
 
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
-  networking.hostName = "nixos-desktop";
 
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
 
-  # Specific drivers (like Nvidia) go here
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # 1. Load the Nvidia drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-
-  # 2. Enable OpenGL (renamed to hardware.graphics in recent unstable)
-  hardware.graphics = {
-    enable = true;
-    # IMPORTANT: Enable 32-bit support for Steam to work!
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver # This is the "translator"
-      libva-vdpau-driver
-      libvdpau-va-gl
-    ];
-  };
-
-  environment.variables = {
-    # Forces the NVIDIA VA-API driver to use the direct backend (best for Wayland)
-    NVD_BACKEND = "direct";
-    LIBVA_DRIVER_NAME = "nvidia";
-
-    # CRITICAL: This allows the browser's video process to see the driver
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-
-    # General Wayland fixes
-    NIXOS_OZONE_WL = "1";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
-
-  # 3. Configure the Nvidia settings
-  hardware.nvidia = {
-    # Modesetting is required for most Wayland compositors (Hyprland, Gnome, etc.)
-    modesetting.enable = true;
-
-    # Power management (fine-grained is usually for laptops, can leave false for desktop)
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
-
-    # USE THE OPEN KERNEL MODULES (GSP)
-    # Supported on your RTX 3060 Ti.
-    open = true;
-
-    # Enable the Nvidia settings menu (accessible via 'nvidia-settings')
-    nvidiaSettings = true;
-
-    # Select the driver version
-    # 'stable' is usually best, but you can use 'beta' or 'production'
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
-  };
-
-  # Realtime audio priority
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # jack.enable = true; # Optional
-  };
-
-  environment.systemPackages = with pkgs; [
-    # This installs the specifically patched osu! stable version
-    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
-
-    # Optional: If you want the native Lazer version as well
-    # osu-lazer-bin
-  ];
-
-  nix.settings = inputs.aagl.nixConfig;
-  programs.honkers-railway-launcher.enable = true;
-
-  programs.obs-studio = {
-    enable = true;
-
-    # optional Nvidia hardware acceleration
-    package = (
-      pkgs.obs-studio.override {
-        cudaSupport = true;
-      }
-    );
-
-    plugins = with pkgs.obs-studio-plugins; [
-      wlrobs
-      obs-backgroundremoval
-      obs-pipewire-audio-capture
-      obs-vaapi # optional AMD hardware acceleration
-      obs-gstreamer
-      obs-vkcapture
-    ];
-  };
-
-  # --- FIX FOR SLOW APP STARTUP ---
-  xdg.portal = {
-    enable = true;
-
-    # Ensure the GNOME portal is installed and ready
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gnome
-      pkgs.xdg-desktop-portal-gtk
-    ];
-
-    # Force apps to use the GNOME portal
-    config.common.default = "gnome";
-  };
+  environment.systemPackages = [ pkgs.sbctl ];
 }
