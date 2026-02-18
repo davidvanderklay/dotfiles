@@ -52,6 +52,7 @@
       url = "github:nix-community/lanzaboote"; # Check their GitHub for latest version
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    opencode.url = "github:anomalyco/opencode";
   };
 
   outputs =
@@ -64,6 +65,7 @@
       home-manager,
       nixvim,
       lanzaboote,
+      opencode,
       ...
     }@inputs:
     {

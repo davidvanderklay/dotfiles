@@ -49,6 +49,11 @@
     installBatSyntax = false; # Fixes a common conflict issue
   };
 
+  programs.opencode = {
+    enable = true;
+    # settings = { ... }; # Configure keys and models here
+  };
+
   systemd.user.services.ghostty = {
     Unit = {
       Description = "Ghostty Terminal Server";
