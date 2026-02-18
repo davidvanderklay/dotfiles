@@ -137,6 +137,8 @@ in
 
     programs.lazygit.enable = true;
 
+    programs.opencode.enable = true;
+
     programs.tmux = {
       enable = true;
       shell = "${pkgs.zsh}/bin/zsh";
