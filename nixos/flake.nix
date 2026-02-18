@@ -82,7 +82,10 @@
             home-manager.users.geolan = {
               imports = [ ./modules/home ];
               mymod.home = {
-                core.enable = true;
+                core = {
+                  enable = true;
+                  homeDirectory = "/Users/geolan";
+                };
                 nixvim.enable = true;
               };
             };
