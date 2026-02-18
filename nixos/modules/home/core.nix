@@ -137,7 +137,19 @@ in
 
     programs.lazygit.enable = true;
 
-    programs.opencode.enable = true;
+    programs.opencode = {
+      enable = true;
+      settings = {
+        permission = {
+          edit = "ask";
+          bash = {
+            "*" = "allow";
+            "rm *" = "ask";
+            "rmdir *" = "ask";
+          };
+        };
+      };
+    };
 
     programs.tmux = {
       enable = true;
