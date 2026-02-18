@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.mymod.home.core;
@@ -7,12 +12,12 @@ in
 {
   options.mymod.home.core = {
     enable = lib.mkEnableOption "core home-manager configuration";
-    
+
     userName = lib.mkOption {
       type = lib.types.str;
       default = "geolan";
     };
-    
+
     homeDirectory = lib.mkOption {
       type = lib.types.str;
       default = "/home/geolan";
@@ -24,39 +29,44 @@ in
       username = cfg.userName;
       homeDirectory = cfg.homeDirectory;
       stateVersion = "25.11";
-      
-      packages = with pkgs; [
-        gcc
-        python3
-        gnumake
-        clang-tools
-        rustc
-        cargo
-        nodejs_22
-        awscli2
-        btop
-        unzip
-        unrar
-        texlive.combined.scheme-full
-        texlab
-        wget
-        croc
-        zstd
-        tailscale
-        syncthing
-        gnupg
-        jq
-        qrencode
-        rustfmt
-        fastfetch
-        tmux
-        yazi
-        fzf
-        ripgrep
-        fd
-        quarto
-        (pkgs.writeShellScriptBin "tmux-sessionizer" (builtins.readFile "${configsPath}/scripts/tmux-sessionizer"))
-      ] ++ lib.optionals stdenv.isLinux [ wl-clipboard ];
+
+      packages =
+        with pkgs;
+        [
+          gcc
+          python3
+          gnumake
+          clang-tools
+          rustc
+          cargo
+          nodejs_22
+          awscli2
+          btop
+          unzip
+          unrar
+          texlive.combined.scheme-full
+          texlab
+          wget
+          croc
+          zstd
+          tailscale
+          syncthing
+          gnupg
+          jq
+          qrencode
+          rustfmt
+          fastfetch
+          tmux
+          yazi
+          fzf
+          ripgrep
+          fd
+          quarto
+          (pkgs.writeShellScriptBin "tmux-sessionizer" (
+            builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
+          ))
+        ]
+        ++ lib.optionals stdenv.isLinux [ wl-clipboard ];
     };
 
     programs.git = {

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.mymod.nvidia;
@@ -6,21 +11,21 @@ in
 {
   options.mymod.nvidia = {
     enable = lib.mkEnableOption "NVIDIA graphics driver";
-    
+
     laptop = {
       enable = lib.mkEnableOption "NVIDIA laptop configuration with Prime offload";
-      
+
       amdgpuBusId = lib.mkOption {
         type = lib.types.str;
         default = "PCI:7:0:0";
       };
-      
+
       nvidiaBusId = lib.mkOption {
         type = lib.types.str;
         default = "PCI:1:0:0";
       };
     };
-    
+
     package = lib.mkOption {
       type = lib.types.raw;
       default = config.boot.kernelPackages.nvidiaPackages.beta;
@@ -45,7 +50,7 @@ in
       open = true;
       nvidiaSettings = true;
       package = cfg.package;
-      
+
       powerManagement = {
         enable = !cfg.laptop.enable;
         finegrained = cfg.laptop.enable;

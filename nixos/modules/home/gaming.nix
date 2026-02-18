@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.mymod.home.gaming;
@@ -6,7 +11,7 @@ in
 {
   options.mymod.home.gaming = {
     enable = lib.mkEnableOption "gaming home packages";
-    
+
     enableLudusaviBackup = lib.mkOption {
       type = lib.types.bool;
       default = true;

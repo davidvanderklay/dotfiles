@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   cfg = config.mymod.core;
@@ -6,27 +12,27 @@ in
 {
   options.mymod.core = {
     enable = lib.mkEnableOption "core system configuration";
-    
+
     userName = lib.mkOption {
       type = lib.types.str;
       default = "geolan";
     };
-    
+
     userDescription = lib.mkOption {
       type = lib.types.str;
       default = "geolan";
     };
-    
+
     hostName = lib.mkOption {
       type = lib.types.str;
       default = "nixos";
     };
-    
+
     timeZone = lib.mkOption {
       type = lib.types.str;
       default = "America/Chicago";
     };
-    
+
     autoUpgrade = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -49,7 +55,10 @@ in
 
     time.timeZone = cfg.timeZone;
 
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
 
     i18n = {
       defaultLocale = "en_US.UTF-8";
@@ -78,7 +87,11 @@ in
     system.autoUpgrade = lib.mkIf cfg.autoUpgrade {
       enable = true;
       flake = inputs.self.outPath;
-      flags = [ "--update-input" "nixpkgs" "-L" ];
+      flags = [
+        "--update-input"
+        "nixpkgs"
+        "-L"
+      ];
       dates = "02:00";
       randomizedDelaySec = "45min";
     };
@@ -86,7 +99,11 @@ in
     users.users.${cfg.userName} = {
       isNormalUser = true;
       description = cfg.userDescription;
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "docker"
+      ];
       shell = pkgs.zsh;
     };
 

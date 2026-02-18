@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.mymod.home.ghostty;
@@ -7,7 +12,7 @@ in
 {
   options.mymod.home.ghostty = {
     enable = lib.mkEnableOption "Ghostty terminal configuration";
-    
+
     enableService = lib.mkOption {
       type = lib.types.bool;
       default = true;
