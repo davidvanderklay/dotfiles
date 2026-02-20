@@ -58,10 +58,6 @@
     ];
 
     casks = [
-      "aerospace"
-      "alfred"
-      "maccy"
-      "rectangle"
       "localsend"
       "xquartz"
       "zen"
@@ -82,8 +78,103 @@
     finder.AppleShowAllExtensions = true;
     finder.FXPreferredViewStyle = "clmv";
     NSGlobalDomain.AppleInterfaceStyle = "Dark";
+    # Custom Keybindings for Workspaces (Cmd + 1, 2, 3, etc.)
+    CustomUserPreferences = {
+      "com.apple.symbolichotkeys" = {
+        AppleSymbolicHotKeys = {
+          # Mission Control (Overview) - ID 32
+          # This example maps it to Option + Space (as a middle ground)
+          # "32" = { enabled = true; value = { parameters = [ 32 49 524288 ]; type = "standard"; }; };
+
+          # Switch to Desktop 1 (Cmd + 1)
+          "118" = {
+            enabled = true;
+            value = {
+              parameters = [
+                65535
+                18
+                1048576
+              ];
+              type = "standard";
+            };
+          };
+          # Switch to Desktop 2 (Cmd + 2)
+          "119" = {
+            enabled = true;
+            value = {
+              parameters = [
+                65535
+                19
+                1048576
+              ];
+              type = "standard";
+            };
+          };
+          # Switch to Desktop 3 (Cmd + 3)
+          "120" = {
+            enabled = true;
+            value = {
+              parameters = [
+                65535
+                20
+                1048576
+              ];
+              type = "standard";
+            };
+          };
+          # Switch to Desktop 4 (Cmd + 4)
+          "121" = {
+            enabled = true;
+            value = {
+              parameters = [
+                65535
+                21
+                1048576
+              ];
+              type = "standard";
+            };
+          };
+          "122" = {
+            enabled = true;
+            value = {
+              parameters = [
+                65535
+                23
+                1048576
+              ];
+              type = "standard";
+            };
+          };
+        };
+      };
+    };
   };
 
+  # 4. SKHD - The "Aerospace Replacement"
+  services.skhd = {
+    enable = true;
+    # Corrected option name: skhdConfig
+    skhdConfig = ''
+      # Open Browser (Zen)
+      alt - w : open -na "Zen"
+
+      # Open Terminal (Ghostty)
+      alt - u : open -na "Ghostty"
+
+      # Open Finder (Focuses it or opens a new window at Home)
+      alt - r : open -a "Finder" ~
+
+      # Close current Window
+      alt - q : skhd -k "cmd - w"
+
+      # Quit current App
+      alt + shift - q : skhd -k "cmd - q"
+
+      # Overview (Mission Control)
+      # Ergonomic bind that doesn't conflict with Cmd+Space
+      alt - space : open -a "Mission Control"
+    '';
+  };
   # 4. Global Shell Config
   programs.zsh.enable = true;
 
