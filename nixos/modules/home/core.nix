@@ -51,6 +51,7 @@ in
           zstd
           tailscale
           syncthing
+          rclone
           gnupg
           jq
           qrencode
