@@ -1,8 +1,14 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-  imports = [ 
-    ./hardware-configuration.nix 
+  imports = [
+    ./hardware-configuration.nix
     ../../modules/nixos
   ];
 
@@ -11,13 +17,13 @@
       enable = true;
       hostName = "nixos-desktop";
     };
-    
+
     desktop.enable = true;
     gaming.enable = true;
     docker.enable = true;
-    
+
     nvidia.enable = true;
-    
+
     services = {
       enable = true;
       obs = true;
@@ -26,6 +32,7 @@
   };
 
   boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.lanzaboote = {
