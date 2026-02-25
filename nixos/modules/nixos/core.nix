@@ -86,6 +86,7 @@ in
 
     system.autoUpgrade = lib.mkIf cfg.autoUpgrade {
       enable = true;
+      persistent = true;
       flake = inputs.self.outPath;
       flags = [
         "--update-input"
