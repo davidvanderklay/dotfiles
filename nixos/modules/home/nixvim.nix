@@ -695,7 +695,7 @@ in
         yaml-language-server
         texliveSmall
         quarto
-        python311Packages.ipykernel
+        python3Packages.ipykernel
         imagemagick
       ];
 
