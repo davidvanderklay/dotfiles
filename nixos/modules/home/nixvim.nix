@@ -267,6 +267,7 @@ in
             cssls.enable = true;
             tailwindcss.enable = true;
             jsonls.enable = true;
+            zls.enable = true;
             rust_analyzer = {
               enable = true;
               installCargo = true;
@@ -687,6 +688,7 @@ in
         sql-formatter
         google-java-format
         zig
+        zls
         jdt-language-server
         gopls
         gotools
