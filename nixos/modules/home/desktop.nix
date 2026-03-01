@@ -164,7 +164,7 @@ in
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
         binding = "<Super>w";
-        command = "zen";
+        command = "zen-beta";
         name = "Browser";
       };
 

@@ -106,7 +106,7 @@ in
         Mod+Tab { toggle-overview; }
         
         Mod+U { spawn "ghostty"; }
-        Mod+W { spawn "zen"; }
+        Mod+W { spawn "zen-beta"; }
         Mod+R { spawn "nautilus"; }
         Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
         
