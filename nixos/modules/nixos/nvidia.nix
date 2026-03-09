@@ -28,7 +28,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.raw;
-      default = config.boot.kernelPackages.nvidiaPackages.stable;
+      default = config.boot.kernelPackages.nvidiaPackages.beta;
     };
   };
 
