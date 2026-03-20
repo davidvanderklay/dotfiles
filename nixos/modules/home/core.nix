@@ -138,7 +138,7 @@ in
 
     programs.lazygit.enable = true;
 
-    programs.opencode = {
+    programs.opencode = lib.mkIf pkgs.stdenv.isLinux {
       enable = true;
       settings = {
         permission = {
