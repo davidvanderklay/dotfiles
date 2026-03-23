@@ -148,6 +148,8 @@ in
             "rm *" = "ask";
             "rmdir *" = "ask";
           };
+          websearch = "allow";
+          codesearch = "allow";
         };
       };
     };
