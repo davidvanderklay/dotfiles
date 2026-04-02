@@ -63,6 +63,7 @@ in
           ripgrep
           fd
           quarto
+          codex
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
