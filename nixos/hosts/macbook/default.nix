@@ -68,7 +68,6 @@
       "font-hack-nerd-font"
       "font-iosevka-nerd-font"
       "nvidia-geforce-now"
-      "stremio"
     ];
   };
 
