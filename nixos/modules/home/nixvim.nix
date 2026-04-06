@@ -680,7 +680,7 @@ in
         clang-tools
         nixfmt
         stylua
-        nodePackages.prettier
+        prettier
         black
         isort
         shfmt
