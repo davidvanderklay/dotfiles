@@ -31,6 +31,18 @@
     };
   };
 
+  services.usbmuxd.enable = true;
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    usbmuxd
+    sbctl
+  ];
+
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -39,6 +51,4 @@
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
-
-  environment.systemPackages = [ pkgs.sbctl ];
 }
