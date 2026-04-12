@@ -35,4 +35,9 @@
     enable = true;
     enableUserService = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    nicotine-plus
+    feishin
+  ];
 }

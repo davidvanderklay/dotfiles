@@ -41,6 +41,8 @@
   environment.systemPackages = with pkgs; [
     usbmuxd
     sbctl
+    nicotine-plus
+    feishin
   ];
 
   boot.loader.systemd-boot.enable = lib.mkForce false;
