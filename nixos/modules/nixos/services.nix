@@ -22,16 +22,6 @@ in
       default = true;
     };
 
-    obs = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-    };
-
-    obsCuda = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-    };
-
     openFirewall = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -54,21 +44,6 @@ in
           53317
           8081
         ];
-      })
-
-      (lib.mkIf cfg.obs {
-        programs.obs-studio = {
-          enable = true;
-          package = if cfg.obsCuda then pkgs.obs-studio.override { cudaSupport = true; } else pkgs.obs-studio;
-          plugins = with pkgs.obs-studio-plugins; [
-            wlrobs
-            obs-backgroundremoval
-            obs-pipewire-audio-capture
-            obs-vaapi
-            obs-gstreamer
-            obs-vkcapture
-          ];
-        };
       })
     ]
   );

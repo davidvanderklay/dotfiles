@@ -26,8 +26,6 @@
 
     services = {
       enable = true;
-      obs = true;
-      obsCuda = true;
     };
   };
 
