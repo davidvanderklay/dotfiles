@@ -22,11 +22,39 @@ in
   config = lib.mkIf cfg.enable {
     programs.ghostty = {
       enable = true;
-      enableZshIntegration = true;
+      enableZshIntegration = false;
       installBatSyntax = false;
     };
 
     xdg.configFile."ghostty/config".source = "${configsPath}/ghostty/config";
+
+    xdg.dataFile."applications/com.mitchellh.ghostty.desktop".text = ''
+      [Desktop Entry]
+      Version=1.0
+      Name=Ghostty
+      Type=Application
+      Comment=A terminal emulator
+      TryExec=${lib.getExe pkgs.ghostty}
+      Exec=${lib.getExe pkgs.ghostty}
+      Icon=com.mitchellh.ghostty
+      Categories=System;TerminalEmulator;
+      Keywords=terminal;tty;pty;
+      StartupNotify=true
+      StartupWMClass=com.mitchellh.ghostty
+      Terminal=false
+      Actions=new-window;
+      X-GNOME-UsesNotifications=true
+      X-TerminalArgExec=-e
+      X-TerminalArgTitle=--title=
+      X-TerminalArgAppId=--class=
+      X-TerminalArgDir=--working-directory=
+      X-TerminalArgHold=--wait-after-command
+      X-KDE-Shortcuts=Ctrl+Alt+T
+
+      [Desktop Action new-window]
+      Name=New Window
+      Exec=${lib.getExe pkgs.ghostty}
+    '';
 
     systemd.user.services = lib.mkIf cfg.enableService {
       ghostty = {
