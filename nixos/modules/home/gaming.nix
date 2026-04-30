@@ -22,7 +22,6 @@ in
     home.packages = with pkgs; [
       distrobox
       localsend
-      lutris
       heroic
       r2modman
       prismlauncher
