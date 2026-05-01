@@ -161,7 +161,7 @@ in
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
         binding = "<Super>u";
-        command = "${pkgs.ghostty}/bin/ghostty --gtk-single-instance=false";
+        command = "ghostty";
         name = "Terminal";
       };
 

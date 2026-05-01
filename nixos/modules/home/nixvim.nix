@@ -141,7 +141,7 @@ in
 
         image = {
           enable = true;
-          backend = "ueberzug";
+          backend = "kitty";
           maxHeightWindowPercentage = 50;
         };
 
