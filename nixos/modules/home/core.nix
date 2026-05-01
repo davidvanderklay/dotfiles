@@ -127,10 +127,6 @@ in
 
         export PATH="$PATH:$HOME/.local/scripts/"
         export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
-
-        if [[ -n $GHOSTTY_RESOURCES_DIR && -z $TMUX ]]; then
-          source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
-        fi
       '';
     };
 
