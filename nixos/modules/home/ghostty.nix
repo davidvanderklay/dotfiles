@@ -42,6 +42,7 @@ in
       StartupNotify=true
       StartupWMClass=com.mitchellh.ghostty
       Terminal=false
+      DBusActivatable=false
       Actions=new-window;
       X-GNOME-UsesNotifications=true
       X-TerminalArgExec=-e
@@ -54,6 +55,13 @@ in
       [Desktop Action new-window]
       Name=New Window
       Exec=${lib.getExe pkgs.ghostty}
+    '';
+
+    xdg.dataFile."dbus-1/services/com.mitchellh.ghostty.service".text = ''
+      [D-BUS Service]
+      Name=com.mitchellh.ghostty
+      SystemdService=app-com.mitchellh.ghostty.service
+      Exec=${lib.getExe pkgs.ghostty} --initial-window=false
     '';
 
     systemd.user.services = lib.mkIf cfg.enableService {
