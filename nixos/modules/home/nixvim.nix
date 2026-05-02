@@ -22,6 +22,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.nixvim = {
       enable = true;
+      nixpkgs.useGlobalPackages = true;
       defaultEditor = true;
 
       viAlias = true;

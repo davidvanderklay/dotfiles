@@ -102,6 +102,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
+            { nixpkgs.config.allowUnfree = true; }
 
             lanzaboote.nixosModules.lanzaboote
             aagl.nixosModules.default
@@ -122,6 +123,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
+            { nixpkgs.config.allowUnfree = true; }
 
             aagl.nixosModules.default
             ./hosts/laptop/default.nix
