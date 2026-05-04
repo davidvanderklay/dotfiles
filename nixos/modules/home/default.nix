@@ -2,7 +2,7 @@
   imports = [
     ./core.nix
     ./desktop.nix
-    ./nixvim.nix
+    ./nixvim
     ./ghostty.nix
     ./gaming.nix
     ./niri.nix

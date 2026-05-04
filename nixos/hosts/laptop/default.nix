@@ -31,10 +31,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.asusd = {
-    enable = true;
-    enableUserService = true;
-  };
+  services.asusd.enable = true;
 
   environment.systemPackages = with pkgs; [
     nicotine-plus

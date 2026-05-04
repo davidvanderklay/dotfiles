@@ -55,23 +55,29 @@
   };
 
   outputs =
+    { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
+    let
+      specialArgs = { inherit inputs; };
+
+      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+
+      pkgsFor = system: import nixpkgs { inherit system; config.allowUnfree = true; };
+    in
     {
-      self,
-      nixpkgs,
-      noctalia,
-      nix-gaming,
-      nix-darwin,
-      home-manager,
-      nixvim,
-      lanzaboote,
-      aagl,
-      opencode,
-      ...
-    }@inputs:
-    {
+      nixosModules.default = import ./modules/nixos;
+      homeModules.default = import ./modules/home;
+
+      formatter = forAllSystems (system: (pkgsFor system).nixfmt-rfc-style);
+
+      devShells = forAllSystems (system: {
+        default = (pkgsFor system).mkShell {
+          packages = with pkgsFor system; [ nixfmt-rfc-style statix deadnix ];
+        };
+      });
 
       darwinConfigurations."eth0" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
+        inherit specialArgs;
         modules = [
           ./hosts/macbook/default.nix
 
@@ -80,60 +86,47 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "before-nix";
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
-            home-manager.users.geolan = {
-              imports = [ ./modules/home ];
-              mymod.home = {
-                core = {
-                  enable = true;
-                  homeDirectory = "/Users/geolan";
-                };
-                nixvim.enable = true;
-              };
-            };
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
           }
         ];
       };
 
       nixosConfigurations = {
-
         desktop = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          inherit specialArgs;
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
-            { nixpkgs.config.allowUnfree = true; }
 
-            lanzaboote.nixosModules.lanzaboote
-            aagl.nixosModules.default
+            inputs.lanzaboote.nixosModules.lanzaboote
+            inputs.aagl.nixosModules.default
             ./hosts/desktop/default.nix
 
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.geolan = import ./profiles/linux-desktop.nix;
             }
           ];
         };
 
         laptop = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          inherit specialArgs;
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
-            { nixpkgs.config.allowUnfree = true; }
 
-            aagl.nixosModules.default
+            inputs.aagl.nixosModules.default
             ./hosts/laptop/default.nix
 
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.sharedModules = [ nixvim.homeModules.nixvim ];
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.geolan = import ./profiles/linux-desktop.nix;
             }
           ];
@@ -141,12 +134,11 @@
       };
 
       homeConfigurations = {
-
         "mac" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = specialArgs;
           modules = [
-            nixvim.homeModules.nixvim
+            inputs.nixvim.homeModules.nixvim
             ./modules/home
             {
               mymod.home = {
@@ -167,9 +159,9 @@
             system = "x86_64-linux";
             config.allowUnfree = true;
           };
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = specialArgs;
           modules = [
-            nixvim.homeModules.nixvim
+            inputs.nixvim.homeModules.nixvim
             ./modules/home
             {
               mymod.home = {
