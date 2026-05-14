@@ -96,6 +96,7 @@ in
         color-scheme = "prefer-dark";
         cursor-theme = "Bibata-Modern-Ice";
         cursor-size = 24;
+        icon-theme = "'Adwaita'";
       };
 
       "org/gnome/shell/extensions/clipboard-indicator" = {
