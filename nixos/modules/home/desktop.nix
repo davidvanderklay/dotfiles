@@ -16,6 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
+      adwaita-fonts
       bibata-cursors
       gnome-tweaks
       gnome-extension-manager
@@ -97,6 +98,9 @@ in
         cursor-theme = "Bibata-Modern-Ice";
         cursor-size = 24;
         icon-theme = "Adwaita";
+        font-name = "Noto Sans 10";
+        document-font-name = "Noto Sans 10";
+        monospace-font-name = "Adwaita Mono 10";
       };
 
       "org/gnome/shell/extensions/clipboard-indicator" = {
