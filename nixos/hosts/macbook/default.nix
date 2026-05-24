@@ -53,6 +53,7 @@
     ];
 
     casks = [
+      "docker"
       "localsend"
       "xquartz"
       "zen"
