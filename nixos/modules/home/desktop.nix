@@ -32,6 +32,7 @@ in
       liberation_ttf
       corefonts
       vista-fonts
+      t3code
     ];
 
     home.pointerCursor = {

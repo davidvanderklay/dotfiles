@@ -25,6 +25,11 @@
 
   services.usbmuxd.enable = true;
 
+  services.udev.extraRules = ''
+    # General USB/HID access for WebUSB/WebHID (Wootility, VIA, Rawm, SayoDevice, etc.)
+    SUBSYSTEM=="hidraw", TAG+="uaccess"
+  '';
+
   programs.appimage = {
     enable = true;
     binfmt = true;
