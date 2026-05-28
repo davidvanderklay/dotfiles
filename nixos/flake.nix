@@ -106,6 +106,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "before-nix";
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.geolan = import ./profiles/linux-desktop.nix;
@@ -125,6 +126,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "before-nix";
               home-manager.extraSpecialArgs = specialArgs;
               home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
               home-manager.users.geolan = import ./profiles/linux-desktop.nix;
