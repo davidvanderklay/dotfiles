@@ -82,6 +82,36 @@ in
       };
     };
 
+    programs.ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+      settings = {
+        "github.com" = {
+          HostName = "ssh.github.com";
+          User = "git";
+          Port = 443;
+          IdentityFile = "~/.ssh/id_ed25519";
+          IdentitiesOnly = true;
+          AddKeysToAgent = "yes";
+          ServerAliveInterval = 30;
+          ServerAliveCountMax = 3;
+        };
+
+        "*" = {
+          AddKeysToAgent = "no";
+          Compression = false;
+          ControlMaster = "no";
+          ControlPath = "~/.ssh/master-%r@%n:%p";
+          ControlPersist = "no";
+          ForwardAgent = false;
+          HashKnownHosts = false;
+          ServerAliveCountMax = 3;
+          ServerAliveInterval = 0;
+          UserKnownHostsFile = "~/.ssh/known_hosts";
+        };
+      };
+    };
+
     programs.direnv = {
       enable = true;
       nix-direnv.enable = true;
