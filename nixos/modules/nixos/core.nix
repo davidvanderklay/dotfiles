@@ -118,6 +118,7 @@ in
       gcc
       wget
       git
+      gh
       ffmpeg
       openvpn
       networkmanager-openconnect
