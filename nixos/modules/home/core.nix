@@ -172,7 +172,7 @@ in
 
     programs.opencode = {
       enable = true;
-      package = inputs.opencode.packages.${pkgs.system}.default.overrideAttrs (old: {
+      package = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
         preBuild = (old.preBuild or "") + ''
           ACTUAL_BUN_VERSION=$(${pkgs.bun}/bin/bun --version)
           sed -i "s/bun@[0-9.]\+/bun@$ACTUAL_BUN_VERSION/" package.json

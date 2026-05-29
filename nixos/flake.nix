@@ -43,7 +43,7 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

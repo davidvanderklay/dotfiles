@@ -369,15 +369,16 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1779973703,
-        "narHash": "sha256-0aNg+9XKcQT4hnwuxnMAkodUwLj8K5IOU+JBOdGW4uM=",
+        "lastModified": 1780072517,
+        "narHash": "sha256-MT8mvkho6KRjit8ht8n9BRi1YFgrP6WexkDTjNkQfzg=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "7dbb34738b94b80adf70287b5a9216bf0f66a790",
+        "rev": "b72fa6fa864d14f116379612a44f1d152670a2e5",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "nixos-26.05",
         "repo": "nixvim",
         "type": "github"
       }
