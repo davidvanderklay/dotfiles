@@ -43,7 +43,7 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-26.05";
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -55,14 +55,28 @@
   };
 
   outputs =
-    { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      ...
+    }@inputs:
     let
       specialArgs = { inherit inputs; };
 
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      pkgsFor = system: import nixpkgs { inherit system; config.allowUnfree = true; };
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
     in
     {
       nixosModules.default = import ./modules/nixos;
@@ -72,7 +86,11 @@
 
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {
-          packages = with pkgsFor system; [ nixfmt-rfc-style statix deadnix ];
+          packages = with pkgsFor system; [
+            nixfmt-rfc-style
+            statix
+            deadnix
+          ];
         };
       });
 
