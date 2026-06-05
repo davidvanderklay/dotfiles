@@ -10,10 +10,6 @@ let
   cfg = config.mymod.home.niri;
 in
 {
-  imports = [
-    inputs.noctalia.homeModules.default
-  ];
-
   options.mymod.home.niri = {
     enable = lib.mkEnableOption "Niri window manager configuration";
 
@@ -37,7 +33,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.noctalia-shell = {
+    programs.noctalia = {
       enable = true;
       settings = { };
     };
@@ -108,7 +104,7 @@ in
         Mod+U { spawn "ghostty"; }
         Mod+W { spawn "zen-beta"; }
         Mod+R { spawn "nautilus"; }
-        Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+        Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
         
         Mod+H { focus-column-left; }
         Mod+L { focus-column-right; }
@@ -148,7 +144,7 @@ in
         Ctrl+Alt+Delete { quit; }
       }
 
-      spawn-at-startup "noctalia-shell"
+      spawn-at-startup "noctalia"
       spawn-at-startup "xwayland-satellite"
 
       output "${cfg.monitor}" {
@@ -178,9 +174,9 @@ in
     home.pointerCursor = {
       gtk.enable = true;
       x11.enable = true;
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 24;
+      package = lib.mkDefault pkgs.bibata-cursors;
+      name = lib.mkDefault "Bibata-Modern-Ice";
+      size = lib.mkDefault 24;
     };
   };
 }

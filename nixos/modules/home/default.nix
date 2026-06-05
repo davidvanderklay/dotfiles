@@ -1,5 +1,8 @@
+{ inputs, ... }:
+
 {
   imports = [
+    inputs.noctalia.homeModules.default
     ./core.nix
     ./desktop.nix
     ./nixvim

@@ -10,7 +10,7 @@ let
 in
 {
   options.mymod.desktop = {
-    enable = lib.mkEnableOption "GNOME desktop environment";
+    enable = lib.mkEnableOption "desktop environment";
   };
 
   config = lib.mkIf cfg.enable {
@@ -18,6 +18,8 @@ in
 
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;
+
+    programs.niri.enable = true;
 
     services.xserver.xkb = {
       layout = "us";

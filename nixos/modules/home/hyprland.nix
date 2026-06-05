@@ -10,10 +10,6 @@ let
   cfg = config.mymod.home.hyprland;
 in
 {
-  imports = [
-    inputs.noctalia.homeModules.default
-  ];
-
   options.mymod.home.hyprland = {
     enable = lib.mkEnableOption "Hyprland window manager configuration";
 
@@ -37,7 +33,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.noctalia-shell = {
+    programs.noctalia = {
       enable = true;
       settings = { };
     };
@@ -59,7 +55,7 @@ in
         ];
 
         exec-once = [
-          "noctalia-shell"
+          "noctalia"
           "xwayland-satellite"
           "swaybg -c '#000000'"
         ];
@@ -108,7 +104,7 @@ in
           "$mainMod, U, exec, ghostty"
           "$mainMod, W, exec, zen"
           "$mainMod, R, exec, nautilus"
-          "$mainMod, Space, exec, noctalia-shell ipc call launcher toggle"
+          "$mainMod, Space, exec, noctalia msg panel-toggle launcher"
 
           "$mainMod, H, movefocus, l"
           "$mainMod, L, movefocus, r"
@@ -147,9 +143,9 @@ in
     home.pointerCursor = {
       gtk.enable = true;
       x11.enable = true;
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 24;
+      package = lib.mkDefault pkgs.bibata-cursors;
+      name = lib.mkDefault "Bibata-Modern-Ice";
+      size = lib.mkDefault 24;
     };
 
     services.hypridle = {
