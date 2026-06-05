@@ -27,7 +27,6 @@ in
       prismlauncher
       protonplus
       ludusavi
-      bitwarden-desktop
       vesktop
       wineWow64Packages.stable
       winetricks
