@@ -42,8 +42,10 @@ in
 
       image = {
         enable = true;
-        backend = "kitty";
-        maxHeightWindowPercentage = 50;
+        settings = {
+          backend = "kitty";
+          max_height_window_percentage = 50;
+        };
       };
 
       web-devicons.enable = true;
