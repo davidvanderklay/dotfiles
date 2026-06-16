@@ -43,6 +43,7 @@ in
       liberation_ttf
       corefonts
       vista-fonts
+      obsidian
       openchamber
     ];
 
