@@ -9,14 +9,6 @@
 let
   cfg = config.mymod.home.desktop;
 
-  paseo = pkgs.writeShellApplication {
-    name = "paseo";
-    runtimeInputs = [ pkgs.nodejs_22 ];
-    text = ''
-      exec ${pkgs.nodejs_22}/bin/npx -y @getpaseo/cli@0.1.96 "$@"
-    '';
-  };
-
   openchamber = pkgs.writeShellApplication {
     name = "openchamber";
     runtimeInputs = [
@@ -51,7 +43,6 @@ in
       liberation_ttf
       corefonts
       vista-fonts
-      paseo
       openchamber
     ];
 
