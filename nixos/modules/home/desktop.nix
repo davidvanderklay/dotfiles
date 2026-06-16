@@ -8,6 +8,25 @@
 
 let
   cfg = config.mymod.home.desktop;
+
+  paseo = pkgs.writeShellApplication {
+    name = "paseo";
+    runtimeInputs = [ pkgs.nodejs_22 ];
+    text = ''
+      exec ${pkgs.nodejs_22}/bin/npx -y @getpaseo/cli@0.1.96 "$@"
+    '';
+  };
+
+  openchamber = pkgs.writeShellApplication {
+    name = "openchamber";
+    runtimeInputs = [
+      pkgs.nodejs_22
+      pkgs.opencode
+    ];
+    text = ''
+      exec ${pkgs.nodejs_22}/bin/npx -y @openchamber/web@1.13.0 "$@"
+    '';
+  };
 in
 {
   options.mymod.home.desktop = {
@@ -32,7 +51,8 @@ in
       liberation_ttf
       corefonts
       vista-fonts
-      t3code
+      paseo
+      openchamber
     ];
 
     home.pointerCursor = {
