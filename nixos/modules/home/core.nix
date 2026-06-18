@@ -9,6 +9,19 @@
 let
   cfg = config.mymod.home.core;
   configsPath = ../../configs;
+
+  opencodeSettings = {
+    permission = {
+      edit = "ask";
+      bash = {
+        "*" = "allow";
+        "rm *" = "ask";
+        "rmdir *" = "ask";
+      };
+      websearch = "allow";
+      codesearch = "allow";
+    };
+  };
 in
 {
   options.mymod.home.core = {
@@ -170,7 +183,7 @@ in
 
     programs.lazygit.enable = true;
 
-    programs.opencode = {
+    programs.opencode = lib.mkIf pkgs.stdenv.isLinux {
       enable = true;
       package = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
         preBuild = (old.preBuild or "") + ''
@@ -178,18 +191,11 @@ in
           sed -i "s/bun@[0-9.]\+/bun@$ACTUAL_BUN_VERSION/" package.json
         '';
       });
-      settings = {
-        permission = {
-          edit = "ask";
-          bash = {
-            "*" = "allow";
-            "rm *" = "ask";
-            "rmdir *" = "ask";
-          };
-          websearch = "allow";
-          codesearch = "allow";
-        };
-      };
+      settings = opencodeSettings;
+    };
+
+    xdg.configFile."opencode/opencode.json" = lib.mkIf pkgs.stdenv.isDarwin {
+      text = builtins.toJSON opencodeSettings;
     };
 
     programs.tmux = {

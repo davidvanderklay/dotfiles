@@ -33,6 +33,8 @@
 
   homebrew = {
     enable = true;
+    enableZshIntegration = true;
+
     onActivation = {
       cleanup = "zap";
       autoUpdate = true;
@@ -42,6 +44,7 @@
     taps = [
       "homebrew/services"
       "nikitabobko/tap"
+      "anomalyco/tap"
     ];
 
     brews = [
@@ -49,6 +52,7 @@
       "jupytext"
       "ghostscript"
       "gh"
+      "anomalyco/tap/opencode"
     ];
 
     casks = [
@@ -65,6 +69,7 @@
       "font-iosevka-nerd-font"
       "t3-code"
       "heroic"
+      "openchamber"
     ];
   };
 

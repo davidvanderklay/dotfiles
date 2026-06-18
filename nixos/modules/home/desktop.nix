@@ -13,7 +13,6 @@ let
     name = "openchamber";
     runtimeInputs = [
       pkgs.nodejs_22
-      pkgs.opencode
     ];
     text = ''
       exec ${pkgs.nodejs_22}/bin/npx -y @openchamber/web@1.13.0 "$@"
