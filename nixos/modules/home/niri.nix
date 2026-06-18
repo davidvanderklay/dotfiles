@@ -38,28 +38,6 @@ in
       settings = { };
     };
 
-    services.hypridle = {
-      enable = true;
-      settings = {
-        general = {
-          lock_cmd = "niri msg action power-off-monitors";
-          unlock_cmd = "niri msg action power-on-monitors";
-          before_sleep_cmd = "niri msg action power-off-monitors";
-        };
-
-        listener = [
-          {
-            timeout = 60;
-            on-timeout = "niri msg action power-off-monitors";
-            on-resume = "niri msg action power-on-monitors";
-          }
-          {
-            timeout = 600;
-          }
-        ];
-      };
-    };
-
     xdg.configFile."niri/config.kdl".text = ''
       prefer-no-csd
       workspace "1"
@@ -163,7 +141,6 @@ in
     };
 
     home.packages = with pkgs; [
-      hypridle
       xwayland-satellite
       swaybg
       wl-clipboard
