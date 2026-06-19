@@ -70,6 +70,7 @@
       "t3-code"
       "heroic"
       "openchamber"
+      "obsidian"
     ];
   };
 
