@@ -67,9 +67,7 @@
       "iina"
       "font-hack-nerd-font"
       "font-iosevka-nerd-font"
-      "t3-code"
       "heroic"
-      "openchamber"
       "obsidian"
       "paseo"
     ];
