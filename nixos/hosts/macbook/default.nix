@@ -71,6 +71,7 @@
       "heroic"
       "openchamber"
       "obsidian"
+      "paseo"
     ];
   };
 
