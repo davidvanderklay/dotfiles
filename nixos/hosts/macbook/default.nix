@@ -157,14 +157,5 @@
   programs.zsh.enable = true;
   services.tailscale.enable = true;
 
-  home-manager.users.geolan = {
-    imports = [ ../../modules/home ];
-    mymod.home = {
-      core = {
-        enable = true;
-        homeDirectory = "/Users/geolan";
-      };
-      nixvim.enable = true;
-    };
-  };
+  home-manager.users.geolan = import ../../profiles/darwin.nix;
 }

@@ -78,6 +78,41 @@
           inherit system;
           config.allowUnfree = true;
         };
+
+      homeManagerCommon = {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.backupFileExtension = "before-nix";
+        home-manager.extraSpecialArgs = specialArgs;
+        home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+      };
+
+      standaloneHome =
+        {
+          pkgs,
+          userName,
+          homeDirectory,
+          extraConfig ? { },
+        }:
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = specialArgs;
+          modules = [
+            inputs.nixvim.homeModules.nixvim
+            ./modules/home
+            {
+              mymod.home = {
+                core = {
+                  enable = true;
+                  inherit userName homeDirectory;
+                };
+                nixvim.enable = true;
+              };
+              home.stateVersion = "25.11";
+            }
+            extraConfig
+          ];
+        };
     in
     {
       nixosModules.default = import ./modules/nixos;
@@ -99,15 +134,8 @@
         inherit specialArgs;
         modules = [
           ./hosts/macbook/default.nix
-
           home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "before-nix";
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
-          }
+          homeManagerCommon
         ];
       };
 
@@ -122,14 +150,8 @@
             ./hosts/desktop/default.nix
 
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "before-nix";
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
-              home-manager.users.geolan = import ./profiles/linux-desktop.nix;
-            }
+            homeManagerCommon
+            { home-manager.users.geolan = import ./profiles/linux-desktop.nix; }
           ];
         };
 
@@ -142,61 +164,29 @@
             ./hosts/laptop/default.nix
 
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "before-nix";
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
-              home-manager.users.geolan = import ./profiles/linux-desktop.nix;
-            }
+            homeManagerCommon
+            { home-manager.users.geolan = import ./profiles/linux-desktop.nix; }
           ];
         };
       };
 
       homeConfigurations = {
-        "mac" = home-manager.lib.homeManagerConfiguration {
+        "mac" = standaloneHome {
           pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-          extraSpecialArgs = specialArgs;
-          modules = [
-            inputs.nixvim.homeModules.nixvim
-            ./modules/home
-            {
-              mymod.home = {
-                core = {
-                  enable = true;
-                  userName = "geolan";
-                  homeDirectory = "/Users/geolan";
-                };
-                nixvim.enable = true;
-              };
-              home.stateVersion = "25.11";
-            }
-          ];
+          userName = "geolan";
+          homeDirectory = "/Users/geolan";
         };
 
-        "generic" = home-manager.lib.homeManagerConfiguration {
+        "generic" = standaloneHome {
           pkgs = import nixpkgs {
             system = "x86_64-linux";
             config.allowUnfree = true;
           };
-          extraSpecialArgs = specialArgs;
-          modules = [
-            inputs.nixvim.homeModules.nixvim
-            ./modules/home
-            {
-              mymod.home = {
-                core = {
-                  enable = true;
-                  userName = "van";
-                  homeDirectory = "/home/van";
-                };
-                nixvim.enable = true;
-              };
-              home.stateVersion = "25.11";
-              targets.genericLinux.enable = true;
-            }
-          ];
+          userName = "van";
+          homeDirectory = "/home/van";
+          extraConfig = {
+            targets.genericLinux.enable = true;
+          };
         };
       };
     };
