@@ -8,16 +8,6 @@
 
 let
   cfg = config.mymod.home.desktop;
-
-  openchamber = pkgs.writeShellApplication {
-    name = "openchamber";
-    runtimeInputs = [
-      pkgs.nodejs_22
-    ];
-    text = ''
-      exec ${pkgs.nodejs_22}/bin/npx -y @openchamber/web@1.13.0 "$@"
-    '';
-  };
 in
 {
   options.mymod.home.desktop = {
@@ -31,6 +21,7 @@ in
       gnome-tweaks
       gnome-extension-manager
       nautilus
+      appimage-run
       inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
       gnomeExtensions.appindicator
       gnomeExtensions.tiling-assistant
@@ -43,7 +34,7 @@ in
       corefonts
       vista-fonts
       obsidian
-      openchamber
+      inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".paseo-desktop
     ];
 
     home.pointerCursor = {

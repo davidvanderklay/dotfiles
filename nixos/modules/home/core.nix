@@ -77,7 +77,8 @@ in
           ripgrep
           fd
           quarto
-          codex
+          inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".opencode
+          inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".codex
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
@@ -183,18 +184,7 @@ in
 
     programs.lazygit.enable = true;
 
-    programs.opencode = lib.mkIf pkgs.stdenv.isLinux {
-      enable = true;
-      package = inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-        preBuild = (old.preBuild or "") + ''
-          ACTUAL_BUN_VERSION=$(${pkgs.bun}/bin/bun --version)
-          sed -i "s/bun@[0-9.]\+/bun@$ACTUAL_BUN_VERSION/" package.json
-        '';
-      });
-      settings = opencodeSettings;
-    };
-
-    xdg.configFile."opencode/opencode.json" = lib.mkIf pkgs.stdenv.isDarwin {
+    xdg.configFile."opencode/opencode.json" = {
       text = builtins.toJSON opencodeSettings;
     };
 

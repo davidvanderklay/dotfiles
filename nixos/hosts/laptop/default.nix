@@ -37,4 +37,6 @@
     nicotine-plus
     feishin
   ];
+
+  boot.kernelPackages = pkgs.linuxPackages_7_0;
 }
