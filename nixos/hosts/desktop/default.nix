@@ -53,5 +53,4 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_7_0;
 }

@@ -58,7 +58,7 @@ in
           btop
           unzip
           unrar
-          texlive.combined.scheme-full
+          texlive.combined.scheme-medium
           texlab
           wget
           croc
