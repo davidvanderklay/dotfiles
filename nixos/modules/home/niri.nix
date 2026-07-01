@@ -15,7 +15,7 @@ in
 
     monitor = lib.mkOption {
       type = lib.types.str;
-      default = "DP-3";
+      default = "DP-1";
       description = "Monitor output name";
     };
 
