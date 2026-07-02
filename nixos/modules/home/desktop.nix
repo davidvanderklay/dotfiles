@@ -34,6 +34,7 @@ in
       corefonts
       vista-fonts
       obsidian
+      t3code
       inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".paseo-desktop
     ];
 
