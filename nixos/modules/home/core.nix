@@ -82,6 +82,7 @@ in
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
+          (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
         ]
         ++ lib.optionals stdenv.isLinux [ wl-clipboard ];
     };
@@ -93,8 +94,15 @@ in
           name = "davidvanderklay";
           email = "davidvanderklay@gmail.com";
         };
+        core.excludesFile = "${config.xdg.configHome}/git/ignore";
       };
     };
+
+    xdg.configFile."git/ignore".text = ''
+      paseo.json
+    '';
+
+    xdg.configFile."paseo/paseo.json".source = "${configsPath}/paseo/paseo.json";
 
     programs.ssh = {
       enable = true;
