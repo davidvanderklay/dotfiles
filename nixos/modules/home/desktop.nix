@@ -35,7 +35,6 @@ in
       vista-fonts
       obsidian
       inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".paseo-desktop
-      t3code
     ];
 
     home.pointerCursor = {
