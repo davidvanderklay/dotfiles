@@ -7,7 +7,6 @@
     core.enable = true;
     nixvim.enable = true;
     desktop.enable = true;
-    niri.enable = true;
     ghostty.enable = true;
     gaming.enable = true;
   };
