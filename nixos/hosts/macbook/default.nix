@@ -70,6 +70,7 @@
       "heroic"
       "obsidian"
       "paseo"
+      "t3-code"
       "iloader"
     ];
   };

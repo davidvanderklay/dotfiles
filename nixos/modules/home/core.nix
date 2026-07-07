@@ -187,7 +187,7 @@ in
       enable = true;
       enableZshIntegration = true;
       defaultCommand = "rg --files --hidden";
-      fileWidgetCommand = "rg --files --hidden";
+      fileWidget.command = "rg --files --hidden";
     };
 
     programs.lazygit.enable = true;
