@@ -77,8 +77,8 @@ in
           ripgrep
           fd
           quarto
-          inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".opencode
-          inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".codex
+          inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+          inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))

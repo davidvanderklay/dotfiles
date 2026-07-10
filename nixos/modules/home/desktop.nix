@@ -34,10 +34,8 @@ in
       corefonts
       vista-fonts
       obsidian
-      (t3code.override {
-        codex = inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".codex;
-      })
-      inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".paseo-desktop
+      (t3code.override { enableCodex = false; })
+      inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
     ];
 
     home.pointerCursor = {

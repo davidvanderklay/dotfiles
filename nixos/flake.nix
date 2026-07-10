@@ -55,7 +55,8 @@
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    llm-agents.url = "github:numtide/llm-agents.nix";
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
+    opencode-nix.url = "github:dominicnunez/opencode-nix";
   };
 
   outputs =
