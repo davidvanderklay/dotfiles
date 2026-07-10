@@ -34,7 +34,9 @@ in
       corefonts
       vista-fonts
       obsidian
-      t3code
+      (t3code.override {
+        codex = inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".codex;
+      })
       inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}".paseo-desktop
     ];
 
