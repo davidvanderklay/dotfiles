@@ -141,6 +141,7 @@ in
     };
 
     home.pointerCursor = {
+      enable = lib.mkDefault true;
       gtk.enable = true;
       x11.enable = true;
       package = lib.mkDefault pkgs.bibata-cursors;
