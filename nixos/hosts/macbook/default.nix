@@ -43,7 +43,6 @@
 
     taps = [
       "homebrew/services"
-      "nikitabobko/tap"
       "anomalyco/tap"
     ];
 
@@ -56,7 +55,7 @@
     ];
 
     casks = [
-      "docker"
+      "docker-desktop"
       "localsend"
       "xquartz"
       "zen"
@@ -69,9 +68,9 @@
       "font-iosevka-nerd-font"
       "heroic"
       "obsidian"
-      "paseo"
-      "t3-code"
+      "t3-code@nightly"
       "iloader"
+      "codex"
     ];
   };
 

@@ -78,13 +78,15 @@ in
           fd
           quarto
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
-          inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
           (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
         ]
-        ++ lib.optionals stdenv.isLinux [ wl-clipboard ];
+        ++ lib.optionals stdenv.isLinux [
+          wl-clipboard
+          inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+        ];
     };
 
     programs.git = {
