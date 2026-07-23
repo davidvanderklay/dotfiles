@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, ... }:
 
 {
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -68,7 +68,6 @@
       "font-iosevka-nerd-font"
       "heroic"
       "obsidian"
-      "t3-code@nightly"
       "iloader"
       "codex"
     ];
@@ -157,6 +156,27 @@
 
   programs.zsh.enable = true;
   services.tailscale.enable = true;
+
+  launchd.user.agents.t3-code-server = {
+    serviceConfig = {
+      ProgramArguments = [
+        "${config.home-manager.users.geolan.home.profileDirectory}/bin/t3-code-server-nightly"
+      ];
+      WorkingDirectory = "/Users/geolan";
+      EnvironmentVariables = {
+        HOME = "/Users/geolan";
+        NPM_CONFIG_CACHE = "/Users/geolan/.cache/npm";
+        PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
+      };
+      RunAtLoad = true;
+      KeepAlive = {
+        SuccessfulExit = false;
+      };
+      ThrottleInterval = 10;
+      StandardOutPath = "/Users/geolan/Library/Logs/t3-code.log";
+      StandardErrorPath = "/Users/geolan/Library/Logs/t3-code.log";
+    };
+  };
 
   home-manager.users.geolan = import ../../profiles/darwin.nix;
 }

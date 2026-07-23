@@ -26,9 +26,13 @@ let
       nodejs_22
       openssh
       tailscale
-      codex
-    ];
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [ codex ];
     text = ''
+      until tailscale status --json >/dev/null 2>&1; do
+        sleep 5
+      done
+
       exec npx --yes t3@nightly serve \
         --base-dir "$HOME/.t3" \
         --tailscale-serve
@@ -40,26 +44,30 @@ in
     enable = lib.mkEnableOption "headless T3 Code nightly server";
   };
 
-  config = lib.mkIf (cfg.enable && pkgs.stdenv.isLinux) {
-    systemd.user.services.t3-code-server = {
-      Unit = {
-        Description = "T3 Code nightly server";
-        After = [ "network-online.target" ];
-        Wants = [ "network-online.target" ];
-      };
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf pkgs.stdenv.isDarwin [ t3Server ];
 
-      Service = {
-        Type = "simple";
-        ExecStart = "${t3Server}/bin/t3-code-server-nightly";
-        Environment = [
-          "HOME=%h"
-          "NPM_CONFIG_CACHE=%h/.cache/npm"
-        ];
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
+    systemd.user.services = lib.mkIf pkgs.stdenv.isLinux {
+      t3-code-server = {
+        Unit = {
+          Description = "T3 Code nightly server";
+          After = [ "network-online.target" ];
+          Wants = [ "network-online.target" ];
+        };
 
-      Install.WantedBy = [ "default.target" ];
+        Service = {
+          Type = "simple";
+          ExecStart = "${t3Server}/bin/t3-code-server-nightly";
+          Environment = [
+            "HOME=%h"
+            "NPM_CONFIG_CACHE=%h/.cache/npm"
+          ];
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
+
+        Install.WantedBy = [ "default.target" ];
+      };
     };
   };
 }

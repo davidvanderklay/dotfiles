@@ -8,6 +8,7 @@
       enable = true;
       homeDirectory = "/Users/geolan";
     };
+    t3code.enable = true;
     nixvim.enable = true;
   };
 }
