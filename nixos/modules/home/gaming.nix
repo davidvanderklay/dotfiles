@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 
@@ -30,7 +31,7 @@ in
       vesktop
       wineWow64Packages.stable
       winetricks
-      ungoogled-chromium
+      inputs.helium.packages."${pkgs.stdenv.hostPlatform.system}".default
     ];
 
     systemd.user.services.ludusavi-backup = lib.mkIf cfg.enableLudusaviBackup {
