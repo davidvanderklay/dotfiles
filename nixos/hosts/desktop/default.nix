@@ -23,8 +23,6 @@
     };
   };
 
-  home-manager.users.geolan.mymod.home.t3code.enable = true;
-
   services.usbmuxd.enable = true;
 
   services.udev.extraRules = ''

@@ -34,6 +34,7 @@ in
       corefonts
       vista-fonts
       obsidian
+      inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code-nightly
     ];
 
     home.pointerCursor = {
