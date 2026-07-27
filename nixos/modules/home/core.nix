@@ -149,7 +149,7 @@ in
 
     programs.zsh = {
       enable = true;
-      enableCompletion = true;
+      enableCompletion = !pkgs.stdenv.isDarwin;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       historySubstringSearch.enable = true;
