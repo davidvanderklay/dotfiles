@@ -7,12 +7,14 @@
       "https://nix-community.cachix.org"
       "https://ezkea.cachix.org"
       "https://noctalia.cachix.org"
+      "https://attic.xuyh0120.win/lantian"
     ];
     extra-trusted-public-keys = [
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
   };
 
@@ -60,6 +62,7 @@
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     t3code-flake.url = "github:omarcresp/t3code-flake";
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-nix.url = "github:dominicnunez/opencode-nix";
@@ -154,6 +157,18 @@
           inherit specialArgs;
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
+
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+                boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
+                nix.settings.substituters = [ "https://attic.xuyh0120.win/lantian" ];
+                nix.settings.trusted-public-keys = [
+                  "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+                ];
+              }
+            )
 
             inputs.lanzaboote.nixosModules.lanzaboote
             inputs.aagl.nixosModules.default
