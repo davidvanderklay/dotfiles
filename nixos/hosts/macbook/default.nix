@@ -71,6 +71,7 @@
       "t3-code@nightly"
       "iloader"
       "codex"
+      "silhouette-studio"
     ];
   };
 
