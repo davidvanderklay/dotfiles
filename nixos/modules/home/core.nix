@@ -22,6 +22,23 @@ let
       codesearch = "allow";
     };
   };
+
+  githubSshSettings = {
+    HostName = "ssh.github.com";
+    User = "git";
+    Port = 443;
+    IdentityFile = "~/.ssh/id_ed25519";
+    IdentitiesOnly = true;
+    AddKeysToAgent = "yes";
+    ServerAliveInterval = 30;
+    ServerAliveCountMax = 3;
+  }
+  // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    # macOS stores SSH passphrases in the login keychain. Together with
+    # AddKeysToAgent this keeps the key available to the launchd agent after
+    # reboots, so GUI apps such as lazygit and T3 Code can use Git over SSH.
+    UseKeychain = "yes";
+  };
 in
 {
   options.mymod.home.core = {
@@ -110,16 +127,7 @@ in
       enable = true;
       enableDefaultConfig = false;
       settings = {
-        "github.com" = {
-          HostName = "ssh.github.com";
-          User = "git";
-          Port = 443;
-          IdentityFile = "~/.ssh/id_ed25519";
-          IdentitiesOnly = true;
-          AddKeysToAgent = "yes";
-          ServerAliveInterval = 30;
-          ServerAliveCountMax = 3;
-        };
+        "github.com" = githubSshSettings;
 
         "*" = {
           AddKeysToAgent = "no";
