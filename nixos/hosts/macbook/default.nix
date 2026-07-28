@@ -69,6 +69,7 @@
       "heroic"
       "obsidian"
       "t3-code@nightly"
+      "stremio"
       "iloader"
       "codex"
       "silhouette-studio"
