@@ -34,7 +34,7 @@ in
       corefonts
       vista-fonts
       obsidian
-      inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code-nightly
+      inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code
     ];
 
     xdg.desktopEntries.t3-code-url-handler = {

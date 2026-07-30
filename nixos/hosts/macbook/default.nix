@@ -68,7 +68,7 @@
       "font-iosevka-nerd-font"
       "heroic"
       "obsidian"
-      "t3-code@nightly"
+      "t3-code"
       "stremio"
       "iloader"
       "codex"
