@@ -37,6 +37,14 @@ in
       inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code-nightly
     ];
 
+    xdg.desktopEntries.t3-code-url-handler = {
+      name = "T3 Code URL Handler";
+      exec = "t3 %U";
+      terminal = false;
+      noDisplay = true;
+      mimeType = [ "x-scheme-handler/t3code" ];
+    };
+
     home.pointerCursor = {
       enable = true;
       gtk.enable = true;
@@ -54,6 +62,7 @@ in
         "x-scheme-handler/https" = "zen-beta.desktop";
         "x-scheme-handler/about" = "zen-beta.desktop";
         "x-scheme-handler/unknown" = "zen-beta.desktop";
+        "x-scheme-handler/t3code" = "t3-code-url-handler.desktop";
         "application/pdf" = "org.gnome.Papers.desktop";
         "image/png" = "org.gnome.Loupe.desktop";
         "image/jpeg" = "org.gnome.Loupe.desktop";
