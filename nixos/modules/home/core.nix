@@ -84,6 +84,7 @@ in
           syncthing
           rclone
           gnupg
+          pinentry-curses
           jq
           qrencode
           rustfmt
