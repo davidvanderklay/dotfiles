@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -35,7 +40,10 @@
     binfmt = true;
   };
 
+  nixpkgs.config.android_sdk.accept_license = true;
+
   environment.systemPackages = with pkgs; [
+    android-studio
     usbmuxd
     sbctl
     nicotine-plus
