@@ -18,5 +18,17 @@ in
       # Claude created this empty directory before Home Manager managed it.
       force = true;
     };
+
+    # Codex uses AGENTS.md directly for global guidance.
+    ".codex/AGENTS.md".source = linkFromRepo "AGENTS.md";
+
+    # Link individual skills so existing user skills, such as find-skills,
+    # remain in ~/.agents/skills alongside the shared skills.
+    ".agents/skills/babysit-pr".source = linkFromRepo "skills/babysit-pr";
+    ".agents/skills/file-pr".source = linkFromRepo "skills/file-pr";
+    ".agents/skills/file-upload".source = linkFromRepo "skills/file-upload";
+    ".agents/skills/html-communication".source = linkFromRepo "skills/html-communication";
+    ".agents/skills/postplan-read".source = linkFromRepo "skills/postplan-read";
+    ".agents/skills/review-pr".source = linkFromRepo "skills/review-pr";
   };
 }
