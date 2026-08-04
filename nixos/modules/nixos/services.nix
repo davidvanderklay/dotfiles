@@ -47,10 +47,21 @@ in
       }
 
       (lib.mkIf cfg.cliproxyapi {
-        services.cliproxyapi = {
-          enable = true;
-          configFile = ../../configs/cliproxyapi/config.yaml;
-        };
+        services.cliproxyapi.enable = true;
+
+        # Seed config.yaml as a real file (not a store symlink) so it can be
+        # edited live — secrets like remote-management.secret-key stay out of
+        # git. Only seeds if the file doesn't already exist; the module's own
+        # preStart (which symlinks configFile) is replaced since we no longer
+        # pass configFile.
+        systemd.services.cliproxyapi.preStart = lib.mkForce ''
+          mkdir -p ${config.services.cliproxyapi.dataDir}
+          if [ ! -f ${config.services.cliproxyapi.dataDir}/config.yaml ]; then
+            cp ${../../configs/cliproxyapi/config.yaml} ${config.services.cliproxyapi.dataDir}/config.yaml
+            chown ${config.services.cliproxyapi.user}:${config.services.cliproxyapi.group} ${config.services.cliproxyapi.dataDir}/config.yaml
+            chmod 600 ${config.services.cliproxyapi.dataDir}/config.yaml
+          fi
+        '';
       })
 
       (lib.mkIf cfg.openFirewall {
