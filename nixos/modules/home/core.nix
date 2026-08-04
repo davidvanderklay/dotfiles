@@ -186,6 +186,8 @@ in
           # haiku=luna-high (quick coding), subagents=luna-high,
           # background=luna-low (commits/summaries).
           export ANTHROPIC_BASE_URL="http://127.0.0.1:8317"
+          # Let Claude Code's own /model picker query the local gateway.
+          export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY="1"
           export ANTHROPIC_DEFAULT_OPUS_MODEL="gpt-5.6-sol-medium"
           export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.6-sol-low"
           export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.6-luna-high"
