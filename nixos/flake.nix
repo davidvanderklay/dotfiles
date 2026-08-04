@@ -67,6 +67,7 @@
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-nix.url = "github:dominicnunez/opencode-nix";
     cliproxyapi.url = "github:benjaminkitt/nix-cliproxyapi";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =

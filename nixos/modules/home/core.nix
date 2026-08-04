@@ -97,6 +97,20 @@ in
           quarto
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           claude-code
+          (pkgs.writeShellScriptBin "claude-t3" ''
+            export ANTHROPIC_BASE_URL="http://127.0.0.1:8317"
+            export ANTHROPIC_AUTH_TOKEN="local"
+            export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY="1"
+            export ANTHROPIC_DEFAULT_OPUS_MODEL="gpt-5.6-sol-medium"
+            export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.6-sol-low"
+            export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.6-luna-high"
+            export CLAUDE_CODE_SUBAGENT_MODEL="gpt-5.6-luna-high"
+            export CLAUDE_CODE_BACKGROUND_TASK_MODEL="gpt-5.6-luna-low"
+            if [ -f "$HOME/.config/claude-proxy/key" ]; then
+              export ANTHROPIC_AUTH_TOKEN="$(cat "$HOME/.config/claude-proxy/key")"
+            fi
+            exec ${claude-code}/bin/claude "$@"
+          '')
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
@@ -106,7 +120,7 @@ in
           wl-clipboard
           inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           (pkgs.writeShellScriptBin "cliproxy-login" ''
-            exec sudo -u cliproxyapi ${inputs.cliproxyapi.packages."${pkgs.stdenv.hostPlatform.system}".cliproxyapi}/bin/cliproxyapi -config /var/lib/cliproxyapi/config.yaml -codex-device-login "$@"
+            exec sudo -u cliproxyapi ${inputs.llm-agents.packages."${pkgs.stdenv.hostPlatform.system}"."cli-proxy-api"}/bin/cli-proxy-api -config /var/lib/cliproxyapi/config.yaml -codex-device-login "$@"
           '')
         ];
     };

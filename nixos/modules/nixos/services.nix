@@ -8,6 +8,14 @@
 
 let
   cfg = config.mymod.services;
+
+  # The service module from nix-cliproxyapi invokes /bin/cliproxyapi, while
+  # Numtide's package keeps the upstream binary name /bin/cli-proxy-api.
+  cliproxyapiPackage = pkgs.symlinkJoin {
+    name = "cli-proxy-api-service";
+    paths = [ inputs.llm-agents.packages.${pkgs.system}.cli-proxy-api ];
+    postBuild = "ln -s $out/bin/cli-proxy-api $out/bin/cliproxyapi";
+  };
 in
 {
   imports = [
@@ -48,6 +56,7 @@ in
 
       (lib.mkIf cfg.cliproxyapi {
         services.cliproxyapi.enable = true;
+        services.cliproxyapi.package = cliproxyapiPackage;
 
         # Seed config.yaml as a real file (not a store symlink) so it can be
         # edited live — secrets like remote-management.secret-key stay out of

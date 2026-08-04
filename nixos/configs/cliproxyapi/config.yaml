@@ -42,8 +42,7 @@ force-model-prefix: true
 claude-code:
   disable-cloaking-model-list: false
 
-# Expose GPT-5.6 family names that map to the same upstream model but pin a
-# different reasoning effort via the payload.override rules below.
+# Expose GPT-5.6 family names and pin their reasoning effort below.
 # Slot usage: opus=sol-high (ceiling), sonnet=luna-max (daily workhorse),
 # haiku=luna-high, subagents=luna-high, background=luna-low (text gen).
 oauth-model-alias:
