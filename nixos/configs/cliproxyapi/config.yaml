@@ -1,21 +1,24 @@
 # CLIProxyAPI — Claude Code harness for GPT-5.6 Sol
 #
-# This file is the declarative baseline. The service copies it to
-# /var/lib/cliproxyapi/config.yaml on first run and hot-reloads that copy,
-# so per-machine secrets go there (see One-time setup below).
+# Declarative baseline: the NixOS module symlinks this file to
+# /var/lib/cliproxyapi/config.yaml (a read-only store path). Change the model
+# map by editing this file + rebuilding. OAuth token files are real files in
+# the auth-dir root (/var/lib/cliproxyapi/codex-<email>-plus.json) — edited
+# live, no rebuild needed.
 #
 # One-time setup:
-#   1. Log in your Codex/ChatGPT accounts (each gets its own token file):
-#        sudo -u cliproxyapi cliproxyapi -config /var/lib/cliproxyapi/config.yaml auth codex
-#      (device flow / web UI both work; repeat for each subscription)
+#   1. Log in each Codex/ChatGPT subscription (one token file each):
+#        cliproxy-login
+#      (device-code flow prints a URL to open in YOUR browser; repeat per sub)
 #   2. Shared account quarantine (only used when you explicitly ask):
-#      edit its file /var/lib/cliproxyapi/codex/codex-<email>.json and add
-#      "prefix": "shared" so normal requests never touch it. Use it with:
-#        claude --model "shared/gpt-5.6-sol-high"
+#      edit its file /var/lib/cliproxyapi/codex-<email>-plus.json, add
+#      "prefix": "shared", then restart the service. Unprefixed requests
+#      skip it entirely. Use it with:
+#        claude --model "shared/gpt-5.6-sol-medium"
 #   3. Optional auth gating: generate a key (openssl rand -hex 16), put it in
 #      api-keys below AND in ~/.config/claude-proxy/key (client side).
 #   4. Optional management UI + usage stats: set remote-management.secret-key
-#      in /var/lib/cliproxyapi/config.yaml, then open http://127.0.0.1:8317
+#      in THIS file, rebuild, then open http://127.0.0.1:8317
 
 host: "127.0.0.1"
 port: 8317

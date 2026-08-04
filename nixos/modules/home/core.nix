@@ -105,6 +105,9 @@ in
         ++ lib.optionals stdenv.isLinux [
           wl-clipboard
           inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+          (pkgs.writeShellScriptBin "cliproxy-login" ''
+            exec sudo -u cliproxyapi ${inputs.cliproxyapi.packages."${pkgs.stdenv.hostPlatform.system}".cliproxyapi}/bin/cliproxyapi -config /var/lib/cliproxyapi/config.yaml -codex-device-login "$@"
+          '')
         ];
     };
 
