@@ -1,0 +1,109 @@
+# CLIProxyAPI — Claude Code harness for GPT-5.6 Sol
+#
+# This file is the declarative baseline. The service copies it to
+# /var/lib/cliproxyapi/config.yaml on first run and hot-reloads that copy,
+# so per-machine secrets go there (see One-time setup below).
+#
+# One-time setup:
+#   1. Log in your Codex/ChatGPT accounts (each gets its own token file):
+#        sudo -u cliproxyapi cliproxyapi -config /var/lib/cliproxyapi/config.yaml auth codex
+#      (device flow / web UI both work; repeat for each subscription)
+#   2. Shared account quarantine (only used when you explicitly ask):
+#      edit its file /var/lib/cliproxyapi/codex/codex-<email>.json and add
+#      "prefix": "shared" so normal requests never touch it. Use it with:
+#        claude --model "shared/gpt-5.6-sol-high"
+#   3. Optional auth gating: generate a key (openssl rand -hex 16), put it in
+#      api-keys below AND in ~/.config/claude-proxy/key (client side).
+#   4. Optional management UI + usage stats: set remote-management.secret-key
+#      in /var/lib/cliproxyapi/config.yaml, then open http://127.0.0.1:8317
+
+host: "127.0.0.1"
+port: 8317
+
+# Auth state for OAuth subscriptions lives here (managed by the service user).
+auth-dir: "/var/lib/cliproxyapi"
+
+# Downstream keys for clients (Claude Code, opencode, ...). Empty = localhost
+# only, any token accepted. Empty is fine since we bind to 127.0.0.1.
+api-keys: []
+
+# Keep in-memory usage stats for the management API / web UI.
+usage-statistics-enabled: true
+
+routing:
+  strategy: "round-robin"
+
+# Credentials with a prefix (e.g. the shared sub) only answer requests that
+# carry that prefix; unprefixed requests never land on them.
+force-model-prefix: true
+
+claude-code:
+  disable-cloaking-model-list: false
+
+# Expose GPT-5.6 family names that map to the same upstream model but pin a
+# different reasoning effort via the payload.override rules below.
+# Slot usage: opus=sol-high (ceiling), sonnet=luna-max (daily workhorse),
+# haiku=luna-high, subagents=luna-high, background=luna-low (text gen).
+oauth-model-alias:
+  codex:
+    - name: "gpt-5.6-sol"
+      alias: "gpt-5.6-sol-high"
+      display-name: "GPT-5.6 Sol (high) — ceiling"
+      fork: true
+    - name: "gpt-5.6-sol"
+      alias: "gpt-5.6-sol-medium"
+      display-name: "GPT-5.6 Sol (medium) — architecture/planning"
+    - name: "gpt-5.6-sol"
+      alias: "gpt-5.6-sol-low"
+      display-name: "GPT-5.6 Sol (low) — implementation"
+    - name: "gpt-5.6-luna"
+      alias: "gpt-5.6-luna-max"
+      display-name: "GPT-5.6 Luna (max) — daily workhorse"
+    - name: "gpt-5.6-luna"
+      alias: "gpt-5.6-luna-xhigh"
+      display-name: "GPT-5.6 Luna (xhigh) — strong legacy tier"
+    - name: "gpt-5.6-luna"
+      alias: "gpt-5.6-luna-high"
+      display-name: "GPT-5.6 Luna (high) — planned implementation"
+    - name: "gpt-5.6-luna"
+      alias: "gpt-5.6-luna-low"
+      display-name: "GPT-5.6 Luna (low) — text gen"
+
+# Pin reasoning effort per client-visible model name on the codex protocol.
+payload:
+  override:
+    - models:
+        - name: "gpt-5.6-sol-high"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "high"
+    - models:
+        - name: "gpt-5.6-sol-medium"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "medium"
+    - models:
+        - name: "gpt-5.6-sol-low"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "low"
+    - models:
+        - name: "gpt-5.6-luna-max"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "max"
+    - models:
+        - name: "gpt-5.6-luna-xhigh"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "xhigh"
+    - models:
+        - name: "gpt-5.6-luna-high"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "high"
+    - models:
+        - name: "gpt-5.6-luna-low"
+          protocol: "codex"
+      params:
+        "reasoning.effort": "low"

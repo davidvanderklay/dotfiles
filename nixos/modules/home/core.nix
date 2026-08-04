@@ -96,6 +96,7 @@ in
           fd
           quarto
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+          claude-code
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
@@ -175,23 +176,38 @@ in
         gd = "git diff";
       };
 
-      initContent = ''
-        bindkey '^[[A' history-substring-search-up
-        bindkey '^[[B' history-substring-search-down
-        bindkey '^[OA' history-substring-search-up
-        bindkey '^[OB' history-substring-search-down
-        bindkey -s ^f "tmux-sessionizer\n"
+      initContent =
+        (lib.optionalString (!pkgs.stdenv.isDarwin) ''
+          # Claude Code -> CLIProxyAPI (GPT-5.6). Slot mapping:
+          # opus=sol-medium, sonnet=sol-low (daily workhorse),
+          # haiku=luna-high (quick coding), subagents=luna-high,
+          # background=luna-low (commits/summaries).
+          export ANTHROPIC_BASE_URL="http://127.0.0.1:8317"
+          export ANTHROPIC_DEFAULT_OPUS_MODEL="gpt-5.6-sol-medium"
+          export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.6-sol-low"
+          export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.6-luna-high"
+          export CLAUDE_CODE_SUBAGENT_MODEL="gpt-5.6-luna-high"
+          export CLAUDE_CODE_BACKGROUND_TASK_MODEL="gpt-5.6-luna-low"
+          export ANTHROPIC_AUTH_TOKEN="local"
+          [ -f "$HOME/.config/claude-proxy/key" ] && export ANTHROPIC_AUTH_TOKEN="$(cat "$HOME/.config/claude-proxy/key")"
+        '')
+        + ''
+          bindkey '^[[A' history-substring-search-up
+          bindkey '^[[B' history-substring-search-down
+          bindkey '^[OA' history-substring-search-up
+          bindkey '^[OB' history-substring-search-down
+          bindkey -s ^f "tmux-sessionizer\n"
 
-        sudo-command-line() {
-            [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
-            if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
-        }
-        zle -N sudo-command-line
-        bindkey "\e\e" sudo-command-line
+          sudo-command-line() {
+              [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+              if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
+          }
+          zle -N sudo-command-line
+          bindkey "\e\e" sudo-command-line
 
-        export PATH="$PATH:$HOME/.local/scripts/"
-        export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
-      '';
+          export PATH="$PATH:$HOME/.local/scripts/"
+          export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
+        '';
     };
 
     programs.fzf = {

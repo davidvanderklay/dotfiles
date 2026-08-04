@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -9,6 +10,10 @@ let
   cfg = config.mymod.services;
 in
 {
+  imports = [
+    inputs.cliproxyapi.nixosModules.default
+  ];
+
   options.mymod.services = {
     enable = lib.mkEnableOption "common services (tailscale, flatpak)";
 
@@ -20,6 +25,12 @@ in
     flatpak = lib.mkOption {
       type = lib.types.bool;
       default = true;
+    };
+
+    cliproxyapi = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "CLIProxyAPI service (Claude Code harness for GPT-5.6 Sol)";
     };
 
     openFirewall = lib.mkOption {
@@ -34,6 +45,13 @@ in
         services.tailscale.enable = cfg.tailscale;
         services.flatpak.enable = cfg.flatpak;
       }
+
+      (lib.mkIf cfg.cliproxyapi {
+        services.cliproxyapi = {
+          enable = true;
+          configFile = ../../configs/cliproxyapi/config.yaml;
+        };
+      })
 
       (lib.mkIf cfg.openFirewall {
         networking.firewall.allowedTCPPorts = [

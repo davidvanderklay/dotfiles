@@ -66,6 +66,7 @@
     t3code-flake.url = "github:omarcresp/t3code-flake";
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-nix.url = "github:dominicnunez/opencode-nix";
+    cliproxyapi.url = "github:benjaminkitt/nix-cliproxyapi";
   };
 
   outputs =
