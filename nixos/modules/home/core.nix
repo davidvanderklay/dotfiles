@@ -97,20 +97,6 @@ in
           quarto
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           claude-code
-          (pkgs.writeShellScriptBin "claude-t3" ''
-            export ANTHROPIC_BASE_URL="http://127.0.0.1:8317"
-            export ANTHROPIC_AUTH_TOKEN="local"
-            export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY="1"
-            export ANTHROPIC_DEFAULT_OPUS_MODEL="gpt-5.6-sol-medium"
-            export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.6-sol-low"
-            export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.6-luna-high"
-            export CLAUDE_CODE_SUBAGENT_MODEL="gpt-5.6-luna-high"
-            export CLAUDE_CODE_BACKGROUND_TASK_MODEL="gpt-5.6-luna-low"
-            if [ -f "$HOME/.config/claude-proxy/key" ]; then
-              export ANTHROPIC_AUTH_TOKEN="$(cat "$HOME/.config/claude-proxy/key")"
-            fi
-            exec ${claude-code}/bin/claude "$@"
-          '')
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
@@ -194,23 +180,20 @@ in
       };
 
       initContent =
-        (lib.optionalString (!pkgs.stdenv.isDarwin) ''
-          # Claude Code -> CLIProxyAPI (GPT-5.6). Slot mapping:
-          # opus=sol-medium, sonnet=sol-low (daily workhorse),
-          # haiku=luna-high (quick coding), subagents=luna-high,
-          # background=luna-low (commits/summaries).
-          export ANTHROPIC_BASE_URL="http://127.0.0.1:8317"
-          # Let Claude Code's own /model picker query the local gateway.
-          export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY="1"
-          export ANTHROPIC_DEFAULT_OPUS_MODEL="gpt-5.6-sol-medium"
-          export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.6-sol-low"
-          export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.6-luna-high"
-          export CLAUDE_CODE_SUBAGENT_MODEL="gpt-5.6-luna-high"
-          export CLAUDE_CODE_BACKGROUND_TASK_MODEL="gpt-5.6-luna-low"
-          export ANTHROPIC_AUTH_TOKEN="local"
-          [ -f "$HOME/.config/claude-proxy/key" ] && export ANTHROPIC_AUTH_TOKEN="$(cat "$HOME/.config/claude-proxy/key")"
-        '')
-        + ''
+        ''
+          # Claude Code -> Meta Model API (Muse Spark 1.2 Contributor).
+          if [ -r "$HOME/.config/meta/model-api-key" ]; then
+            export MODEL_API_KEY="$(cat "$HOME/.config/meta/model-api-key")"
+          fi
+          export ANTHROPIC_BASE_URL="https://api.meta.ai"
+          export ANTHROPIC_AUTH_TOKEN="$MODEL_API_KEY"
+          export ANTHROPIC_MODEL="muse-spark-1.2-contributor"
+          export ANTHROPIC_DEFAULT_OPUS_MODEL="muse-spark-1.2-contributor"
+          export ANTHROPIC_DEFAULT_SONNET_MODEL="muse-spark-1.2-contributor"
+          export ANTHROPIC_DEFAULT_HAIKU_MODEL="muse-spark-1.2-contributor"
+          export CLAUDE_CODE_SUBAGENT_MODEL="muse-spark-1.2-contributor"
+          export ENABLE_TOOL_SEARCH="true"
+
           bindkey '^[[A' history-substring-search-up
           bindkey '^[[B' history-substring-search-down
           bindkey '^[OA' history-substring-search-up
