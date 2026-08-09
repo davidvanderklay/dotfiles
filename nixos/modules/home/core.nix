@@ -71,6 +71,7 @@ in
           rustc
           cargo
           nodejs_22
+          pnpm
           awscli2
           btop
           unzip
