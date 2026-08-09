@@ -210,6 +210,7 @@ in
 
           export PATH="$PATH:$HOME/.local/scripts/"
           export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
+          export PATH="$HOME/.local/bin:$PATH"
         '';
     };
 
