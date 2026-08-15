@@ -6,40 +6,6 @@ in
 {
   config = lib.mkIf cfg.enable {
     programs.nixvim.plugins = {
-      quarto = {
-        enable = true;
-        settings = {
-          lspFeatures = {
-            enabled = true;
-            languages = [
-              "python"
-              "bash"
-              "lua"
-            ];
-            chunks = "all";
-          };
-          codeRunner = {
-            enabled = true;
-            default_method = "molten";
-          };
-        };
-      };
-
-      molten = {
-        enable = true;
-        settings = {
-          auto_open_output = false;
-          save_last_position = true;
-          auto_export_output = true;
-          image_provider = "image.nvim";
-          wrap_output = true;
-          virt_text_output = true;
-          virt_lines_off_by_1 = true;
-        };
-      };
-
-      otter.enable = true;
-
       image = {
         enable = true;
         settings = {

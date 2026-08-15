@@ -85,9 +85,6 @@ in
       extraPython3Packages =
         ps: with ps; [
           pynvim
-          jupyter-client
-          ipykernel
-          nbformat
         ];
 
       extraPackages = with pkgs; [
@@ -114,8 +111,6 @@ in
         vscode-langservers-extracted
         yaml-language-server
         texliveSmall
-        quarto
-        python3Packages.ipykernel
         imagemagick
       ];
 
