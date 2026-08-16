@@ -27,6 +27,8 @@ in
     ".agents/skills/babysit-pr".source = linkFromRepo "skills/babysit-pr";
     ".agents/skills/file-pr".source = linkFromRepo "skills/file-pr";
     ".agents/skills/file-upload".source = linkFromRepo "skills/file-upload";
+    ".agents/skills/grill-me".source = linkFromRepo "skills/grill-me";
+    ".agents/skills/grilling".source = linkFromRepo "skills/grilling";
     ".agents/skills/handoff".source = linkFromRepo "skills/handoff";
     ".agents/skills/html-communication".source = linkFromRepo "skills/html-communication";
     ".agents/skills/postplan-read".source = linkFromRepo "skills/postplan-read";
