@@ -21,6 +21,7 @@ in
       gnome-tweaks
       gnome-extension-manager
       nautilus
+      celluloid
       appimage-run
       inputs.zen-browser.packages."${pkgs.stdenv.hostPlatform.system}".default
       gnomeExtensions.appindicator
@@ -64,6 +65,13 @@ in
         "x-scheme-handler/unknown" = "zen-beta.desktop";
         "x-scheme-handler/t3code" = "t3-code-url-handler.desktop";
         "application/pdf" = "org.gnome.Papers.desktop";
+        "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/webm" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/x-matroska" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/x-msvideo" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/quicktime" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/mpeg" = "io.github.celluloid_player.Celluloid.desktop";
+        "video/ogg" = "io.github.celluloid_player.Celluloid.desktop";
         "image/png" = "org.gnome.Loupe.desktop";
         "image/jpeg" = "org.gnome.Loupe.desktop";
         "image/gif" = "org.gnome.Loupe.desktop";
@@ -96,6 +104,10 @@ in
     };
 
     dconf.settings = {
+      "io/github/celluloid-player/celluloid" = {
+        mpv-options = "--hwdec=auto";
+      };
+
       "org/gnome/shell" = {
         disable-user-extensions = false;
         enabled-extensions = [

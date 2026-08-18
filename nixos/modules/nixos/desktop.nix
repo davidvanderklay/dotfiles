@@ -19,6 +19,8 @@ in
     services.displayManager.gdm.enable = true;
     services.desktopManager.gnome.enable = true;
 
+    environment.gnome.excludePackages = [ pkgs.totem ];
+
     services.xserver.xkb = {
       layout = "us";
       variant = "";
