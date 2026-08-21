@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 let
   agentConfigRepo = "${config.home.homeDirectory}/Projects/agent-config";
@@ -22,18 +22,29 @@ in
     # Codex uses AGENTS.md directly for global guidance.
     ".codex/AGENTS.md".source = linkFromRepo "AGENTS.md";
 
-    # Link individual skills so existing user skills, such as find-skills,
-    # remain in ~/.agents/skills alongside the shared skills.
-    ".agents/skills/babysit-pr".source = linkFromRepo "skills/babysit-pr";
-    ".agents/skills/file-pr".source = linkFromRepo "skills/file-pr";
-    ".agents/skills/file-upload".source = linkFromRepo "skills/file-upload";
-    ".agents/skills/grill-me".source = linkFromRepo "skills/grill-me";
-    ".agents/skills/grilling".source = linkFromRepo "skills/grilling";
-    ".agents/skills/handoff".source = linkFromRepo "skills/handoff";
-    ".agents/skills/html-communication".source = linkFromRepo "skills/html-communication";
-    ".agents/skills/postplan-read".source = linkFromRepo "skills/postplan-read";
-    ".agents/skills/review-pr".source = linkFromRepo "skills/review-pr";
-    ".agents/skills/to-spec".source = linkFromRepo "skills/to-spec";
-    ".agents/skills/to-tickets".source = linkFromRepo "skills/to-tickets";
   };
+
+  # Discover shared skills at activation time. The repository is intentionally
+  # outside the flake, so reading it during pure Nix evaluation is forbidden.
+  # Existing non-symlinked local skills are left untouched.
+  home.activation.linkAgentConfigSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    skills_dir="${agentConfigRepo}/skills"
+    target_dir="$HOME/.agents/skills"
+
+    mkdir -p "$target_dir"
+    for skill_dir in "$skills_dir"/*; do
+      [ -d "$skill_dir" ] || continue
+      skill_name="''${skill_dir##*/}"
+      target="$target_dir/$skill_name"
+
+      if [ -L "$target" ]; then
+        rm "$target"
+      elif [ -e "$target" ]; then
+        echo "Skipping shared skill '$skill_name': $target already exists" >&2
+        continue
+      fi
+
+      ln -s "$skill_dir" "$target"
+    done
+  '';
 }
