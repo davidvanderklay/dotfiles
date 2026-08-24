@@ -79,8 +79,6 @@
       url = "github:dominicnunez/opencode-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    cliproxyapi.url = "github:benjaminkitt/nix-cliproxyapi";
-    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
