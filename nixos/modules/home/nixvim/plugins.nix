@@ -154,7 +154,7 @@ in
           };
           cmake.enable = true;
           dockerls.enable = true;
-          marksman.enable = pkgs.stdenv.isLinux;
+          marksman.enable = pkgs.stdenv.hostPlatform.isLinux;
           sqls.enable = true;
           taplo.enable = true;
           yamlls.enable = true;

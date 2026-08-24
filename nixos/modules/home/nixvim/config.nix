@@ -130,7 +130,7 @@ in
         end
 
         ${
-          if pkgs.stdenv.isLinux then
+          if pkgs.stdenv.hostPlatform.isLinux then
             ''
               local cpp_base = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}"
               local cpp_arch = "${pkgs.gcc-unwrapped}/include/c++/${pkgs.gcc-unwrapped.version}/${pkgs.stdenv.hostPlatform.config}"

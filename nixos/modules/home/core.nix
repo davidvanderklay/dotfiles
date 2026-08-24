@@ -33,7 +33,7 @@ let
     ServerAliveInterval = 30;
     ServerAliveCountMax = 3;
   }
-  // lib.optionalAttrs pkgs.stdenv.isDarwin {
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     # macOS stores SSH passphrases in the login keychain. Together with
     # AddKeysToAgent this keeps the key available to the launchd agent after
     # reboots, so GUI apps such as lazygit and T3 Code can use Git over SSH.
@@ -103,7 +103,7 @@ in
           ))
           (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
         ]
-        ++ lib.optionals stdenv.isLinux [
+        ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
           wl-clipboard
           inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           (pkgs.writeShellScriptBin "cliproxy-login" ''
@@ -163,7 +163,7 @@ in
 
     programs.zsh = {
       enable = true;
-      enableCompletion = !pkgs.stdenv.isDarwin;
+      enableCompletion = !pkgs.stdenv.hostPlatform.isDarwin;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       historySubstringSearch.enable = true;

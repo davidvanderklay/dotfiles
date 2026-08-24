@@ -2,7 +2,6 @@
 
 {
   imports = [
-    inputs.noctalia.homeModules.default
     ./core.nix
     ./agent-config.nix
     ./desktop.nix

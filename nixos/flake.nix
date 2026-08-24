@@ -24,6 +24,12 @@
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     noctalia = {
@@ -61,11 +67,18 @@
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     t3code-flake.url = "github:omarcresp/t3code-flake";
-    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
-    opencode-nix.url = "github:dominicnunez/opencode-nix";
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    opencode-nix = {
+      url = "github:dominicnunez/opencode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     cliproxyapi.url = "github:benjaminkitt/nix-cliproxyapi";
     llm-agents.url = "github:numtide/llm-agents.nix";
   };

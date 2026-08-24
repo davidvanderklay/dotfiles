@@ -13,7 +13,7 @@ let
   # Numtide's package keeps the upstream binary name /bin/cli-proxy-api.
   cliproxyapiPackage = pkgs.symlinkJoin {
     name = "cli-proxy-api-service";
-    paths = [ inputs.llm-agents.packages.${pkgs.system}.cli-proxy-api ];
+    paths = [ inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.cli-proxy-api ];
     postBuild = "ln -s $out/bin/cli-proxy-api $out/bin/cliproxyapi";
   };
 in
