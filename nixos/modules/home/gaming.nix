@@ -8,6 +8,14 @@
 
 let
   cfg = config.mymod.home.gaming;
+  helium = inputs.helium.packages."${pkgs.stdenv.hostPlatform.system}".default.overrideAttrs (old: {
+    postInstall = (old.postInstall or "") + ''
+      substituteInPlace $out/bin/helium \
+        --replace-fail \
+        '--enable-features=WaylandWindowDecorations' \
+        '--enable-features=WaylandWindowDecorations,HeliumMiddleClickAutoscroll'
+    '';
+  });
 in
 {
   options.mymod.home.gaming = {
@@ -31,7 +39,7 @@ in
       vesktop
       wineWow64Packages.stable
       winetricks
-      inputs.helium.packages."${pkgs.stdenv.hostPlatform.system}".default
+      helium
     ];
 
     systemd.user.services.ludusavi-backup = lib.mkIf cfg.enableLudusaviBackup {
