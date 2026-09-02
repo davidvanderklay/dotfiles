@@ -1,7 +1,7 @@
 {
   imports = [
     ./core.nix
-    ./desktop.nix
+    ./gnome.nix
     ./gaming.nix
     ./docker.nix
     ./nvidia.nix

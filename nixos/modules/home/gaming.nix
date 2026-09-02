@@ -8,6 +8,10 @@
 
 let
   cfg = config.mymod.home.gaming;
+  # Adds middle-click autoscroll, which Helium disables by default.
+  # Fragile by nature: uses --replace-fail so the build breaks loudly
+  # if upstream renames the WaylandWindowDecorations flag. Fix by
+  # updating the flag strings below, not by removing --replace-fail.
   helium = inputs.helium.packages."${pkgs.stdenv.hostPlatform.system}".default.overrideAttrs (old: {
     postInstall = (old.postInstall or "") + ''
       substituteInPlace $out/bin/helium \
@@ -50,7 +54,7 @@ in
       };
     };
 
-    systemd.user.timers.ludusavi-auto-backup = lib.mkIf cfg.enableLudusaviBackup {
+    systemd.user.timers.ludusavi-backup = lib.mkIf cfg.enableLudusaviBackup {
       Timer = {
         OnCalendar = "daily";
         Persistent = true;

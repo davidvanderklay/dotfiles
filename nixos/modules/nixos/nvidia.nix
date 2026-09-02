@@ -6,10 +6,10 @@
 }:
 
 let
-  cfg = config.mymod.nvidia;
+  cfg = config.mymod.nixos.nvidia;
 in
 {
-  options.mymod.nvidia = {
+  options.mymod.nixos.nvidia = {
     enable = lib.mkEnableOption "NVIDIA graphics driver";
 
     laptop = {
@@ -27,7 +27,7 @@ in
     };
 
     package = lib.mkOption {
-      type = lib.types.raw;
+      type = lib.types.package;
       default = config.boot.kernelPackages.nvidiaPackages.stable;
     };
   };
@@ -66,6 +66,9 @@ in
       };
     };
 
+    # Forced NVIDIA decode path. Correct when NVIDIA drives the
+    # display (desktop). On Prime-offload laptops the iGPU may decode
+    # better; unset LIBVA_DRIVER_NAME per-app if Firefox misbehaves.
     environment.variables = {
       NVD_BACKEND = "direct";
       LIBVA_DRIVER_NAME = "nvidia";

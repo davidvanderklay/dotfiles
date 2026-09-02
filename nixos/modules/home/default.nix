@@ -4,7 +4,7 @@
   imports = [
     ./core.nix
     ./agent-config.nix
-    ./desktop.nix
+    ./workstation.nix
     ./nixvim
     ./ghostty.nix
     ./gaming.nix

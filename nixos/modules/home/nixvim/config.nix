@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.mymod.home.nixvim;
@@ -87,12 +92,10 @@ in
           pynvim
         ];
 
+      # Home core already provides gcc, ripgrep, fd, clang-tools, and
+      # texliveSmall. Keep only what nixvim uniquely needs here.
       extraPackages = with pkgs; [
-        ripgrep
-        fd
-        gcc
         clang
-        clang-tools
         nixfmt
         stylua
         prettier
@@ -110,7 +113,6 @@ in
         taplo
         vscode-langservers-extracted
         yaml-language-server
-        texliveSmall
         imagemagick
       ];
 
@@ -129,6 +131,9 @@ in
           }
         end
 
+        -- clangd outside nix-shell cannot find the Nix C++ stdlib.
+        -- Point it at the active gcc-unwrapped headers (Linux only;
+        -- macOS Xcode headers resolve without help).
         ${
           if pkgs.stdenv.hostPlatform.isLinux then
             ''

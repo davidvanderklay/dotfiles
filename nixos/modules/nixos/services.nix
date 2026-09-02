@@ -5,10 +5,10 @@
 }:
 
 let
-  cfg = config.mymod.services;
+  cfg = config.mymod.nixos.services;
 in
 {
-  options.mymod.services = {
+  options.mymod.nixos.services = {
     enable = lib.mkEnableOption "common services (tailscale, flatpak)";
 
     tailscale = lib.mkOption {
@@ -34,6 +34,7 @@ in
         services.flatpak.enable = cfg.flatpak;
       }
 
+      # 53317 = LocalSend, 8081 = Feishin/Navidrome companion.
       (lib.mkIf cfg.openFirewall {
         networking.firewall.allowedTCPPorts = [
           53317

@@ -103,6 +103,8 @@ in
           ))
           (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
         ]
+        # codex-cli-nix has no darwin package in its flake; keep it
+        # Linux-only until upstream publishes one.
         ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
           wl-clipboard
           inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
@@ -132,6 +134,8 @@ in
       settings = {
         "github.com" = githubSshSettings;
 
+        # TODO(review with David): this * block disables multiplexing and
+        # several defaults. Left as-is pending SSH hardening discussion.
         "*" = {
           AddKeysToAgent = "no";
           Compression = false;
@@ -177,38 +181,35 @@ in
         gd = "git diff";
       };
 
-      initContent =
-        ''
-          # Claude Code -> Meta Model API (Muse Spark 1.2 Contributor).
-          if [ -r "$HOME/.config/meta/model-api-key" ]; then
-            export MODEL_API_KEY="$(cat "$HOME/.config/meta/model-api-key")"
-          fi
-          export ANTHROPIC_BASE_URL="https://api.meta.ai"
-          export ANTHROPIC_AUTH_TOKEN="$MODEL_API_KEY"
-          export ANTHROPIC_MODEL="muse-spark-1.2-contributor"
-          export ANTHROPIC_DEFAULT_OPUS_MODEL="muse-spark-1.2-contributor"
-          export ANTHROPIC_DEFAULT_SONNET_MODEL="muse-spark-1.2-contributor"
-          export ANTHROPIC_DEFAULT_HAIKU_MODEL="muse-spark-1.2-contributor"
-          export CLAUDE_CODE_SUBAGENT_MODEL="muse-spark-1.2-contributor"
-          export ENABLE_TOOL_SEARCH="true"
+      initContent = ''
+        # Claude Code -> Meta Model API (Muse Spark 1.3 Contributor).
+        if [ -r "$HOME/.config/meta/model-api-key" ]; then
+          export MODEL_API_KEY="$(cat "$HOME/.config/meta/model-api-key")"
+        fi
+        export ANTHROPIC_BASE_URL="https://api.meta.ai"
+        export ANTHROPIC_AUTH_TOKEN="$MODEL_API_KEY"
+        export ANTHROPIC_MODEL="muse-spark-1.3-contributor"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="muse-spark-1.3-contributor"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="muse-spark-1.3-contributor"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="muse-spark-1.3-contributor"
+        export CLAUDE_CODE_SUBAGENT_MODEL="muse-spark-1.3-contributor"
+        export ENABLE_TOOL_SEARCH="true"
 
-          bindkey '^[[A' history-substring-search-up
-          bindkey '^[[B' history-substring-search-down
-          bindkey '^[OA' history-substring-search-up
-          bindkey '^[OB' history-substring-search-down
-          bindkey -s ^f "tmux-sessionizer\n"
+        bindkey '^[[A' history-substring-search-up
+        bindkey '^[[B' history-substring-search-down
+        bindkey '^[OA' history-substring-search-up
+        bindkey '^[OB' history-substring-search-down
+        bindkey -s ^f "tmux-sessionizer\n"
 
-          sudo-command-line() {
-              [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
-              if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
-          }
-          zle -N sudo-command-line
-          bindkey "\e\e" sudo-command-line
+        sudo-command-line() {
+            [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+            if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
+        }
+        zle -N sudo-command-line
+        bindkey "\e\e" sudo-command-line
 
-          export PATH="$PATH:$HOME/.local/scripts/"
-          export PATH="$PATH:$HOME/XyceInstall/Serial/bin/"
-          export PATH="$HOME/.local/bin:$PATH"
-        '';
+        export PATH="$HOME/.local/bin:$HOME/.local/scripts:$PATH"
+      '';
     };
 
     programs.fzf = {
@@ -240,6 +241,8 @@ in
           plugin = tmuxPlugins.mkTmuxPlugin {
             pluginName = "kanagawa";
             version = "master";
+            # Pinned by hash, not tag: upstream has no releases.
+            # Re-fetch updates the hash; build fails loudly on drift.
             src = pkgs.fetchFromGitHub {
               owner = "Nybkox";
               repo = "tmux-kanagawa";

@@ -1,15 +1,14 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
 let
-  cfg = config.mymod.docker;
+  cfg = config.mymod.nixos.docker;
 in
 {
-  options.mymod.docker = {
+  options.mymod.nixos.docker = {
     enable = lib.mkEnableOption "Docker and auto-prune";
   };
 

@@ -175,7 +175,7 @@ in
       {
         mode = "n";
         key = "<leader>6";
-        action.__raw = "function() require('harpoon'):list():select(5) end";
+        action.__raw = "function() require('harpoon'):list():select(6) end";
         options.desc = "Harpoon File 6";
       }
       {

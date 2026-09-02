@@ -11,13 +11,13 @@
     ../../modules/nixos
   ];
 
-  mymod = {
+  mymod.nixos = {
     core = {
       enable = true;
       hostName = "nixos-desktop";
     };
 
-    desktop.enable = true;
+    gnome.enable = true;
     gaming.enable = true;
     docker.enable = true;
 
@@ -40,6 +40,8 @@
     binfmt = true;
   };
 
+  # Android Studio is a desktop-only workstation tool, not a generic
+  # system package. Laptop does not install it.
   nixpkgs.config.android_sdk.accept_license = true;
 
   environment.systemPackages = with pkgs; [
@@ -52,6 +54,9 @@
     ghostscript
   ];
 
+  # Secure boot via lanzaboote. systemd-boot is disabled on purpose;
+  # configurationLimit below only applies if you re-enable systemd-boot.
+  # pkiBundle assumes `sbctl create-keys` was run once manually.
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;

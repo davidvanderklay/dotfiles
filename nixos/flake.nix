@@ -1,8 +1,10 @@
 {
   description = "My NixOS and Portable Home Flake";
 
+  # Mirrors mymod.nixos.core substituters so flake eval hits the same caches.
   nixConfig = {
     extra-substituters = [
+      "https://cache.nixos.org/"
       "https://cache.numtide.com"
       "https://nix-community.cachix.org"
       "https://ezkea.cachix.org"
@@ -10,6 +12,7 @@
       "https://attic.xuyh0120.win/lantian"
     ];
     extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
@@ -27,6 +30,8 @@
       inputs.rust-overlay.follows = "rust-overlay";
     };
 
+    # Not used directly. Kept so aagl and lanzaboote follow a single
+    # rust-overlay pin instead of pulling their own copies.
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -52,7 +57,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     helium = {
       url = "github:schembriaiden/helium-browser-nix-flake";
@@ -70,7 +78,10 @@
       inputs.rust-overlay.follows = "rust-overlay";
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-    t3code-flake.url = "github:omarcresp/t3code-flake";
+    t3code-flake = {
+      url = "github:omarcresp/t3code-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -144,12 +155,12 @@
       nixosModules.default = import ./modules/nixos;
       homeModules.default = import ./modules/home;
 
-      formatter = forAllSystems (system: (pkgsFor system).nixfmt-rfc-style);
+      formatter = forAllSystems (system: (pkgsFor system).nixfmt-tree);
 
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {
           packages = with pkgsFor system; [
-            nixfmt-rfc-style
+            nixfmt-tree
             statix
             deadnix
           ];
@@ -174,12 +185,10 @@
             (
               { pkgs, ... }:
               {
+                # CachyOS kernel overlay. Binary cache comes from
+                # mymod.nixos.core so laptop and desktop share it.
                 nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
                 boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
-                nix.settings.substituters = [ "https://attic.xuyh0120.win/lantian" ];
-                nix.settings.trusted-public-keys = [
-                  "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-                ];
               }
             )
 
@@ -198,6 +207,16 @@
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
 
+            # Same CachyOS v3 kernel as desktop. Duplicated until the
+            # shared mkNixos helper lands (deferred refactor #4).
+            (
+              { pkgs, ... }:
+              {
+                nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+                boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
+              }
+            )
+
             inputs.aagl.nixosModules.default
             ./hosts/laptop/default.nix
 
@@ -210,7 +229,12 @@
 
       homeConfigurations = {
         "mac" = standaloneHome {
-          pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+          # allowUnfree parity with the generic config: home core
+          # installs unfree redistributables (e.g. unrar).
+          pkgs = import nixpkgs {
+            system = "aarch64-darwin";
+            config.allowUnfree = true;
+          };
           userName = "geolan";
           homeDirectory = "/Users/geolan";
         };
@@ -224,6 +248,7 @@
           homeDirectory = "/home/van";
           extraConfig = {
             targets.genericLinux.enable = true;
+            mymod.home.agentConfig.enable = false;
           };
         };
       };

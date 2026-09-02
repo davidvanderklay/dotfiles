@@ -7,10 +7,10 @@
 }:
 
 let
-  cfg = config.mymod.gaming;
+  cfg = config.mymod.nixos.gaming;
 in
 {
-  options.mymod.gaming = {
+  options.mymod.nixos.gaming = {
     enable = lib.mkEnableOption "gaming packages and configuration";
 
     enableOsu = lib.mkOption {

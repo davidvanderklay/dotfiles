@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   cfg = config.mymod.home.nixvim;
@@ -6,6 +11,8 @@ in
 {
   config = lib.mkIf cfg.enable {
     programs.nixvim.plugins = {
+      # Kitty graphics protocol also renders in Ghostty, our default
+      # terminal, so keep backend=kitty even though kitty is not installed.
       image = {
         enable = true;
         settings = {
@@ -206,6 +213,8 @@ in
         };
       };
 
+      # Enabled with an empty table so per-language linters can be
+      # added without touching enable flags. Add one or drop this block.
       lint = {
         enable = true;
         lintersByFt = { };

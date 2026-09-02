@@ -7,10 +7,10 @@
 }:
 
 let
-  cfg = config.mymod.core;
+  cfg = config.mymod.nixos.core;
 in
 {
-  options.mymod.core = {
+  options.mymod.nixos.core = {
     enable = lib.mkEnableOption "core system configuration";
 
     userName = lib.mkOption {
@@ -55,6 +55,9 @@ in
 
     time.timeZone = cfg.timeZone;
 
+    # Canonical substituter list for all NixOS hosts. Keep flake.nix
+    # nixConfig in sync so `nix` commands benefit before the system builds.
+    # attic/lantian serves the cachyos kernel overlay used by desktop+laptop.
     nix.settings = {
       experimental-features = [
         "nix-command"
@@ -66,6 +69,7 @@ in
         "https://cache.numtide.com"
         "https://ezkea.cachix.org"
         "https://noctalia.cachix.org"
+        "https://attic.xuyh0120.win/lantian"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -73,6 +77,7 @@ in
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
         "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
         "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       ];
     };
 
@@ -137,16 +142,16 @@ in
 
     environment.variables.EDITOR = "nvim";
 
+    # Dev compilers live in home core (mymod.home.core). System keeps
+    # only boot, network, and fetch tools.
     environment.systemPackages = with pkgs; [
-      gnumake
-      gcc
-      wget
       git
       gh
       ffmpeg
       openvpn
       networkmanager-openconnect
       openconnect
+      wget
     ];
 
     system.stateVersion = "25.11";

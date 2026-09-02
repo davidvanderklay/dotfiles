@@ -16,20 +16,27 @@ in
     enableService = lib.mkOption {
       type = lib.types.bool;
       default = true;
+      description = "Run Ghostty as a graphical-session server for fast opens.";
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.ghostty = {
-      enable = true;
-      enableZshIntegration = true;
-      installBatSyntax = false;
-    };
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      programs.ghostty = {
+        enable = true;
+        enableZshIntegration = true;
+        # Bat syntax files duplicate what Ghostty already ships; skip them.
+        installBatSyntax = false;
+      };
 
-    xdg.configFile."ghostty/config".source = "${configsPath}/ghostty/config";
+      xdg.configFile."ghostty/config".source = "${configsPath}/ghostty/config";
+    })
 
-    systemd.user.services = lib.mkIf cfg.enableService {
-      ghostty = {
+    # Server keeps one process around so new windows open instantly.
+    # The generic DBus env fix lives in workstation.nix, not here, so
+    # disabling Ghostty does not break other graphical apps.
+    (lib.mkIf (cfg.enable && cfg.enableService) {
+      systemd.user.services.ghostty = {
         Unit = {
           Description = "Ghostty Terminal Server";
           After = [ "graphical-session.target" ];
@@ -42,19 +49,6 @@ in
         };
         Install.WantedBy = [ "graphical-session.target" ];
       };
-
-      dbus-update-activation-environment = {
-        Unit = {
-          Description = "Update DBus activation environment";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all";
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
-      };
-    };
-  };
+    })
+  ];
 }

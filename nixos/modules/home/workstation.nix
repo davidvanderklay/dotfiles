@@ -7,11 +7,11 @@
 }:
 
 let
-  cfg = config.mymod.home.desktop;
+  cfg = config.mymod.home.workstation;
 in
 {
-  options.mymod.home.desktop = {
-    enable = lib.mkEnableOption "GNOME desktop home configuration";
+  options.mymod.home.workstation = {
+    enable = lib.mkEnableOption "shared Linux workstation apps (browser, fonts, mime, GTK). Pair with gnome, hyprland, or niri.";
   };
 
   config = lib.mkIf cfg.enable {
@@ -37,6 +37,22 @@ in
       obsidian
       inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code-nightly
     ];
+
+    # Refreshes systemd+DBus env after login so graphical apps launched
+    # from the shell inherit WAYLAND_DISPLAY etc. Belongs here (not in
+    # ghostty.nix) so it survives disabling the terminal.
+    systemd.user.services.dbus-update-activation-environment = {
+      Unit = {
+        Description = "Update DBus activation environment";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
 
     xdg.desktopEntries.t3-code-url-handler = {
       name = "T3 Code URL Handler";

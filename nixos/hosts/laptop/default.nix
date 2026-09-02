@@ -1,21 +1,26 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports = [ 
-    ./hardware-configuration.nix 
+  imports = [
+    ./hardware-configuration.nix
     ../../modules/nixos
   ];
 
-  mymod = {
+  mymod.nixos = {
     core = {
       enable = true;
       hostName = "nixos-laptop";
     };
-    
-    desktop.enable = true;
+
+    gnome.enable = true;
     gaming.enable = true;
     docker.enable = true;
-    
+
     nvidia = {
       enable = true;
       laptop = {
@@ -24,7 +29,7 @@
         nvidiaBusId = "PCI:1:0:0";
       };
     };
-    
+
     services.enable = true;
   };
 
@@ -37,6 +42,4 @@
     nicotine-plus
     feishin
   ];
-
-  boot.kernelPackages = pkgs.linuxPackages_7_0;
 }

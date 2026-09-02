@@ -6,11 +6,11 @@
 }:
 
 let
-  cfg = config.mymod.desktop;
+  cfg = config.mymod.nixos.gnome;
 in
 {
-  options.mymod.desktop = {
-    enable = lib.mkEnableOption "desktop environment";
+  options.mymod.nixos.gnome = {
+    enable = lib.mkEnableOption "GNOME desktop environment (GDM + GNOME Shell)";
   };
 
   config = lib.mkIf cfg.enable {
