@@ -7,6 +7,16 @@
 
 let
   cfg = config.mymod.home.nixvim;
+  oldworldPlugin = pkgs.vimUtils.buildVimPlugin {
+    pname = "oldworld.nvim";
+    version = "unstable-2026-09-04";
+    src = pkgs.fetchFromGitHub {
+      owner = "dgox16";
+      repo = "oldworld.nvim";
+      rev = "db072a0bd2c90035fc3a57a73014cb54d3902f1f";
+      hash = "sha256-yO5XKSMwDu0/QYnoMbxWs+h0tfjftAYJYPrKO2XYfNQ=";
+    };
+  };
 in
 {
   config = lib.mkIf cfg.enable {
@@ -63,6 +73,7 @@ in
         updatetime = 250;
         timeoutlen = 300;
         termguicolors = true;
+        background = "dark";
         smoothscroll = true;
         expandtab = true;
         shiftwidth = 2;
@@ -76,16 +87,7 @@ in
         maplocalleader = "\\";
       };
 
-      colorschemes.kanagawa = {
-        enable = true;
-        settings = {
-          theme = "dragon";
-          background = {
-            dark = "dragon";
-            light = "lotus";
-          };
-        };
-      };
+      extraPlugins = [ oldworldPlugin ];
 
       extraPython3Packages =
         ps: with ps; [
@@ -154,6 +156,11 @@ in
             vim.cmd("write")
           end)
         end, { desc = "Format and Save" })
+      '';
+
+      extraConfigLuaPost = ''
+        require("oldworld").setup({ variant = "oled" })
+        vim.cmd.colorscheme("oldworld")
       '';
     };
   };
