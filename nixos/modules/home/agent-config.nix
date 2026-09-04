@@ -1,9 +1,15 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.mymod.home.agentConfig;
   agentConfigRepo = toString cfg.repoPath;
   linkFromRepo = path: config.lib.file.mkOutOfStoreSymlink "${agentConfigRepo}/${path}";
+  hermesServerHealthWrapper = pkgs.writeShellScript "hermes-server-health-wrapper" ''
+    exec "${agentConfigRepo}/hermes/scripts/server-health.sh" "$@"
+  '';
+  hermesGithubPrWrapper = pkgs.writeShellScript "hermes-github-pr-wrapper" ''
+    exec "${agentConfigRepo}/hermes/scripts/github-pr-status.sh" "$@"
+  '';
 in
 {
   options.mymod.home.agentConfig = {
@@ -49,14 +55,6 @@ in
         source = linkFromRepo "hermes/monitored-repos";
         force = true;
       };
-      ".hermes/scripts/server-health.sh" = {
-        source = linkFromRepo "hermes/scripts/server-health.sh";
-        force = true;
-      };
-      ".hermes/scripts/github-pr-status.sh" = {
-        source = linkFromRepo "hermes/scripts/github-pr-status.sh";
-        force = true;
-      };
     };
 
     # Discover shared skills at activation time. The repository is intentionally
@@ -99,9 +97,7 @@ in
       for relative_path in \
         config.yaml \
         SOUL.md \
-        monitored-repos \
-        scripts/server-health.sh \
-        scripts/github-pr-status.sh; do
+        monitored-repos; do
         source_path="$hermes_source/$relative_path"
         target_path="$hermes_target/$relative_path"
 
@@ -114,6 +110,33 @@ in
         fi
 
         ln -s "$source_path" "$target_path"
+      done
+
+      # Hermes resolves cron scripts before running them and rejects symlinks
+      # whose targets leave ~/.hermes/scripts. Keep the source scripts in Git,
+      # but place regular wrappers in Hermes' allowed directory.
+      for script_name in server-health.sh github-pr-status.sh; do
+        source_path="$hermes_source/scripts/$script_name"
+        target_path="$hermes_target/scripts/$script_name"
+
+        [ -e "$source_path" ] || continue
+        case "$script_name" in
+          server-health.sh)
+            wrapper_path="${hermesServerHealthWrapper}"
+            ;;
+          github-pr-status.sh)
+            wrapper_path="${hermesGithubPrWrapper}"
+            ;;
+        esac
+
+        if [ -L "$target_path" ] || [ -f "$target_path" ]; then
+          rm -f "$target_path"
+        elif [ -e "$target_path" ]; then
+          echo "Skipping Hermes script '$script_name': target is not a file" >&2
+          continue
+        fi
+
+        ${pkgs.coreutils}/bin/install -m 700 "$wrapper_path" "$target_path"
       done
     '';
   };
