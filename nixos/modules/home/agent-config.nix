@@ -2,13 +2,19 @@
 
 let
   cfg = config.mymod.home.agentConfig;
-  agentConfigRepo = "${config.home.homeDirectory}/Projects/agent-config";
+  agentConfigRepo = toString cfg.repoPath;
   linkFromRepo = path: config.lib.file.mkOutOfStoreSymlink "${agentConfigRepo}/${path}";
 in
 {
   options.mymod.home.agentConfig = {
     enable = lib.mkEnableOption "symlinks into the separate agent-config repo" // {
       default = true;
+    };
+
+    repoPath = lib.mkOption {
+      type = lib.types.path;
+      default = "${config.home.homeDirectory}/Projects/agent-config";
+      description = "Checkout containing shared agent instructions and skills";
     };
   };
 
@@ -28,6 +34,29 @@ in
 
       # Codex uses AGENTS.md directly for global guidance.
       ".codex/AGENTS.md".source = linkFromRepo "AGENTS.md";
+
+      # Hermes keeps runtime state and credentials under ~/.hermes, while
+      # these mutable, non-secret inputs live in the Git checkout.
+      ".hermes/config.yaml" = {
+        source = linkFromRepo "hermes/config.yaml";
+        force = true;
+      };
+      ".hermes/SOUL.md" = {
+        source = linkFromRepo "hermes/SOUL.md";
+        force = true;
+      };
+      ".hermes/monitored-repos" = {
+        source = linkFromRepo "hermes/monitored-repos";
+        force = true;
+      };
+      ".hermes/scripts/server-health.sh" = {
+        source = linkFromRepo "hermes/scripts/server-health.sh";
+        force = true;
+      };
+      ".hermes/scripts/github-pr-status.sh" = {
+        source = linkFromRepo "hermes/scripts/github-pr-status.sh";
+        force = true;
+      };
     };
 
     # Discover shared skills at activation time. The repository is intentionally
@@ -53,6 +82,38 @@ in
         fi
 
         ln -s "$skill_dir" "$target"
+      done
+    '';
+
+    # ~/.hermes is also a runtime directory, so Home Manager can leave
+    # pre-existing files there untouched even when a home.file entry has
+    # force = true. Link the Git-owned Hermes inputs explicitly after the
+    # generation has been linked. Runtime state and credentials remain local.
+    home.activation.linkHermesAgentConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      hermes_source="${agentConfigRepo}/hermes"
+      hermes_target="$HOME/.hermes"
+
+      [ -d "$hermes_source" ] || exit 0
+      mkdir -p "$hermes_target/scripts"
+
+      for relative_path in \
+        config.yaml \
+        SOUL.md \
+        monitored-repos \
+        scripts/server-health.sh \
+        scripts/github-pr-status.sh; do
+        source_path="$hermes_source/$relative_path"
+        target_path="$hermes_target/$relative_path"
+
+        [ -e "$source_path" ] || continue
+        if [ -L "$target_path" ] || [ -f "$target_path" ]; then
+          rm -f "$target_path"
+        elif [ -e "$target_path" ]; then
+          echo "Skipping Hermes config '$relative_path': target is not a file" >&2
+          continue
+        fi
+
+        ln -s "$source_path" "$target_path"
       done
     '';
   };

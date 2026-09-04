@@ -248,7 +248,6 @@
           homeDirectory = "/home/van";
           extraConfig = {
             targets.genericLinux.enable = true;
-            mymod.home.agentConfig.enable = false;
           };
         };
       };
