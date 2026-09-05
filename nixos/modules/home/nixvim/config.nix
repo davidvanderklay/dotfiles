@@ -7,14 +7,14 @@
 
 let
   cfg = config.mymod.home.nixvim;
-  oldworldPlugin = pkgs.vimUtils.buildVimPlugin {
-    pname = "oldworld.nvim";
-    version = "unstable-2026-09-04";
+  vaguePlugin = pkgs.vimUtils.buildVimPlugin {
+    pname = "vague.nvim";
+    version = "2.1.4";
     src = pkgs.fetchFromGitHub {
-      owner = "dgox16";
-      repo = "oldworld.nvim";
-      rev = "db072a0bd2c90035fc3a57a73014cb54d3902f1f";
-      hash = "sha256-yO5XKSMwDu0/QYnoMbxWs+h0tfjftAYJYPrKO2XYfNQ=";
+      owner = "vague-theme";
+      repo = "vague.nvim";
+      rev = "161384e625e7b6cca118a3fa66225ba5cacdfb50";
+      hash = "sha256-57dHWOUPFIyFdLEs9RDv0cateLRc8XAqT4TmDUSQyV4=";
     };
   };
 in
@@ -87,7 +87,7 @@ in
         maplocalleader = "\\";
       };
 
-      extraPlugins = [ oldworldPlugin ];
+      extraPlugins = [ vaguePlugin ];
 
       extraPython3Packages =
         ps: with ps; [
@@ -159,8 +159,13 @@ in
       '';
 
       extraConfigLuaPost = ''
-        require("oldworld").setup({ variant = "oled" })
-        vim.cmd.colorscheme("oldworld")
+        require("vague").setup({
+          -- Vague has no named OLED variant; use true black for the base background.
+          colors = {
+            bg = "#000000",
+          },
+        })
+        vim.cmd.colorscheme("vague")
       '';
     };
   };
