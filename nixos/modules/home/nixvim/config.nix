@@ -7,6 +7,16 @@
 
 let
   cfg = config.mymod.home.nixvim;
+  vaguePlugin = pkgs.vimUtils.buildVimPlugin {
+    pname = "vague.nvim";
+    version = "2.1.4";
+    src = pkgs.fetchFromGitHub {
+      owner = "vague-theme";
+      repo = "vague.nvim";
+      rev = "161384e625e7b6cca118a3fa66225ba5cacdfb50";
+      hash = "sha256-57dHWOUPFIyFdLEs9RDv0cateLRc8XAqT4TmDUSQyV4=";
+    };
+  };
 in
 {
   config = lib.mkIf cfg.enable {
@@ -63,6 +73,7 @@ in
         updatetime = 250;
         timeoutlen = 300;
         termguicolors = true;
+        background = "dark";
         smoothscroll = true;
         expandtab = true;
         shiftwidth = 2;
@@ -76,16 +87,7 @@ in
         maplocalleader = "\\";
       };
 
-      colorschemes.kanagawa = {
-        enable = true;
-        settings = {
-          theme = "dragon";
-          background = {
-            dark = "dragon";
-            light = "lotus";
-          };
-        };
-      };
+      extraPlugins = [ vaguePlugin ];
 
       extraPython3Packages =
         ps: with ps; [
@@ -154,6 +156,16 @@ in
             vim.cmd("write")
           end)
         end, { desc = "Format and Save" })
+      '';
+
+      extraConfigLuaPost = ''
+        require("vague").setup({
+          -- Vague has no named OLED variant; use true black for the base background.
+          colors = {
+            bg = "#000000",
+          },
+        })
+        vim.cmd.colorscheme("vague")
       '';
     };
   };
