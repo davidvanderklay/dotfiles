@@ -9,6 +9,11 @@
       homeDirectory = "/Users/geolan";
     };
     nixvim.enable = true;
+    ghostty = {
+      enable = true;
+      enableService = false;
+      fontSize = 15;
+    };
   };
 
   xdg.configFile."skhd/skhdrc".text = ''
