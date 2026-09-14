@@ -9,6 +9,47 @@
 let
   cfg = config.mymod.home.core;
   configsPath = ../../configs;
+  ticktickLockfile = ../../packages/ticktick-cli/package-lock.json;
+
+  ticktickCli = pkgs.buildNpmPackage {
+    pname = "ticktick-cli";
+    version = "0.1.13";
+
+    src = pkgs.fetchurl {
+      url = "https://registry.npmjs.org/@ticktick/cli/-/ticktick-cli-0.1.13.tgz";
+      hash = "sha256-oqkXbAyQaeAMuU+0WC3Hp/YiP8AHW8itZIN3PvVuvg8=";
+    };
+
+    sourceRoot = "package";
+    nodejs = pkgs.nodejs_22;
+    npmDepsHash = "sha256-yDPYMcncKOG8pu+5hNnf8mAvjv3gBU5d+VFD2sXYwSo=";
+    dontNpmBuild = true;
+    nativeBuildInputs = [ pkgs.jq pkgs.makeWrapper ];
+
+    postPatch = ''
+      ${pkgs.jq}/bin/jq 'del(.devDependencies, .scripts)' package.json > package.json.new
+      mv package.json.new package.json
+      cp ${ticktickLockfile} package-lock.json
+    '';
+
+    installPhase = ''
+      mkdir -p $out/lib/ticktick-cli
+      cp -r dist $out/lib/ticktick-cli/
+      install -Dm644 package.json $out/lib/ticktick-cli/package.json
+      cp -r node_modules $out/lib/ticktick-cli/
+      makeWrapper ${pkgs.nodejs_22}/bin/node $out/bin/ticktick \
+        --add-flags "$out/lib/ticktick-cli/dist/index.js"
+      ln -s ticktick $out/bin/ticktick-cli
+    '';
+
+    meta = {
+      description = "Command-line interface for TickTick";
+      homepage = "https://github.com/TickTeam/ticktick-cli";
+      license = lib.licenses.mit;
+      mainProgram = "ticktick";
+      platforms = lib.platforms.unix;
+    };
+  };
 
   opencodeSettings = {
     permission = {
@@ -96,6 +137,7 @@ in
           ripgrep
           fd
           quarto
+          ticktickCli
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
           claude-code
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
