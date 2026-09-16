@@ -136,6 +136,7 @@ in
 
       "org/gnome/desktop/interface" = {
         color-scheme = "prefer-dark";
+        gtk-key-theme = "Emacs";
         cursor-theme = "Bibata-Modern-Ice";
         cursor-size = 24;
         icon-theme = "Adwaita";
