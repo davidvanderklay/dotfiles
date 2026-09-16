@@ -45,6 +45,7 @@
       "homebrew/services"
       "anomalyco/tap"
       "jackielii/tap"
+      "CarterT27/tap"
     ];
 
     brews = [
@@ -53,6 +54,7 @@
       "ghostscript"
       "gh"
       "anomalyco/tap/opencode"
+      "CarterT27/tap/ticktick-cli"
     ];
 
     casks = [
@@ -73,6 +75,7 @@
       "stremio"
       "iloader"
       "codex"
+      "claude-code"
       "silhouette-studio"
       "jackielii/tap/skhd-zig"
     ];

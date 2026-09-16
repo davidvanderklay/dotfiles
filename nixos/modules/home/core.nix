@@ -9,6 +9,7 @@
 let
   cfg = config.mymod.home.core;
   configsPath = ../../configs;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   ticktickLockfile = ../../packages/ticktick-cli/package-lock.json;
 
   ticktickCli = pkgs.buildNpmPackage {
@@ -16,7 +17,7 @@ let
     version = "0.1.13";
 
     src = pkgs.fetchurl {
-      url = "https://registry.npmjs.org/@ticktick/cli/-/ticktick-cli-0.1.13.tgz";
+      url = "https://registry.npmjs.org/@ticktick/ticktick-cli/-/ticktick-cli-0.1.13.tgz";
       hash = "sha256-oqkXbAyQaeAMuU+0WC3Hp/YiP8AHW8itZIN3PvVuvg8=";
     };
 
@@ -137,13 +138,16 @@ in
           ripgrep
           fd
           quarto
-          ticktickCli
-          inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
-          claude-code
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
           (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
+        ]
+        # macOS provides these CLI tools through Homebrew.
+        ++ lib.optionals (!isDarwin) [
+          ticktickCli
+          claude-code
+          inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
         ]
         # codex-cli-nix has no darwin package in its flake; keep it
         # Linux-only until upstream publishes one.
@@ -221,6 +225,10 @@ in
         gp = "git push";
         gl = "git pull";
         gd = "git diff";
+      }
+      // lib.optionalAttrs isDarwin {
+        ticktick = "tt";
+        "ticktick-cli" = "tt";
       };
 
       initContent = ''
