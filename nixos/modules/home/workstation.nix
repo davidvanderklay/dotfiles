@@ -74,11 +74,11 @@ in
     xdg.mimeApps = {
       enable = true;
       defaultApplications = {
-        "text/html" = "zen-beta.desktop";
-        "x-scheme-handler/http" = "zen-beta.desktop";
-        "x-scheme-handler/https" = "zen-beta.desktop";
-        "x-scheme-handler/about" = "zen-beta.desktop";
-        "x-scheme-handler/unknown" = "zen-beta.desktop";
+        "text/html" = "helium.desktop";
+        "x-scheme-handler/http" = "helium.desktop";
+        "x-scheme-handler/https" = "helium.desktop";
+        "x-scheme-handler/about" = "helium.desktop";
+        "x-scheme-handler/unknown" = "helium.desktop";
         "x-scheme-handler/t3code" = "t3-code-url-handler.desktop";
         "application/pdf" = "org.gnome.Papers.desktop";
         "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
@@ -213,7 +213,7 @@ in
 
       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
         binding = "<Super>w";
-        command = "zen-beta";
+        command = "helium";
         name = "Browser";
       };
 

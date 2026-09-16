@@ -102,7 +102,7 @@ in
           "$mainMod, F, fullscreen, 1"
 
           "$mainMod, U, exec, ghostty"
-          "$mainMod, W, exec, zen"
+          "$mainMod, W, exec, helium"
           "$mainMod, R, exec, nautilus"
           "$mainMod, Space, exec, noctalia msg panel-toggle launcher"
 

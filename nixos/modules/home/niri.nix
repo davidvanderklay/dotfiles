@@ -80,7 +80,7 @@ in
         Mod+Tab { toggle-overview; }
         
         Mod+U { spawn "ghostty"; }
-        Mod+W { spawn "zen-beta"; }
+        Mod+W { spawn "helium"; }
         Mod+R { spawn "nautilus"; }
         Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
         

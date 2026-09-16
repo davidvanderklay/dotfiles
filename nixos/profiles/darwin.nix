@@ -17,7 +17,7 @@
   };
 
   xdg.configFile."skhd/skhdrc".text = ''
-    alt - w : open -na "Zen"
+    alt - w : open -na "Helium"
     alt - u : open -na "Ghostty"
     alt - r : open -a "Finder" ~
     alt - q : skhd -k "cmd - w"
