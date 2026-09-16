@@ -28,6 +28,12 @@
     };
   };
 
+  # Allow the local MuMix backend to be reached by a physical device on the LAN.
+  networking.firewall.allowedTCPPorts = [
+    3001 # MuMix local backend
+    3900 # MuMix local Garage S3 API
+  ];
+
   services.usbmuxd.enable = true;
 
   services.udev.extraRules = ''
