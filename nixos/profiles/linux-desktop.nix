@@ -1,7 +1,10 @@
-{ ... }:
+{ inputs, ... }:
 
 {
-  imports = [ ../modules/home ];
+  imports = [
+    ../modules/home
+    inputs.xremap.homeManagerModules.default
+  ];
 
   mymod.home = {
     core.enable = true;

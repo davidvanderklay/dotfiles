@@ -28,6 +28,7 @@ in
       gnomeExtensions.tiling-assistant
       gnomeExtensions.hot-edge
       gnomeExtensions.clipboard-indicator
+      gnomeExtensions.xremap
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-color-emoji
@@ -96,6 +97,23 @@ in
       };
     };
 
+    services.xremap = {
+      enable = true;
+      withGnome = true;
+      watch = true;
+      config.keymap = [
+        {
+          name = "Helium search navigation";
+          application.only = [ "/(?i)helium/" ];
+          exact_match = true;
+          remap = {
+            "C-n" = "Down";
+            "C-p" = "Up";
+          };
+        }
+      ];
+    };
+
     xdg.configFile."autostart/org.localsend.localsend_app.desktop".text = ''
       [Desktop Entry]
       Type=Application
@@ -131,6 +149,7 @@ in
           "tiling-assistant@leleat-on-github"
           "hotedge@jonathan.jdoda.ca"
           "clipboard-indicator@tudmotu.com"
+          "xremap@k0kubun.com"
         ];
       };
 

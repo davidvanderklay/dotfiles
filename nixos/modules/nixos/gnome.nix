@@ -14,6 +14,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    hardware.uinput.enable = true;
+    boot.kernelModules = [ "uinput" ];
+
+    services.udev.extraRules = ''
+      KERNEL=="uinput", GROUP="input", TAG+="uaccess"
+    '';
+
     services.xserver.enable = true;
 
     services.displayManager.gdm.enable = true;
