@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -51,6 +52,7 @@
   nixpkgs.config.android_sdk.accept_license = true;
 
   environment.systemPackages = with pkgs; [
+    inputs.limusic.packages."${pkgs.stdenv.hostPlatform.system}".default
     android-studio
     usbmuxd
     sbctl

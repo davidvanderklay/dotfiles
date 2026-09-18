@@ -87,6 +87,10 @@
       url = "github:omarcresp/t3code-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    limusic = {
+      url = "github:davidvanderklay/limusic-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
