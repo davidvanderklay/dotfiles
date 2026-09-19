@@ -3,7 +3,6 @@
 {
   imports = [
     ../modules/home
-    inputs.xremap.homeManagerModules.default
   ];
 
   mymod.home = {
