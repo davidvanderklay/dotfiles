@@ -232,19 +232,6 @@ in
       };
 
       initContent = ''
-        # Claude Code -> Meta Model API (Muse Spark 1.3 Contributor).
-        if [ -r "$HOME/.config/meta/model-api-key" ]; then
-          export MODEL_API_KEY="$(cat "$HOME/.config/meta/model-api-key")"
-        fi
-        export ANTHROPIC_BASE_URL="https://api.meta.ai"
-        export ANTHROPIC_AUTH_TOKEN="$MODEL_API_KEY"
-        export ANTHROPIC_MODEL="muse-spark-1.3-contributor"
-        export ANTHROPIC_DEFAULT_OPUS_MODEL="muse-spark-1.3-contributor"
-        export ANTHROPIC_DEFAULT_SONNET_MODEL="muse-spark-1.3-contributor"
-        export ANTHROPIC_DEFAULT_HAIKU_MODEL="muse-spark-1.3-contributor"
-        export CLAUDE_CODE_SUBAGENT_MODEL="muse-spark-1.3-contributor"
-        export ENABLE_TOOL_SEARCH="true"
-
         bindkey '^[[A' history-substring-search-up
         bindkey '^[[B' history-substring-search-down
         bindkey '^[OA' history-substring-search-up
