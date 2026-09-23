@@ -95,6 +95,9 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+    };
     opencode-nix = {
       url = "github:dominicnunez/opencode-nix";
       inputs.nixpkgs.follows = "nixpkgs";
