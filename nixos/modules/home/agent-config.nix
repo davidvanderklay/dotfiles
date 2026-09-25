@@ -83,12 +83,12 @@ in
       done
     '';
 
-    # Preserve Claude's other user settings while disabling its commit trailer.
-    home.activation.disableClaudeCommitAttribution = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    # Preserve Claude's other user settings while disabling its commit and PR attribution.
+    home.activation.disableClaudeAttribution = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       settings_file="$HOME/.claude/settings.json"
       mkdir -p "$HOME/.claude"
 
-      if [ -f "$settings_file" ] && ${pkgs.jq}/bin/jq -e '.attribution.commit == ""' "$settings_file" >/dev/null; then
+      if [ -f "$settings_file" ] && ${pkgs.jq}/bin/jq -e '.attribution.commit == "" and .attribution.pr == ""' "$settings_file" >/dev/null; then
         exit 0
       fi
 
@@ -96,10 +96,10 @@ in
       trap '${pkgs.coreutils}/bin/rm -f "$settings_temp"' EXIT
 
       if [ -f "$settings_file" ]; then
-        ${pkgs.jq}/bin/jq '.attribution = ((.attribution | if type == "object" then . else {} end) + { commit: "" })' \
+        ${pkgs.jq}/bin/jq '.attribution = ((.attribution | if type == "object" then . else {} end) + { commit: "", pr: "" })' \
           "$settings_file" > "$settings_temp"
       else
-        ${pkgs.jq}/bin/jq -n '{ attribution: { commit: "" } }' > "$settings_temp"
+        ${pkgs.jq}/bin/jq -n '{ attribution: { commit: "", pr: "" } }' > "$settings_temp"
       fi
 
       ${pkgs.coreutils}/bin/chmod 600 "$settings_temp"
