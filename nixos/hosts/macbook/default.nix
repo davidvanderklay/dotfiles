@@ -75,7 +75,7 @@
       "stremio"
       "iloader"
       "codex"
-      "claude-code"
+      "claude-code@latest"
       "silhouette-studio"
       "jackielii/tap/skhd-zig"
     ];
