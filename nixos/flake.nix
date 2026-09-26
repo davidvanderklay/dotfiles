@@ -229,6 +229,7 @@
               }
             )
 
+            inputs.lanzaboote.nixosModules.lanzaboote
             inputs.aagl.nixosModules.default
             ./hosts/laptop/default.nix
 
