@@ -44,6 +44,74 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
+  # Windows has its own ESP, so systemd-boot cannot discover its loader
+  # automatically. Launch a signed EDK2 shell and let its script locate the
+  # Windows ESP by checking the firmware's FS mappings.
+  system.activationScripts.windowsBootEntry = {
+    deps = [ "etc" ];
+    text = ''
+      if ! ${pkgs.util-linux}/bin/mountpoint -q /boot; then
+        echo "Skipping Windows boot entry: /boot is not mounted"
+        exit 0
+      fi
+
+      shellDir=/boot/EFI/windows-boot
+      shellFile="$shellDir/shell.efi"
+      install -d -m 0755 "$shellDir" /boot/loader/entries
+
+      if ! ${pkgs.sbctl}/bin/sbctl sign \
+        --output "$shellFile" \
+        "${pkgs.edk2-uefi-shell}/shell.efi"; then
+        echo "Could not sign the Windows boot helper; skipping its menu entry"
+        exit 0
+      fi
+
+      cat > "$shellDir/startup.nsh" <<'UEFI_EOF'
+      map -r
+      if exist FS0:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS0:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS1:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS1:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS2:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS2:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS3:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS3:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS4:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS4:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS5:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS5:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS6:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS6:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      if exist FS7:\EFI\Microsoft\Boot\bootmgfw.efi then
+        FS7:\EFI\Microsoft\Boot\bootmgfw.efi
+        exit
+      endif
+      echo Windows Boot Manager was not found. Run map -c to inspect the available filesystems.
+      UEFI_EOF
+
+      cat > /boot/loader/entries/windows.conf <<'ENTRY_EOF'
+      title Windows
+      efi /EFI/windows-boot/shell.efi
+      options -nointerrupt
+      sort-key o_windows
+      ENTRY_EOF
+    '';
+  };
+
   # systemd stage 1 can use systemd-cryptenroll TPM2 tokens to unlock LUKS.
   boot.initrd.systemd = {
     enable = true;
