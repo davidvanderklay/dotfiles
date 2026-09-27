@@ -24,7 +24,7 @@
     docker.enable = true;
   };
 
-  # Start the graphical session for T3 Code and remote desktop after reboot.
+  # Start a graphical session for the browser and Android tools after reboot.
   services.displayManager.autoLogin = {
     enable = true;
     user = "geolan";
@@ -47,7 +47,10 @@
   networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 22 ];
 
   # Android Emulator uses KVM on Linux. The firmware must also enable VT-x or AMD-V.
-  users.users.geolan.extraGroups = [ "kvm" ];
+  users.users.geolan = {
+    extraGroups = [ "kvm" ];
+    linger = true;
+  };
   nixpkgs.config.android_sdk.accept_license = true;
   environment.systemPackages = [ pkgs.android-studio ];
 }
