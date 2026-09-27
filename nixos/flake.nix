@@ -189,6 +189,17 @@
       };
 
       nixosConfigurations = {
+        agent = nixpkgs.lib.nixosSystem {
+          inherit specialArgs;
+          modules = [
+            { nixpkgs.hostPlatform = "x86_64-linux"; }
+            ./hosts/agent/default.nix
+            home-manager.nixosModules.home-manager
+            homeManagerCommon
+            { home-manager.users.geolan = import ./profiles/linux-agent.nix; }
+          ];
+        };
+
         desktop = nixpkgs.lib.nixosSystem {
           inherit specialArgs;
           modules = [

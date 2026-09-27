@@ -15,6 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    mymod.home.t3Code.enable = true;
+
     home.packages = with pkgs; [
       adwaita-fonts
       bibata-cursors
@@ -36,32 +38,7 @@ in
       corefonts
       vista-fonts
       obsidian
-      inputs.t3code-flake.packages."${pkgs.stdenv.hostPlatform.system}".t3-code-nightly
     ];
-
-    # Refreshes systemd+DBus env after login so graphical apps launched
-    # from the shell inherit WAYLAND_DISPLAY etc. Belongs here (not in
-    # ghostty.nix) so it survives disabling the terminal.
-    systemd.user.services.dbus-update-activation-environment = {
-      Unit = {
-        Description = "Update DBus activation environment";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all";
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
-
-    xdg.desktopEntries.t3-code-url-handler = {
-      name = "T3 Code URL Handler";
-      exec = "t3 %U";
-      terminal = false;
-      noDisplay = true;
-      mimeType = [ "x-scheme-handler/t3code" ];
-    };
 
     home.pointerCursor = {
       enable = true;
@@ -80,7 +57,6 @@ in
         "x-scheme-handler/https" = "helium.desktop";
         "x-scheme-handler/about" = "helium.desktop";
         "x-scheme-handler/unknown" = "helium.desktop";
-        "x-scheme-handler/t3code" = "t3-code-url-handler.desktop";
         "application/pdf" = "org.gnome.Papers.desktop";
         "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
         "video/webm" = "io.github.celluloid_player.Celluloid.desktop";

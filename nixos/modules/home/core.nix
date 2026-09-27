@@ -25,7 +25,10 @@ let
     nodejs = pkgs.nodejs_22;
     npmDepsHash = "sha256-yDPYMcncKOG8pu+5hNnf8mAvjv3gBU5d+VFD2sXYwSo=";
     dontNpmBuild = true;
-    nativeBuildInputs = [ pkgs.jq pkgs.makeWrapper ];
+    nativeBuildInputs = [
+      pkgs.jq
+      pkgs.makeWrapper
+    ];
 
     postPatch = ''
       ${pkgs.jq}/bin/jq 'del(.devDependencies, .scripts)' package.json > package.json.new
@@ -95,6 +98,12 @@ in
       type = lib.types.str;
       default = "/home/geolan";
     };
+
+    includePersonalTools = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install personal document and transfer tools in addition to coding tools.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -117,19 +126,11 @@ in
           awscli2
           btop
           unzip
-          unrar
-          texliveSmall
-          texlab
           wget
-          croc
           zstd
-          tailscale
-          syncthing
-          rclone
           gnupg
           pinentry-curses
           jq
-          qrencode
           rustfmt
           fastfetch
           tmux
@@ -137,18 +138,28 @@ in
           fzf
           ripgrep
           fd
-          quarto
           (pkgs.writeShellScriptBin "tmux-sessionizer" (
             builtins.readFile "${configsPath}/scripts/tmux-sessionizer"
           ))
           (pkgs.writeShellScriptBin "paseo-init" (builtins.readFile "${configsPath}/scripts/paseo-init"))
         ]
+        ++ lib.optionals cfg.includePersonalTools [
+          unrar
+          texliveSmall
+          texlab
+          croc
+          tailscale
+          syncthing
+          rclone
+          qrencode
+          quarto
+        ]
         # macOS provides these CLI tools through Homebrew.
         ++ lib.optionals (!isDarwin) [
-          ticktickCli
           inputs.claude-code.packages."${pkgs.stdenv.hostPlatform.system}".default
           inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
         ]
+        ++ lib.optionals (cfg.includePersonalTools && !isDarwin) [ ticktickCli ]
         # codex-cli-nix has no darwin package in its flake; keep it
         # Linux-only until upstream publishes one.
         ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
