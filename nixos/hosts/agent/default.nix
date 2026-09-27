@@ -40,7 +40,7 @@
     enable = true;
     openFirewall = false;
     settings = {
-      PasswordAuthentication = false;
+      PasswordAuthentication = true;
       KbdInteractiveAuthentication = false;
     };
   };
