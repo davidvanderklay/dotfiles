@@ -63,23 +63,26 @@ in
     # when the repo is not checked out (e.g. generic/containers).
     home.activation.linkAgentConfigSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       skills_dir="${agentConfigRepo}/skills"
-      target_dir="$HOME/.agents/skills"
 
       [ -d "$skills_dir" ] || exit 0
-      mkdir -p "$target_dir"
+      mkdir -p "$HOME/.agents/skills" "$HOME/.codex/skills"
       for skill_dir in "$skills_dir"/*; do
         [ -d "$skill_dir" ] || continue
+        [ -f "$skill_dir/SKILL.md" ] || continue
         skill_name="''${skill_dir##*/}"
-        target="$target_dir/$skill_name"
 
-        if [ -L "$target" ]; then
-          rm "$target"
-        elif [ -e "$target" ]; then
-          echo "Skipping shared skill '$skill_name': $target already exists" >&2
-          continue
-        fi
+        for target_dir in "$HOME/.agents/skills" "$HOME/.codex/skills"; do
+          target="$target_dir/$skill_name"
 
-        ln -s "$skill_dir" "$target"
+          if [ -L "$target" ]; then
+            rm "$target"
+          elif [ -e "$target" ]; then
+            echo "Skipping shared skill '$skill_name': $target already exists" >&2
+            continue
+          fi
+
+          ln -s "$skill_dir" "$target"
+        done
       done
     '';
 
