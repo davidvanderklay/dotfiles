@@ -24,6 +24,27 @@
     docker.enable = true;
   };
 
+  # Deploy the versions committed from the desktop, without updating inputs here.
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:davidvanderklay/dotfiles/main?dir=nixos#agent";
+    upgrade = false;
+    flags = [
+      "--no-update-lock-file"
+      "-L"
+    ];
+    dates = "06:00";
+    # Skip missed runs rather than restarting services during the workday.
+    persistent = false;
+    allowReboot = true;
+    # Local America/Chicago time. Long builds retry the reboot on the next run.
+    rebootWindow = {
+      # NixOS uses strict bounds, so include builds that finish at 06:00.
+      lower = "05:59";
+      upper = "07:00";
+    };
+  };
+
   # Start a graphical session for the browser and Android tools after reboot.
   services.displayManager.autoLogin = {
     enable = true;

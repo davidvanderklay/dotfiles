@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 
@@ -31,11 +30,6 @@ in
     timeZone = lib.mkOption {
       type = lib.types.str;
       default = "America/Chicago";
-    };
-
-    autoUpgrade = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
     };
   };
 
@@ -103,19 +97,6 @@ in
         dates = "weekly";
         options = "--delete-older-than 7d";
       };
-    };
-
-    system.autoUpgrade = lib.mkIf cfg.autoUpgrade {
-      enable = true;
-      persistent = true;
-      flake = inputs.self.outPath;
-      flags = [
-        "--update-input"
-        "nixpkgs"
-        "-L"
-      ];
-      dates = "02:00";
-      randomizedDelaySec = "45min";
     };
 
     users.users.${cfg.userName} = {
