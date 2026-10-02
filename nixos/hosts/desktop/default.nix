@@ -21,6 +21,7 @@
     gnome.enable = true;
     gaming.enable = true;
     docker.enable = true;
+    android.enable = true;
 
     nvidia.enable = true;
 
@@ -47,13 +48,8 @@
     binfmt = true;
   };
 
-  # Android Studio is a desktop-only workstation tool, not a generic
-  # system package. Laptop does not install it.
-  nixpkgs.config.android_sdk.accept_license = true;
-
   environment.systemPackages = with pkgs; [
     inputs.limusic.packages."${pkgs.stdenv.hostPlatform.system}".default
-    android-studio
     usbmuxd
     sbctl
     nicotine-plus

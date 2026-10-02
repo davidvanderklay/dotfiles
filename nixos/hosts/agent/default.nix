@@ -5,6 +5,7 @@
     ../../modules/nixos/core.nix
     ../../modules/nixos/gnome.nix
     ../../modules/nixos/docker.nix
+    ../../modules/nixos/android.nix
   ]
   ++ lib.optional (builtins.pathExists ./hardware-configuration.nix) ./hardware-configuration.nix;
 
@@ -22,6 +23,7 @@
     };
     gnome.enable = true;
     docker.enable = true;
+    android.enable = true;
   };
 
   # Deploy the versions committed from the desktop, without updating inputs here.
@@ -107,6 +109,4 @@
     extraGroups = [ "kvm" ];
     linger = true;
   };
-  nixpkgs.config.android_sdk.accept_license = true;
-  environment.systemPackages = [ pkgs.android-studio ];
 }
