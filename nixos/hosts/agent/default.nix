@@ -45,6 +45,40 @@
     };
   };
 
+  # Pull shared config before Home Manager activation discovers new skills.
+  systemd.services.agent-config-sync = {
+    description = "Pull shared agent configuration";
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+    path = [
+      pkgs.git
+      pkgs.openssh
+    ];
+
+    environment = {
+      HOME = "/home/geolan";
+      GIT_TERMINAL_PROMPT = "0";
+      GIT_SSH_COMMAND = "ssh -o BatchMode=yes";
+    };
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "geolan";
+      WorkingDirectory = "/home/geolan/Projects/agent-config";
+      TimeoutStartSec = "2min";
+    };
+
+    script = ''
+      git pull --ff-only
+    '';
+  };
+
+  # A failed pull is logged without blocking the system upgrade.
+  systemd.services.nixos-upgrade = {
+    wants = [ "agent-config-sync.service" ];
+    after = [ "agent-config-sync.service" ];
+  };
+
   # Start a graphical session for the browser and Android tools after reboot.
   services.displayManager.autoLogin = {
     enable = true;
