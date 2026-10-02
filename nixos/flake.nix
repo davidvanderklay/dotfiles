@@ -98,10 +98,6 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
     };
-    opencode-nix = {
-      url = "github:dominicnunez/opencode-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -171,6 +167,9 @@
 
       packages.x86_64-linux.t3-code-cli =
         (pkgsFor "x86_64-linux").callPackage ./packages/t3-code-cli { };
+
+      packages.x86_64-linux.opencode =
+        (pkgsFor "x86_64-linux").callPackage ./packages/opencode { };
 
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {

@@ -157,7 +157,7 @@ in
         # macOS provides these CLI tools through Homebrew.
         ++ lib.optionals (!isDarwin) [
           inputs.claude-code.packages."${pkgs.stdenv.hostPlatform.system}".default
-          inputs.opencode-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+          (pkgs.callPackage ../../packages/opencode { })
         ]
         ++ lib.optionals (cfg.includePersonalTools && !isDarwin) [ ticktickCli ]
         # codex-cli-nix has no darwin package in its flake; keep it
