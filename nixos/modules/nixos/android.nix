@@ -15,7 +15,12 @@ in
 
   config = lib.mkIf cfg.enable {
     nixpkgs.config.android_sdk.accept_license = true;
-    environment.systemPackages = [ pkgs.android-studio ];
+    # The SDK's avdmanager and sdkmanager are shell scripts that need java on
+    # PATH. T3 Code's device hub lists emulators through avdmanager.
+    environment.systemPackages = [
+      pkgs.android-studio
+      pkgs.jdk
+    ];
 
     # Android Studio downloads generic Linux SDK binaries to ~/Android/Sdk.
     # They run inside Studio's FHS sandbox, but tools that call them directly
