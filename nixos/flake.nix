@@ -169,6 +169,9 @@
 
       formatter = forAllSystems (system: (pkgsFor system).nixfmt-tree);
 
+      packages.x86_64-linux.t3-code-cli =
+        (pkgsFor "x86_64-linux").callPackage ./packages/t3-code-cli { };
+
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {
           packages = with pkgsFor system; [

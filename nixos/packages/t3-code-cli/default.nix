@@ -6,12 +6,12 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "t3-code-cli";
-  # Keep this on the same release as the desktop package in t3code-flake.
-  version = "0.0.43-nightly.20260926.2318";
+  # Updated by scripts/update-t3-code-cli.py independently of the desktop.
+  version = "0.0.45-nightly.20261002.2595";
 
   src = fetchurl {
     url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-    hash = "sha256-Sbciq4x+FDedwHu1CPvKC4KtsYqc5HgA+Bksx3VKlKs=";
+    hash = "sha256-bSGXqfNCL6xmJsIPjzrAyeIquvt5UdbrZnGKK9W9cGc=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];

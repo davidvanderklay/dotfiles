@@ -1,0 +1,74 @@
+name: Update T3 Code CLI nightly
+
+on:
+  schedule:
+    # 04:17 CDT / 03:17 CST, ahead of the agent's 06:00 local rebuild.
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-t3-code-cli
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+
+      - uses: cachix/install-nix-action@v31.11.1
+
+      - name: Test release selection
+        run: python3 -B -m unittest discover -s scripts -p 'test_update_t3_code_cli.py'
+
+      - name: Update standalone CLI pin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B scripts/update-t3-code-cli.py
+
+      - name: Build and verify CLI
+        run: |
+          nix build ./nixos#t3-code-cli --no-link --print-out-paths > /tmp/t3-cli-path
+          package="$(cat /tmp/t3-cli-path)"
+          expected="$(sed -n 's/^  version = "\([^"]*\)";/\1/p' nixos/packages/t3-code-cli/default.nix)"
+          actual="$(timeout 30 "$package/bin/t3" --version)"
+          test "$actual" = "t3 v$expected"
+          timeout 30 "$package/bin/t3" serve --help > /tmp/t3-serve-help
+          grep -F 't3 serve' /tmp/t3-serve-help
+
+          state="$(mktemp -d)"
+          "$package/bin/t3" serve --host 127.0.0.1 --port 41739 \
+            --base-dir "$state" --no-browser > "$state/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true; rm -rf "$state"' EXIT
+          for ((attempt=0; attempt<30; attempt++)); do
+            if curl --fail --silent http://127.0.0.1:41739/ > "$state/client.html"; then
+              grep -qi '<html' "$state/client.html"
+              exit 0
+            fi
+            kill -0 "$server_pid"
+            sleep 1
+          done
+          echo 'Headless CLI failed to serve the web client within 30 seconds.' >&2
+          exit 1
+
+      - name: Commit verified pin
+        run: |
+          package=nixos/packages/t3-code-cli/default.nix
+          if git diff --quiet -- "$package"; then
+            echo 'CLI pin is already current.'
+            exit 0
+          fi
+          version="$(sed -n 's/^  version = "\([^"]*\)";/\1/p' "$package")"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$package"
+          git commit -m "Update T3 Code CLI to $version"
+          git pull --rebase origin main
+          git push origin HEAD:main
