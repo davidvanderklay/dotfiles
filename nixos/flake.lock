@@ -51,11 +51,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790810102,
-        "narHash": "sha256-3yzoUUAuFPx/mJaRwDklzvIiaflJ3Clu1vSH7jWxlKE=",
+        "lastModified": 1790889289,
+        "narHash": "sha256-c2enAEAaGleMaBUU3zBdyCM3asCkHluKXn6TpDWmi6M=",
         "owner": "sadjow",
         "repo": "codex-cli-nix",
-        "rev": "65edd6ed0a1ef40e384c27d6da661a999b098f45",
+        "rev": "361dfa0c8028b58be69eebc8b3850211b5f6d5cf",
         "type": "github"
       },
       "original": {
@@ -323,11 +323,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790819692,
-        "narHash": "sha256-rvubAPbh3QCliic3sAK+CXTrPCGgJstY52OTs/5H1J4=",
+        "lastModified": 1790911008,
+        "narHash": "sha256-r7KBcjLlw7LzuvCYUU1V50L81uf+0YgHTCnhymTwwpw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c8ecc29e5175452bee4a2aa1ba2383856d795338",
+        "rev": "a439f71e75b94c88300022045713c790c79ba007",
         "type": "github"
       },
       "original": {
@@ -604,11 +604,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790857470,
-        "narHash": "sha256-EalyF5nWDS6xui58LC131oez7gZWcaO6P5bClDCVD6U=",
+        "lastModified": 1790905070,
+        "narHash": "sha256-ukT5U54WQSpq6sktl5QJOZ8S4ZF3LLmP8CAFel1XJf0=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "30415127e6c864212c61804a531a018980718b1f",
+        "rev": "6ef43e2bf2f3d5b4205ec72a72e34a2ab76ce3b4",
         "type": "github"
       },
       "original": {
@@ -689,11 +689,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790843958,
-        "narHash": "sha256-jtYAaAXT1gxEtzmeYmOGu0IvKPle5J39BOFbgl6os+A=",
+        "lastModified": 1790882220,
+        "narHash": "sha256-n+rcrZkqos6/HY2iSJsVsJw3Q4mB9XEquYpus97iOi4=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "b2ccad3b67335d368eef49ec48b9c8166858e73d",
+        "rev": "dcee1adabb61484343af863501d2e3d91ef51f72",
         "type": "github"
       },
       "original": {
@@ -786,11 +786,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790869133,
-        "narHash": "sha256-A79TBXm/t9zmEq+GFYQa7G59fQjKdVUyJL2ZJr/sZPE=",
+        "lastModified": 1790921188,
+        "narHash": "sha256-YsORXQxl6zqgF4357C/k/9vVfRR0wTAHSwqEd/M7iOk=",
         "owner": "omarcresp",
         "repo": "t3code-flake",
-        "rev": "eaad92361c397ce9cb3c6e543a6d4a4e1402ba1f",
+        "rev": "8a40d2360dd1b93224128959e6e8a9607be59dff",
         "type": "github"
       },
       "original": {
