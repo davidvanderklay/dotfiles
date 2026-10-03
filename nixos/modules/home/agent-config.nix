@@ -57,57 +57,62 @@ in
       };
     };
 
+    # Run hooks in subshells so early exits and traps cannot stop later activation steps.
     # Discover shared skills at activation time. The repository is intentionally
     # outside the flake, so reading it during pure Nix evaluation is forbidden.
     # Existing non-symlinked local skills are left untouched. Skips quietly
     # when the repo is not checked out (e.g. generic/containers).
     home.activation.linkAgentConfigSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      skills_dir="${agentConfigRepo}/skills"
+      (
+        skills_dir="${agentConfigRepo}/skills"
 
-      [ -d "$skills_dir" ] || exit 0
-      mkdir -p "$HOME/.agents/skills" "$HOME/.codex/skills"
-      for skill_dir in "$skills_dir"/*; do
-        [ -d "$skill_dir" ] || continue
-        [ -f "$skill_dir/SKILL.md" ] || continue
-        skill_name="''${skill_dir##*/}"
+        [ -d "$skills_dir" ] || exit 0
+        mkdir -p "$HOME/.agents/skills" "$HOME/.codex/skills"
+        for skill_dir in "$skills_dir"/*; do
+          [ -d "$skill_dir" ] || continue
+          [ -f "$skill_dir/SKILL.md" ] || continue
+          skill_name="''${skill_dir##*/}"
 
-        for target_dir in "$HOME/.agents/skills" "$HOME/.codex/skills"; do
-          target="$target_dir/$skill_name"
+          for target_dir in "$HOME/.agents/skills" "$HOME/.codex/skills"; do
+            target="$target_dir/$skill_name"
 
-          if [ -L "$target" ]; then
-            rm "$target"
-          elif [ -e "$target" ]; then
-            echo "Skipping shared skill '$skill_name': $target already exists" >&2
-            continue
-          fi
+            if [ -L "$target" ]; then
+              rm "$target"
+            elif [ -e "$target" ]; then
+              echo "Skipping shared skill '$skill_name': $target already exists" >&2
+              continue
+            fi
 
-          ln -s "$skill_dir" "$target"
+            ln -s "$skill_dir" "$target"
+          done
         done
-      done
+      )
     '';
 
     # Preserve Claude's other user settings while disabling its commit and PR attribution.
     home.activation.disableClaudeAttribution = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      settings_file="$HOME/.claude/settings.json"
-      mkdir -p "$HOME/.claude"
+      (
+        settings_file="$HOME/.claude/settings.json"
+        mkdir -p "$HOME/.claude"
 
-      if [ -f "$settings_file" ] && ${pkgs.jq}/bin/jq -e '.attribution.commit == "" and .attribution.pr == ""' "$settings_file" >/dev/null; then
-        exit 0
-      fi
+        if [ -f "$settings_file" ] && ${pkgs.jq}/bin/jq -e '.attribution.commit == "" and .attribution.pr == ""' "$settings_file" >/dev/null; then
+          exit 0
+        fi
 
-      settings_temp="$(${pkgs.coreutils}/bin/mktemp "$settings_file.XXXXXX")"
-      trap '${pkgs.coreutils}/bin/rm -f "$settings_temp"' EXIT
+        settings_temp="$(${pkgs.coreutils}/bin/mktemp "$settings_file.XXXXXX")"
+        trap '${pkgs.coreutils}/bin/rm -f "$settings_temp"' EXIT
 
-      if [ -f "$settings_file" ]; then
-        ${pkgs.jq}/bin/jq '.attribution = ((.attribution | if type == "object" then . else {} end) + { commit: "", pr: "" })' \
-          "$settings_file" > "$settings_temp"
-      else
-        ${pkgs.jq}/bin/jq -n '{ attribution: { commit: "", pr: "" } }' > "$settings_temp"
-      fi
+        if [ -f "$settings_file" ]; then
+          ${pkgs.jq}/bin/jq '.attribution = ((.attribution | if type == "object" then . else {} end) + { commit: "", pr: "" })' \
+            "$settings_file" > "$settings_temp"
+        else
+          ${pkgs.jq}/bin/jq -n '{ attribution: { commit: "", pr: "" } }' > "$settings_temp"
+        fi
 
-      ${pkgs.coreutils}/bin/chmod 600 "$settings_temp"
-      ${pkgs.coreutils}/bin/mv "$settings_temp" "$settings_file"
-      trap - EXIT
+        ${pkgs.coreutils}/bin/chmod 600 "$settings_temp"
+        ${pkgs.coreutils}/bin/mv "$settings_temp" "$settings_file"
+        trap - EXIT
+      )
     '';
 
     # ~/.hermes is also a runtime directory, so Home Manager can leave
@@ -115,56 +120,58 @@ in
     # force = true. Link the Git-owned Hermes inputs explicitly after the
     # generation has been linked. Runtime state and credentials remain local.
     home.activation.linkHermesAgentConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      hermes_source="${agentConfigRepo}/hermes"
-      hermes_target="$HOME/.hermes"
+      (
+        hermes_source="${agentConfigRepo}/hermes"
+        hermes_target="$HOME/.hermes"
 
-      [ -d "$hermes_source" ] || exit 0
-      mkdir -p "$hermes_target/scripts"
+        [ -d "$hermes_source" ] || exit 0
+        mkdir -p "$hermes_target/scripts"
 
-      for relative_path in \
-        config.yaml \
-        SOUL.md \
-        monitored-repos; do
-        source_path="$hermes_source/$relative_path"
-        target_path="$hermes_target/$relative_path"
+        for relative_path in \
+          config.yaml \
+          SOUL.md \
+          monitored-repos; do
+          source_path="$hermes_source/$relative_path"
+          target_path="$hermes_target/$relative_path"
 
-        [ -e "$source_path" ] || continue
-        if [ -L "$target_path" ] || [ -f "$target_path" ]; then
-          rm -f "$target_path"
-        elif [ -e "$target_path" ]; then
-          echo "Skipping Hermes config '$relative_path': target is not a file" >&2
-          continue
-        fi
+          [ -e "$source_path" ] || continue
+          if [ -L "$target_path" ] || [ -f "$target_path" ]; then
+            rm -f "$target_path"
+          elif [ -e "$target_path" ]; then
+            echo "Skipping Hermes config '$relative_path': target is not a file" >&2
+            continue
+          fi
 
-        ln -s "$source_path" "$target_path"
-      done
+          ln -s "$source_path" "$target_path"
+        done
 
-      # Hermes resolves cron scripts before running them and rejects symlinks
-      # whose targets leave ~/.hermes/scripts. Keep the source scripts in Git,
-      # but place regular wrappers in Hermes' allowed directory.
-      for script_name in server-health.sh github-pr-status.sh; do
-        source_path="$hermes_source/scripts/$script_name"
-        target_path="$hermes_target/scripts/$script_name"
+        # Hermes resolves cron scripts before running them and rejects symlinks
+        # whose targets leave ~/.hermes/scripts. Keep the source scripts in Git,
+        # but place regular wrappers in Hermes' allowed directory.
+        for script_name in server-health.sh github-pr-status.sh; do
+          source_path="$hermes_source/scripts/$script_name"
+          target_path="$hermes_target/scripts/$script_name"
 
-        [ -e "$source_path" ] || continue
-        case "$script_name" in
-          server-health.sh)
-            wrapper_path="${hermesServerHealthWrapper}"
-            ;;
-          github-pr-status.sh)
-            wrapper_path="${hermesGithubPrWrapper}"
-            ;;
-        esac
+          [ -e "$source_path" ] || continue
+          case "$script_name" in
+            server-health.sh)
+              wrapper_path="${hermesServerHealthWrapper}"
+              ;;
+            github-pr-status.sh)
+              wrapper_path="${hermesGithubPrWrapper}"
+              ;;
+          esac
 
-        if [ -L "$target_path" ] || [ -f "$target_path" ]; then
-          rm -f "$target_path"
-        elif [ -e "$target_path" ]; then
-          echo "Skipping Hermes script '$script_name': target is not a file" >&2
-          continue
-        fi
+          if [ -L "$target_path" ] || [ -f "$target_path" ]; then
+            rm -f "$target_path"
+          elif [ -e "$target_path" ]; then
+            echo "Skipping Hermes script '$script_name': target is not a file" >&2
+            continue
+          fi
 
-        ${pkgs.coreutils}/bin/install -m 700 "$wrapper_path" "$target_path"
-      done
+          ${pkgs.coreutils}/bin/install -m 700 "$wrapper_path" "$target_path"
+        done
+      )
     '';
   };
 }

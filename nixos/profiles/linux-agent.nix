@@ -25,6 +25,9 @@ in
     winetricks
   ];
 
+  # Restart changed user services when the morning system update activates this profile.
+  systemd.user.startServices = true;
+
   # Lingering on the host starts the headless server before login.
   systemd.user.services.t3code = {
     Unit = {
