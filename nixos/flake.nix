@@ -84,7 +84,7 @@
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     t3code-flake = {
-      url = "github:omarcresp/t3code-flake";
+      url = "github:davidvanderklay/t3code-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     limusic = {
