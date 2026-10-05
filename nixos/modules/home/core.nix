@@ -243,6 +243,15 @@ in
         "ticktick-cli" = "tt";
       };
 
+      # Upload token for the file-upload agent skill. Read from a local file
+      # in .zshenv so non-interactive agent shells see it and the secret
+      # stays out of Git and the Nix store.
+      envExtra = ''
+        if [[ -r "$HOME/.config/file-upload/token" ]]; then
+          export FILE_HOST_TOKEN="$(<"$HOME/.config/file-upload/token")"
+        fi
+      '';
+
       initContent = ''
         bindkey '^[[A' history-substring-search-up
         bindkey '^[[B' history-substring-search-down
