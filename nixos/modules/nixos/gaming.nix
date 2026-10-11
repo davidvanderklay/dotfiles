@@ -17,11 +17,6 @@ in
       type = lib.types.bool;
       default = true;
     };
-
-    enableHonkers = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -39,8 +34,5 @@ in
       lib.optionals cfg.enableOsu [
         inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
       ];
-
-    nix.settings = lib.mkIf cfg.enableHonkers inputs.aagl.nixConfig;
-    programs.honkers-railway-launcher.enable = cfg.enableHonkers;
   };
 }

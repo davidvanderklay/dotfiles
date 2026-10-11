@@ -7,7 +7,6 @@
       "https://cache.nixos.org/"
       "https://cache.numtide.com"
       "https://nix-community.cachix.org"
-      "https://ezkea.cachix.org"
       "https://noctalia.cachix.org"
       "https://attic.xuyh0120.win/lantian"
     ];
@@ -15,7 +14,6 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
@@ -24,14 +22,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    aagl = {
-      url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.rust-overlay.follows = "rust-overlay";
-    };
-
-    # Not used directly. Kept so aagl and lanzaboote follow a single
-    # rust-overlay pin instead of pulling their own copies.
+    # Not used directly. Kept for lanzaboote's rust-overlay pin.
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -218,7 +209,6 @@
             )
 
             inputs.lanzaboote.nixosModules.lanzaboote
-            inputs.aagl.nixosModules.default
             ./hosts/desktop/default.nix
 
             home-manager.nixosModules.home-manager
@@ -243,7 +233,6 @@
             )
 
             inputs.lanzaboote.nixosModules.lanzaboote
-            inputs.aagl.nixosModules.default
             ./hosts/laptop/default.nix
 
             home-manager.nixosModules.home-manager
