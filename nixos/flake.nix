@@ -8,14 +8,12 @@
       "https://cache.numtide.com"
       "https://nix-community.cachix.org"
       "https://noctalia.cachix.org"
-      "https://attic.xuyh0120.win/lantian"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
   };
 
@@ -73,7 +71,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     t3code-flake = {
       url = "github:davidvanderklay/t3code-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -198,16 +195,6 @@
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
 
-            (
-              { pkgs, ... }:
-              {
-                # CachyOS kernel overlay. Binary cache comes from
-                # mymod.nixos.core so laptop and desktop share it.
-                nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
-                boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
-              }
-            )
-
             inputs.lanzaboote.nixosModules.lanzaboote
             ./hosts/desktop/default.nix
 
@@ -221,16 +208,6 @@
           inherit specialArgs;
           modules = [
             { nixpkgs.hostPlatform = "x86_64-linux"; }
-
-            # Same CachyOS v3 kernel as desktop. Duplicated until the
-            # shared mkNixos helper lands (deferred refactor #4).
-            (
-              { pkgs, ... }:
-              {
-                nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
-                boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
-              }
-            )
 
             inputs.lanzaboote.nixosModules.lanzaboote
             ./hosts/laptop/default.nix
