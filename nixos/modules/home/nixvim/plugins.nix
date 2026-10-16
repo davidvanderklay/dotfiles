@@ -68,6 +68,36 @@ in
         indent.enable = true;
         nixGrammars = true;
         nixvimInjections = true;
+        grammarPackages = with config.programs.nixvim.plugins.treesitter.package.builtGrammars; [
+          javascript
+          typescript
+          tsx
+          html
+          css
+          json
+          yaml
+          toml
+          python
+          rust
+          go
+          c
+          cpp
+          nix
+          bash
+          lua
+          vim
+          vimdoc
+          markdown
+          markdown_inline
+          regex
+          sql
+          dockerfile
+          make
+          gitcommit
+          gitignore
+          git_rebase
+          diff
+        ];
       };
 
       ts-autotag.enable = true;
