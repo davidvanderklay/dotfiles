@@ -7,11 +7,11 @@
 stdenv.mkDerivation (finalAttrs: {
   pname = "t3-code-cli";
   # Updated by scripts/update-t3-code-cli.py independently of the desktop.
-  version = "0.1.1-nightly.20261016.3203";
+  version = "0.1.1-nightly.20261017.3238";
 
   src = fetchurl {
     url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-    hash = "sha256-ctx5gsEZgGhckXePuUgRNT9/I0uViji388RgSwNAcgs=";
+    hash = "sha256-GF4nuqdRBQoqoMEfDFomUlZVzD9bcQrtpo4s8HKkITs=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];
