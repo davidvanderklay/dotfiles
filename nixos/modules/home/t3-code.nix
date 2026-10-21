@@ -10,10 +10,13 @@ let
 
   # T3 Code updates itself only from a writable AppImage, so the app lives in
   # the home directory rather than the Nix store.
-  appDir = "${config.xdg.dataHome}/t3code";
-  appImage = "${appDir}/T3-Code-Nightly.AppImage";
+  # T3 keeps its own files in ~/.local/share/t3code, so the app gets its own directory.
+  appDir = "${config.xdg.dataHome}/t3code-app";
+  appImage = "${appDir}/T3-Code.AppImage";
   # Patched copy of the current AppImage, shared by the app and the t3 CLI.
   currentDir = "${appDir}/current";
+  # Written by the launcher, not Home Manager, since it changes with the channel.
+  desktopEntry = "${config.xdg.dataHome}/applications/t3code.desktop";
 
   # Electron's linked and dlopen'd libraries, mirroring nixpkgs' electron-bin.
   linkedLibs = with pkgs; [
@@ -72,7 +75,10 @@ let
     exec "$root/t3code" "$root/resources/app.asar/apps/server/dist/bin.mjs" "$@"
   '';
 
-  # Downloads the newest nightly on first run, then unpacks and patches each new
+  # Matches release tags for the channel the first download should follow.
+  tagPattern = if cfg.channel == "stable" then "^v[0-9]+\\.[0-9]+\\.[0-9]+$" else "-nightly\\.";
+
+  # Downloads the newest release on first run, then unpacks and patches each new
   # AppImage so it runs directly. appimage-run's sandbox would block sudo and
   # ssh for everything the app starts. After the in-app updater replaces the
   # file, this stops the copy the updater launched and relaunches the patched one.
@@ -90,11 +96,13 @@ let
     text = ''
       dir=${lib.escapeShellArg appDir}
       app=${lib.escapeShellArg appImage}
-      mkdir -p "$dir"
+      entry=${lib.escapeShellArg desktopEntry}
+      mkdir -p "$dir" "$(dirname "$entry")"
 
       if [ ! -e "$app" ]; then
         tag=$(curl -fsSL "https://api.github.com/repos/pingdotgg/t3code/releases?per_page=50" \
-          | jq -r '[.[] | select(.tag_name | test("-nightly\\."))][0].tag_name')
+          | jq -r --arg pattern ${lib.escapeShellArg tagPattern} \
+            '[.[] | select(.tag_name | test($pattern))][0].tag_name')
         curl -fL -o "$app.tmp" \
           "https://github.com/pingdotgg/t3code/releases/download/$tag/T3-Code-''${tag#v}-x86_64.AppImage"
         chmod +x "$app.tmp"
@@ -102,6 +110,8 @@ let
       fi
 
       # Each AppImage version gets its own directory, named by the file's mtime.
+      # The menu entry comes from the build itself, so its name and icon follow the
+      # channel picked in T3's settings.
       prepare() {
         local target old
         target="patched-$(stat -c %Y "$app")"
@@ -117,6 +127,11 @@ let
           --ignore-missing libc.musl-x86_64.so.1
         ln -sf ${lib.getLib pkgs.vulkan-loader}/lib/libvulkan.so.1 "$dir/$target/libvulkan.so.1"
         ln -sfn "$target" "$dir/current"
+        sed -e 's|^Exec=.*|Exec=t3code %U|' \
+          -e "s|^Icon=.*|Icon=$dir/current/t3code.png|" \
+          -e '/^MimeType=/d' \
+          "$dir/current/t3code.desktop" > "$entry.tmp"
+        mv "$entry.tmp" "$entry"
         if [ -n "$old" ]; then
           rm -rf "''${dir:?}/$old"
         fi
@@ -136,9 +151,30 @@ let
       done
     '';
   };
+
+  placeholderEntry = pkgs.writeText "t3code.desktop" ''
+    [Desktop Entry]
+    Type=Application
+    Name=T3 Code
+    Exec=t3code %U
+    Terminal=false
+    Categories=Development;
+    StartupWMClass=t3code
+  '';
 in
 {
-  options.mymod.home.t3Code.enable = lib.mkEnableOption "T3 Code desktop app and URL handler";
+  options.mymod.home.t3Code = {
+    enable = lib.mkEnableOption "T3 Code desktop app and URL handler";
+
+    channel = lib.mkOption {
+      type = lib.types.enum [
+        "stable"
+        "nightly"
+      ];
+      default = "nightly";
+      description = "Release channel for the first download. After that, T3's own update setting decides.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     home.packages = [
@@ -162,14 +198,14 @@ in
       Install.WantedBy = [ "graphical-session.target" ];
     };
 
-    xdg.desktopEntries.t3-code-nightly = {
-      name = "T3 Code (Nightly)";
-      exec = "t3code %U";
-      icon = "${currentDir}/t3code.png";
-      terminal = false;
-      categories = [ "Development" ];
-      settings.StartupWMClass = "t3code";
-    };
+    # Gives a fresh machine a menu entry until the first launch writes the real one.
+    home.activation.t3CodeDesktopEntry = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ ! -e ${lib.escapeShellArg desktopEntry} ]; then
+        run mkdir -p ${lib.escapeShellArg (builtins.dirOf desktopEntry)}
+        run cp ${placeholderEntry} ${lib.escapeShellArg desktopEntry}
+        run chmod u+w ${lib.escapeShellArg desktopEntry}
+      fi
+    '';
 
     xdg.desktopEntries.t3-code-url-handler = {
       name = "T3 Code URL Handler";
