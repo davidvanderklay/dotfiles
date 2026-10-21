@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 
@@ -10,6 +9,9 @@ let
   cfg = config.mymod.home.core;
   configsPath = ../../configs;
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  # NixOS has no writable global npm prefix. macOS uses Homebrew, and other
+  # Linux distros already install agent CLIs normally.
+  isNixOS = pkgs.stdenv.hostPlatform.isLinux && !config.targets.genericLinux.enable;
   ticktickLockfile = ../../packages/ticktick-cli/package-lock.json;
 
   ticktickCli = pkgs.buildNpmPackage {
@@ -66,6 +68,26 @@ let
       websearch = "allow";
       codesearch = "allow";
     };
+  };
+
+  # Installs each agent CLI once if it is missing. Updates then come from
+  # T3 Code or the CLI itself, which detect npm and native installs.
+  agentCliInstall = pkgs.writeShellApplication {
+    name = "agent-cli-install";
+    runtimeInputs = with pkgs; [
+      bash
+      coreutils
+      curl
+      gnutar
+      gzip
+      nodejs_22
+    ];
+    text = ''
+      bin="$HOME/.local/bin"
+      [ -x "$bin/codex" ] || npm install -g @openai/codex@latest
+      [ -x "$bin/opencode" ] || npm install -g @opencode/cli@latest
+      [ -x "$bin/claude" ] || curl -fsSL https://claude.ai/install.sh | bash
+    '';
   };
 
   githubSshSettings = {
@@ -154,18 +176,34 @@ in
           qrencode
           quarto
         ]
-        # macOS provides these CLI tools through Homebrew.
-        ++ lib.optionals (!isDarwin) [
-          inputs.claude-code.packages."${pkgs.stdenv.hostPlatform.system}".default
-          (pkgs.callPackage ../../packages/opencode { })
-        ]
         ++ lib.optionals (cfg.includePersonalTools && !isDarwin) [ ticktickCli ]
-        # codex-cli-nix has no darwin package in its flake; keep it
-        # Linux-only until upstream publishes one.
         ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
           wl-clipboard
-          inputs.codex-cli-nix.packages."${pkgs.stdenv.hostPlatform.system}".default
+          # Codex's Linux sandbox runs commands through bwrap.
+          bubblewrap
         ];
+
+      # Shells source this too, so GUI apps and services that read the login
+      # environment find the npm and native agent CLIs.
+      sessionPath = [ "$HOME/.local/bin" ];
+    };
+
+    # Agent CLIs come from their own installers so T3 Code can update them.
+    # npm installs globals into ~/.local.
+    home.file.".npmrc" = lib.mkIf isNixOS {
+      text = "prefix=${cfg.homeDirectory}/.local\n";
+    };
+
+    systemd.user.services.agent-cli-install = lib.mkIf isNixOS {
+      Unit.Description = "Install missing agent CLIs";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${agentCliInstall}/bin/agent-cli-install";
+        # The network may not be up yet at login or boot.
+        Restart = "on-failure";
+        RestartSec = 60;
+      };
+      Install.WantedBy = [ "default.target" ];
     };
 
     programs.git = {

@@ -1,7 +1,25 @@
 { inputs, pkgs, ... }:
 
 let
-  t3CodeCli = pkgs.callPackage ../packages/t3-code-cli { };
+  # Installs the headless server with upstream's installer on first boot. After
+  # that, `t3 service install` owns t3code.service and `t3 update` replaces it.
+  t3CodeInstall = pkgs.writeShellApplication {
+    name = "t3code-install";
+    runtimeInputs = with pkgs; [
+      coreutils
+      curl
+      findutils
+      gnugrep
+      gnused
+      gnutar
+      gzip
+      systemd
+    ];
+    text = ''
+      curl -fsSL https://t3.codes/install.sh | T3CODE_CHANNEL=nightly sh
+      "$HOME/.local/bin/t3" service install
+    '';
+  };
 in
 {
   imports = [ ../modules/home ];
@@ -19,7 +37,6 @@ in
 
   # Keep Wine independent of the gaming profile.
   home.packages = with pkgs; [
-    t3CodeCli
     inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
     wineWow64Packages.stable
     winetricks
@@ -28,19 +45,18 @@ in
   # Restart changed user services when the morning system update activates this profile.
   systemd.user.startServices = true;
 
-  # Lingering on the host starts the headless server before login.
-  systemd.user.services.t3code = {
+  # Lingering on the host keeps the server running before login.
+  systemd.user.services.t3code-install = {
     Unit = {
-      Description = "T3 Code headless server";
-      After = [ "network-online.target" ];
+      Description = "Install the T3 Code headless server";
+      ConditionPathExists = "!%h/.local/bin/t3";
     };
     Service = {
-      ExecStart = "${t3CodeCli}/bin/t3 serve";
-      Restart = "always";
-      RestartSec = 5;
-      Environment = [
-        "PATH=/home/geolan/.local/bin:/etc/profiles/per-user/geolan/bin:/run/current-system/sw/bin"
-      ];
+      Type = "oneshot";
+      ExecStart = "${t3CodeInstall}/bin/t3code-install";
+      # The network may not be up yet at boot.
+      Restart = "on-failure";
+      RestartSec = 60;
     };
     Install.WantedBy = [ "default.target" ];
   };

@@ -71,20 +71,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
-    t3code-flake = {
-      url = "github:davidvanderklay/t3code-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     limusic = {
       url = "github:davidvanderklay/limusic-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    codex-cli-nix = {
-      url = "github:sadjow/codex-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    claude-code = {
-      url = "github:sadjow/claude-code-nix";
     };
   };
 
@@ -152,12 +141,6 @@
       homeModules.default = import ./modules/home;
 
       formatter = forAllSystems (system: (pkgsFor system).nixfmt-tree);
-
-      packages.x86_64-linux.t3-code-cli =
-        (pkgsFor "x86_64-linux").callPackage ./packages/t3-code-cli { };
-
-      packages.x86_64-linux.opencode =
-        (pkgsFor "x86_64-linux").callPackage ./packages/opencode { };
 
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {
