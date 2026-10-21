@@ -12,12 +12,54 @@ let
   # the home directory rather than the Nix store.
   appDir = "${config.xdg.dataHome}/t3code";
   appImage = "${appDir}/T3-Code-Nightly.AppImage";
-  # Extracted copy of the current AppImage, shared by the app and the t3 CLI.
+  # Patched copy of the current AppImage, shared by the app and the t3 CLI.
   currentDir = "${appDir}/current";
 
-  # Runs the bundled t3 CLI from the extracted app through nix-ld. The app
-  # rewrites ~/.t3/bin/t3 with an AppImage mount launcher unless the file lacks
-  # its marker comment, and appimage-run cannot mount, so this replaces it.
+  # Electron's linked and dlopen'd libraries, mirroring nixpkgs' electron-bin.
+  linkedLibs = with pkgs; [
+    alsa-lib
+    at-spi2-atk
+    cairo
+    cups
+    dbus
+    expat
+    gdk-pixbuf
+    glib
+    gtk3
+    libGL
+    libdrm
+    libgbm
+    libsecret
+    libxkbcommon
+    libxshmfence
+    nspr
+    nss
+    pango
+    stdenv.cc.cc
+    systemdLibs
+    vulkan-loader
+    libX11
+    libXcomposite
+    libXdamage
+    libXext
+    libXfixes
+    libXrandr
+    libxcb
+    libxkbfile
+  ];
+  dlopenLibs = with pkgs; [
+    libGL
+    libnotify
+    libpulseaudio
+    libsecret
+    pciutils
+    vulkan-loader
+  ];
+  libDirs = libs: lib.concatMapStringsSep " " (pkg: "${lib.getLib pkg}/lib") libs;
+
+  # Runs the bundled t3 CLI from the patched app. The app rewrites ~/.t3/bin/t3
+  # with an AppImage mount launcher unless the file lacks its marker comment,
+  # and NixOS cannot run that launcher, so this replaces it.
   t3Cli = pkgs.writeShellScriptBin "t3" ''
     export T3CODE_CLI_PATH="$HOME/.t3/bin/t3"
     export T3CODE_HOME="''${T3CODE_HOME:-$HOME/.t3}"
@@ -30,16 +72,20 @@ let
     exec "$root/t3code" "$root/resources/app.asar/apps/server/dist/bin.mjs" "$@"
   '';
 
-  # Downloads the newest nightly on first run, extracts each new AppImage, and
-  # relaunches after the in-app updater replaces the file. The updater's own
-  # relaunch dies with the appimage-run sandbox.
+  # Downloads the newest nightly on first run, then unpacks and patches each new
+  # AppImage so it runs directly. appimage-run's sandbox would block sudo and
+  # ssh for everything the app starts. After the in-app updater replaces the
+  # file, this stops the copy the updater launched and relaunches the patched one.
   t3CodeLauncher = pkgs.writeShellApplication {
     name = "t3code";
     runtimeInputs = with pkgs; [
       appimage-run
+      auto-patchelf
       coreutils
       curl
       jq
+      patchelf
+      procps
     ];
     text = ''
       dir=${lib.escapeShellArg appDir}
@@ -55,28 +101,37 @@ let
         mv "$app.tmp" "$app"
       fi
 
-      extract() {
-        local stamp old
-        stamp=$(stat -c %Y "$app")
-        [ "$(cat "$dir/current/.stamp" 2>/dev/null)" = "$stamp" ] && return
-        rm -rf "$dir/extract.tmp"
-        appimage-run -x "$dir/extract.tmp" "$app"
-        echo "$stamp" > "$dir/extract.tmp/.stamp"
+      # Each AppImage version gets its own directory, named by the file's mtime.
+      prepare() {
+        local target old
+        target="patched-$(stat -c %Y "$app")"
         old=$(readlink "$dir/current" || true)
-        mv "$dir/extract.tmp" "$dir/app-$stamp"
-        ln -sfn "app-$stamp" "$dir/current"
-        if [ -n "$old" ] && [ "$old" != "app-$stamp" ]; then
+        [ "$old" = "$target" ] && return
+        rm -rf "''${dir:?}/$target"
+        appimage-run -x "$dir/$target" "$app"
+        # AppImage-bundled desktop libraries Electron does not need.
+        rm -rf "''${dir:?}/''${target:?}/usr"
+        auto-patchelf --paths "$dir/$target" \
+          --libs ${libDirs linkedLibs} \
+          --append-rpaths ${libDirs dlopenLibs} \
+          --ignore-missing libc.musl-x86_64.so.1
+        ln -sf ${lib.getLib pkgs.vulkan-loader}/lib/libvulkan.so.1 "$dir/$target/libvulkan.so.1"
+        ln -sfn "$target" "$dir/current"
+        if [ -n "$old" ]; then
           rm -rf "''${dir:?}/$old"
         fi
       }
 
       while :; do
-        extract
+        prepare
         before=$(stat -c %Y "$app")
         status=0
-        APPIMAGE="$app" appimage-run -w "$dir/current" -- "$@" || status=$?
+        APPIMAGE="$app" "$dir/current/t3code" "$@" || status=$?
         [ "$(stat -c %Y "$app")" = "$before" ] && exit "$status"
-        # Relaunch the updated app without replaying the original URL.
+        # The updater starts the new AppImage itself; replace it with a patched copy.
+        pkill -f -- "$app" || true
+        rm -rf "''${XDG_CACHE_HOME:-$HOME/.cache}/appimage-run/$(sha256sum "$app" | cut -d " " -f 1)"
+        # Relaunch without replaying the original URL.
         set --
       done
     '';
