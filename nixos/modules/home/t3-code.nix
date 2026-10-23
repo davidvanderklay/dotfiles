@@ -116,7 +116,7 @@ let
         local target old
         target="patched-$(stat -c %Y "$app")"
         old=$(readlink "$dir/current" || true)
-        [ "$old" = "$target" ] && [ -f "$dir/current/t3code.png" ] && return
+        [ "$old" = "$target" ] && [ -x "$dir/current/t3code" ] && [ -f "$dir/current/t3code.png" ] && return
         rm -rf "''${dir:?}/$target"
         appimage-run -x "$dir/$target" "$app"
         # The root icon is a symlink into usr, which is removed below.
@@ -134,7 +134,7 @@ let
           -e '/^MimeType=/d' \
           "$dir/current/t3code.desktop" > "$entry.tmp"
         mv "$entry.tmp" "$entry"
-        if [ -n "$old" ]; then
+        if [ -n "$old" ] && [ "$old" != "$target" ]; then
           rm -rf "''${dir:?}/$old"
         fi
       }
