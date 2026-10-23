@@ -116,9 +116,11 @@ let
         local target old
         target="patched-$(stat -c %Y "$app")"
         old=$(readlink "$dir/current" || true)
-        [ "$old" = "$target" ] && return
+        [ "$old" = "$target" ] && [ -f "$dir/current/t3code.png" ] && return
         rm -rf "''${dir:?}/$target"
         appimage-run -x "$dir/$target" "$app"
+        # The root icon is a symlink into usr, which is removed below.
+        cp --remove-destination "$(readlink -f "$dir/$target/t3code.png")" "$dir/$target/t3code.png"
         # AppImage-bundled desktop libraries Electron does not need.
         rm -rf "''${dir:?}/''${target:?}/usr"
         auto-patchelf --paths "$dir/$target" \
