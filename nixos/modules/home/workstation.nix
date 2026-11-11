@@ -31,6 +31,7 @@ in
       gnomeExtensions.hot-edge
       gnomeExtensions.clipboard-indicator
       gnomeExtensions.xremap
+      gnomeExtensions.caffeine
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-color-emoji
@@ -126,6 +127,7 @@ in
           "hotedge@jonathan.jdoda.ca"
           "clipboard-indicator@tudmotu.com"
           "xremap@k0kubun.com"
+          "caffeine@patapon.info"
         ];
       };
 
