@@ -20,6 +20,7 @@
     gnome.enable = true;
     gaming.enable = true;
     docker.enable = true;
+    t3Code.enable = true;
 
     nvidia = {
       enable = true;

@@ -6,6 +6,7 @@
     ../../modules/nixos/gnome.nix
     ../../modules/nixos/docker.nix
     ../../modules/nixos/android.nix
+    ../../modules/nixos/t3-code.nix
   ]
   ++ lib.optional (builtins.pathExists ./hardware-configuration.nix) ./hardware-configuration.nix;
 
@@ -24,6 +25,7 @@
     gnome.enable = true;
     docker.enable = true;
     android.enable = true;
+    t3Code.enable = true;
   };
 
   # Deploy the versions committed from the desktop, without updating inputs here.

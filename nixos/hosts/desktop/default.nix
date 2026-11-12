@@ -22,6 +22,7 @@
     gaming.enable = true;
     docker.enable = true;
     android.enable = true;
+    t3Code.enable = true;
 
     nvidia.enable = true;
 

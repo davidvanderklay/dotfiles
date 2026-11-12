@@ -5,6 +5,7 @@
     ./gaming.nix
     ./docker.nix
     ./android.nix
+    ./t3-code.nix
     ./nvidia.nix
     ./services.nix
   ];
