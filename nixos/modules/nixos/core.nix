@@ -86,7 +86,8 @@ in
     };
 
     nix = {
-      settings.auto-optimise-store = true;
+      # Dedupe the store on a timer instead of during every build.
+      optimise.automatic = true;
       gc = {
         automatic = true;
         dates = "weekly";

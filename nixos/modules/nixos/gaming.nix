@@ -1,8 +1,6 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
   ...
 }:
 
@@ -12,11 +10,6 @@ in
 {
   options.mymod.nixos.gaming = {
     enable = lib.mkEnableOption "gaming packages and configuration";
-
-    enableOsu = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,11 +21,5 @@ in
 
     programs.gamemode.enable = true;
     programs.gamescope.enable = true;
-
-    environment.systemPackages =
-      with pkgs;
-      lib.optionals cfg.enableOsu [
-        inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.osu-stable
-      ];
   };
 }

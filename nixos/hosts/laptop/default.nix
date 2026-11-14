@@ -113,11 +113,9 @@
     '';
   };
 
-  # systemd stage 1 can use systemd-cryptenroll TPM2 tokens to unlock LUKS.
-  boot.initrd.systemd = {
-    enable = true;
-    tpm2.enable = true;
-  };
+  # Stage 1 is always systemd now, so it can use systemd-cryptenroll TPM2
+  # tokens to unlock LUKS.
+  boot.initrd.systemd.tpm2.enable = true;
 
   # Add TPM2 as an unlock method while retaining the existing passphrase.
   # Root's device path is defined in hardware-configuration.nix. Swap is a

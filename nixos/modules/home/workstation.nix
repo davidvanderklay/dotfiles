@@ -76,6 +76,9 @@ in
 
     services.xremap = {
       enable = true;
+      # nixpkgs' build has every feature, GNOME included, and is in the binary
+      # cache. The flake's own package is compiled locally on every nixpkgs bump.
+      package = pkgs.xremap;
       withGnome = true;
       watch = true;
       config.keymap = [
