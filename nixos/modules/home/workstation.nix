@@ -98,7 +98,7 @@ in
       [Desktop Entry]
       Type=Application
       Name=LocalSend
-      Exec=localsend --hidden
+      Exec=localsend_app --hidden
       Icon=localsend
       Comment=An open source cross-platform alternative to AirDrop
       X-GNOME-Autostart-enabled=true

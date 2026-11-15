@@ -20,6 +20,17 @@ let
         '--enable-features=WaylandWindowDecorations,HeliumMiddleClickAutoscroll'
     '';
   });
+  # nixpkgs 740730748ec2 made GTK's `-lz` link libz.so, but localsend_app's
+  # rpath lacks zlib, so it fails at launch. Drop once upstream fixes it.
+  localsend = pkgs.symlinkJoin {
+    name = "localsend-zlib-fix";
+    paths = [ pkgs.localsend ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/localsend_app \
+        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.zlib ]}
+    '';
+  };
 in
 {
   options.mymod.home.gaming = {
