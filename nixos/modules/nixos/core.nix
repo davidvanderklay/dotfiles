@@ -125,6 +125,7 @@ in
     environment.systemPackages = with pkgs; [
       git
       gh
+      glab
       ffmpeg
       openvpn
       networkmanager-openconnect

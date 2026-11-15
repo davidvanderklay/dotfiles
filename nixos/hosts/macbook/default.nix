@@ -53,6 +53,7 @@
       "jupytext"
       "ghostscript"
       "gh"
+      "glab"
       "anomalyco/tap/opencode-v2"
       "CarterT27/tap/ticktick-cli"
     ];
