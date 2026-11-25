@@ -46,7 +46,6 @@ in
     home.packages = with pkgs; [
       distrobox
       localsend
-      heroic
       r2modman
       prismlauncher
       protonplus
@@ -55,6 +54,7 @@ in
       wineWow64Packages.stable
       winetricks
       helium
+      inputs.irori.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
     systemd.user.services.ludusavi-backup = lib.mkIf cfg.enableLudusaviBackup {

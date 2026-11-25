@@ -147,6 +147,26 @@
         "type": "github"
       }
     },
+    "irori": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795480629,
+        "narHash": "sha256-54BbksZQC7r/NWCvaE70VqB5xrarA4mB055XEDhZuoU=",
+        "owner": "irori-app",
+        "repo": "irori",
+        "rev": "33ad094994354b84a321083d1b57cfed553d0ea2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "irori-app",
+        "repo": "irori",
+        "type": "github"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -311,6 +331,7 @@
       "inputs": {
         "helium": "helium",
         "home-manager": "home-manager",
+        "irori": "irori",
         "lanzaboote": "lanzaboote",
         "limusic": "limusic",
         "nix-darwin": "nix-darwin",

@@ -70,6 +70,12 @@
       url = "github:davidvanderklay/limusic-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Trialing as a Heroic replacement. Upstream bumps the pinned release by hand.
+    irori = {
+      url = "github:irori-app/irori";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
