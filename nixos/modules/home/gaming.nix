@@ -20,6 +20,19 @@ let
         '--enable-features=WaylandWindowDecorations,HeliumMiddleClickAutoscroll'
     '';
   });
+  # Upstream's flake still pins 1.1.0 after the 1.2.0 release (which has the
+  # Steam sign-in fix). Drop this override once their flake.nix is bumped.
+  irori = inputs.irori.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: rec {
+    version = "1.2.0";
+    src = pkgs.fetchurl {
+      url = "https://github.com/irori-app/irori/releases/download/v${version}/Irori-${version}-linux.tar.gz";
+      hash = "sha256-XahaZWAOiJoCEA+4GNAd7fDBNbSY0eMTyddKVAjxnJM=";
+    };
+    # Upstream's check greps for the version it was written with.
+    installCheckPhase = ''
+      HOME=$(mktemp -d) $out/bin/irori --version | grep -F "${version}"
+    '';
+  });
   # nixpkgs 740730748ec2 made GTK's `-lz` link libz.so, but localsend_app's
   # rpath lacks zlib, so it fails at launch. Drop once upstream fixes it.
   localsend = pkgs.symlinkJoin {
@@ -54,7 +67,7 @@ in
       wineWow64Packages.stable
       winetricks
       helium
-      inputs.irori.packages.${pkgs.stdenv.hostPlatform.system}.default
+      irori
     ];
 
     systemd.user.services.ludusavi-backup = lib.mkIf cfg.enableLudusaviBackup {
