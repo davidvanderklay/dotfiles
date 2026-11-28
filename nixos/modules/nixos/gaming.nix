@@ -20,6 +20,8 @@ in
     };
 
     programs.gamemode.enable = true;
+    # gamemode's polkit rule only skips the password prompt for this group.
+    users.users.${config.mymod.nixos.core.userName}.extraGroups = [ "gamemode" ];
     programs.gamescope.enable = true;
   };
 }
