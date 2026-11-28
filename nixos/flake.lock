@@ -154,16 +154,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1795781072,
-        "narHash": "sha256-alZPeHrpVDNVMfnSxj8vBTcYQ8ZDNxrGH7d6JFU7Dz4=",
-        "owner": "irori-app",
-        "repo": "irori",
-        "rev": "0ae648b6edd6107d0f090f3542ff37817cff4d06",
+        "lastModified": 1795851992,
+        "narHash": "sha256-jujvdGnCX1U/hdNnD79CM+FkmmTvy8hBNOzx0mmmxXA=",
+        "owner": "davidvanderklay",
+        "repo": "irori-nix",
+        "rev": "86b8934871cd873d7cfa5a24e258e9663fe7f6ff",
         "type": "github"
       },
       "original": {
-        "owner": "irori-app",
-        "repo": "irori",
+        "owner": "davidvanderklay",
+        "repo": "irori-nix",
         "type": "github"
       }
     },

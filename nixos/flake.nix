@@ -71,9 +71,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Trialing as a Heroic replacement. Upstream bumps the pinned release by hand.
+    # Trialing as a Heroic replacement. Own flake, since upstream's lags releases.
     irori = {
-      url = "github:irori-app/irori";
+      url = "github:davidvanderklay/irori-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
