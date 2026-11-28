@@ -174,7 +174,6 @@ in
           syncthing
           rclone
           qrencode
-          quarto
         ]
         ++ lib.optionals (cfg.includePersonalTools && !isDarwin) [ ticktickCli ]
         ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
